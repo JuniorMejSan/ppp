@@ -5,7 +5,7 @@ class vistasModelo{
     //modelo para obtener las vistas, indicamos que es protegido
     protected static function obtener_vistas_modelo($vista){
         //lista blanca de palabras que si se pueden escribir en la url
-        $listaBlanca = [];
+        $listaBlanca = ["home", "client-list"];
         
         if (in_array($vista, $listaBlanca)) { //si el valor que viene mediante la url esta en la lista blanca
             if (is_file("./vistas/contenidos/".$vista."-view.php")) { //sirve para comprobra un archivo enviado mediante url dentro del directorio
