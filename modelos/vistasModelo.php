@@ -13,7 +13,7 @@ class vistasModelo{
             }else {
                 $contenido = "404";
             }
-        }elseif ($vistas == "login" || $vistas == "index") { //si no esta dentro de la lista blanca pero es login o index manda al inicio de sesion
+        }elseif ($vista == "login" || $vista == "index") { //si no esta dentro de la lista blanca pero es login o index manda al inicio de sesion
             $contenido = "login";
         }else { //si no existe manda error 404
             $contenido = "404";
