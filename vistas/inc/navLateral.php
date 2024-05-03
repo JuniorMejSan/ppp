@@ -3,9 +3,9 @@
     <div class="full-box nav-lateral-content">
         <figure class="full-box nav-lateral-avatar">
             <i class="far fa-times-circle show-nav-lateral"></i>
-            <img src="<?php echo server_url; ?>vistas/assets/avatar/Avatar.png" class="img-fluid" alt="Avatar">
+            <img src="<?php echo server_url; ?>vistas/assets/img/usqay_logo2.png" class="img-fluid" alt="Avatar">
             <figcaption class="roboto-medium text-center">
-                Junior Mejía <br><small class="roboto-condensed-light">Web Developer</small>
+                USQAY <br><small class="roboto-condensed-light">Sistema Kardex</small>
             </figcaption>
         </figure>
         <nav class="full-box nav-lateral-menu">

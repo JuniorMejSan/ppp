@@ -2,16 +2,16 @@
 
 class vistasModelo{
 
-    //modelo para obtener las vistas, indicamos que es protegido
+    //modelo para obtener las vistas, con protected indicamos que es protegido
     protected static function obtener_vistas_modelo($vista){
-        //lista blanca de palabras que si se pueden escribir en la url
+        //lista blanca de palabras que si se pueden escribir en la url, si no muestra error 404
         $listaBlanca = ["home", "client-list"];
         
         if (in_array($vista, $listaBlanca)) { //si el valor que viene mediante la url esta en la lista blanca
-            if (is_file("./vistas/contenidos/".$vista."-view.php")) { //sirve para comprobra un archivo enviado mediante url dentro del directorio
-                $contenido = "./vistas/contenidos/".$vista."-view.php";
+            if (is_file("./vistas/contenidos/".$vista."-view.php")) { //is_file sirve para comprobra un archivo enviado mediante url dentro del directorio
+                $contenido = "./vistas/contenidos/".$vista."-view.php"; //manda a la vista
             }else {
-                $contenido = "404";
+                $contenido = "404";  //no existe
             }
         }elseif ($vista == "login" || $vista == "index") { //si no esta dentro de la lista blanca pero es login o index manda al inicio de sesion
             $contenido = "login";
@@ -23,4 +23,3 @@ class vistasModelo{
 }
 
 
-?>

@@ -1,6 +1,6 @@
 <?php
 const server = "localhost";
-const db = "prestamos";
+const db = "ppp";
 const user = "root";
 const pass = "";
 
@@ -10,6 +10,6 @@ const sgdb = "mysql:host=".server.";dbname=".db;
 
 //para encriptacion de contraseñas y registros en la bd
 const method = "AES-256-CBC";
-const secret_key = '$prestamos2024';
+const secret_key = '$practicas2024';
 const secret_iv = '201627';
 ?>

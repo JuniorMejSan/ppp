@@ -4,7 +4,7 @@ require_once "./modelos/vistasModelo.php";
 
 class vistasControlador extends vistasModelo{  //se crea la clase vistasControlador que hereda de vistasModelo
 
-    //controlador para obtener plantilla y mostrarla
+    //controlador para obtener plantilla y mostrarla en index.php
     public function obtener_plantilla_controlador(){
         return require_once "./vistas/plantilla.php";
     }
@@ -20,4 +20,3 @@ class vistasControlador extends vistasModelo{  //se crea la clase vistasControla
         return $respuesta;
     }
 }
-?>
