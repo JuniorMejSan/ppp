@@ -176,7 +176,7 @@ table form{
 /*----------  Page 404 styles  ----------*/
 .container-404{
 	background: #000428;
-	background: linear-gradient(to right, #004e92, #000428);
+	background: linear-gradient(to right, #fd933c, #e67213);
 	color: #fff;
 	height: 100%;
 	display: flex;
@@ -190,9 +190,9 @@ table form{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: #0575E6;
-	background: -webkit-linear-gradient(to right, #021B79, #0575E6);
-	background: linear-gradient(to right, #021B79, #0575E6);
+	background: #f0a569;
+	background: -webkit-linear-gradient(to right, #e67213, #f0a569);
+	background: linear-gradient(to right, #e67213, #f0a569);
 
 }
 .login-content{
