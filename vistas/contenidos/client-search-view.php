@@ -12,13 +12,13 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a href="client-new.html"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
+            <a href="<?php echo server_url; ?>client-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
         </li>
         <li>
-            <a href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
+            <a href="<?php echo server_url; ?>client-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
         </li>
         <li>
-            <a class="active" href="client-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR
+            <a class="active" href="<?php echo server_url; ?>client-search/"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR
                 CLIENTE</a>
         </li>
     </ul>
@@ -96,7 +96,7 @@
                         </button>
                     </td>
                     <td>
-                        <a href="client-update.html" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>client-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -121,7 +121,7 @@
                         </button>
                     </td>
                     <td>
-                        <a href="client-update.html" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>client-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -146,7 +146,7 @@
                         </button>
                     </td>
                     <td>
-                        <a href="client-update.html" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>client-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -171,7 +171,7 @@
                         </button>
                     </td>
                     <td>
-                        <a href="client-update.html" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>client-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>

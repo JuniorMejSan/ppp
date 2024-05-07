@@ -13,15 +13,15 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a class="active" href="user-new.html"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO
+            <a class="active" href="<?php echo server_url; ?>user-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO
                 USUARIO</a>
         </li>
         <li>
-            <a href="user-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
+            <a href="<?php echo server_url; ?>user-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
                 USUARIOS</a>
         </li>
         <li>
-            <a href="user-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR USUARIO</a>
+            <a href="<?php echo server_url; ?>user-search/"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR USUARIO</a>
         </li>
     </ul>
 </div>
