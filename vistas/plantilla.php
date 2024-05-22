@@ -12,20 +12,18 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<title>
-		<?php 
+		<?php
 		if ($vistas == "404") {
 			echo 'NOT FOUND';
-		}else {
+		} else {
 			echo company;
 		}
 		?>
 	</title>
-
 	<?php
 	//archivos css
 	include "./vistas/inc/link.php";
 	?>
-
 </head>
 
 <body>
@@ -40,15 +38,12 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 			<?php
 			include "./vistas/inc/navLateral.php";
 			?>
-
 			<!-- Page content -->
 			<section class="full-box page-content">
 				<?php
 				include "./vistas/inc/navBar.php";
 				include $vistas;
 				?>
-
-
 			</section>
 		</main>
 	<?php

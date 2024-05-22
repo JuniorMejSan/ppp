@@ -20,23 +20,16 @@
     </a>
 
     <a href="<?php echo server_url; ?>item-list/" class="tile">
-        <div class="tile-tittle">Items</div>
+        <div class="tile-tittle">Inventario</div>
         <div class="tile-icon">
             <i class="fas fa-pallet fa-fw"></i>
             <p>9 Registrados</p>
         </div>
     </a>
 
-    <a href="<?php echo server_url; ?>reservation-reservation/" class="tile">
-        <div class="tile-tittle">Reservaciones</div>
-        <div class="tile-icon">
-            <i class="far fa-calendar-alt fa-fw"></i>
-            <p>30 Registradas</p>
-        </div>
-    </a>
 
     <a href="<?php echo server_url; ?>reservation-pending/" class="tile">
-        <div class="tile-tittle">Prestamos</div>
+        <div class="tile-tittle">Ventas</div>
         <div class="tile-icon">
             <i class="fas fa-hand-holding-usd fa-fw"></i>
             <p>200 Registrados</p>
@@ -60,7 +53,7 @@
     </a>
 
     <a href="<?php echo server_url; ?>empresa/" class="tile">
-        <div class="tile-tittle">Empresa</div>
+        <div class="tile-tittle">Proveedores</div>
         <div class="tile-icon">
             <i class="fas fa-store-alt fa-fw"></i>
             <p>1 Registrada</p>

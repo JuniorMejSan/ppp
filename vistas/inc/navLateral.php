@@ -31,7 +31,7 @@
                 </li>
 
                 <li>
-                    <a href="#" class="nav-btn-submenu"><i class="fas fa-pallet fa-fw"></i> &nbsp; Items <i
+                    <a href="#" class="nav-btn-submenu"><i class="fas fa-pallet fa-fw"></i> &nbsp; Inventario <i
                             class="fas fa-chevron-down"></i></a>
                     <ul>
                         <li>
@@ -39,7 +39,7 @@
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Lista de
-                                items</a>
+                                Inventario</a>
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>item-search/"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar item</a>
@@ -49,7 +49,7 @@
 
                 <li>
                     <a href="#" class="nav-btn-submenu"><i class="fas fa-file-invoice-dollar fa-fw"></i> &nbsp;
-                        Préstamos <i class="fas fa-chevron-down"></i></a>
+                        Ventas <i class="fas fa-chevron-down"></i></a>
                     <ul>
                         <li>
                             <a href="<?php echo server_url; ?>reservation-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Nuevo préstamo</a>
@@ -60,7 +60,7 @@
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>reservation-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp;
-                                Préstamos</a>
+                                Ventas</a>
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>reservation-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp;
