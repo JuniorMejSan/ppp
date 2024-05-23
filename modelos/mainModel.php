@@ -78,4 +78,23 @@
             $cadena = trim($cadena);
             return $cadena;
         }
+
+        //funcion para validar datos string
+        protected static function verificar_datos($filtro, $cadena){//$filtro son los caracteres permitidos y $cadena el dato a validar
+            if (preg_match("/^".$filtro."$/", $cadena)) {//preg_match sirve para verificar coincidencias, en este caso $cadena con el filtro que le pasamos
+                return false; //es decir cpincide con el formato solicitado y no hay errores
+            }else{
+                return true;
+            }
+        }
+
+        //funcion para validar fechas
+        protected static function verificar_fecha($fecha){
+            $valores = explode("-", $fecha);//es un arra con todos los datos de una fecha, porque los separa por el -
+            if (count($valores) == 3 && checkdate($valores[1], $valores[2], $valores[0])) { //$valores debe tener solo 3 datos (d-m-a), checkdate revisa que sea una fecha primero recive mes, luego día  luego año peor el formato es a-m-d
+                return false; //es decir cpincide con el formato solicitado y no hay errores
+            }else{
+                return true;
+            }
+        }
     }
