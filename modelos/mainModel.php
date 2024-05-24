@@ -97,4 +97,55 @@
                 return true;
             }
         }
+
+        //funcion para paginar tabla
+        protected static function paginador_tablas($pagina, $Npaginas, $url, $botones){//$pagina recive la pagina actual de la tabla, $Npagians la cantidad de paginas que tiene el listado, $url la pagina a la que lleva cada boton, $botones la cantidad de botones que se van a mostrar
+            $tabla = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">'; //esto es la navegacion de botones de una tabla en la vista
+            if ($pagina == 1) { //cuando la paginacion esta en la pagina 1 se deshabilita el boton para regresar
+                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fa-solid fa-angles-left"></i></a></li>';
+            }else{ //se habilita
+                $tabla.='<li class="page-item">
+                            <a class="page-link" href="'.$url.'1/">
+                                <i class="fa-solid fa-angles-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="'.$url.($pagina-1).'/">Anterior</a>
+                        </li>'; //en el jref enviamos al usuario a la pag 1 y con -1 va retrocediendo en las paginas
+            }
+
+            $ci = 0; //contador de iteraciones, para la cantidad de vueltas del ciclo
+            //for para mostrar la cantidad de botones que se van a mostrar en la paginacion
+            for ($i=$pagina; $i <= $Npaginas; $i++) { 
+                if ($ci >= $botones) { //muestra la cantidad de botones segun la cantidad de iteraciones
+                    break;
+                }
+                //if para mostrar sobreado el boton de la pagina donde nos encontramos
+                if($pagina == $i){
+                    $tabla .= '<li class="page-item">
+                                    <a class="page-link active" href="'.$url.$i.'/">'.$i.'</a>
+                                </li>'; //active para el sombreado y concatenamos $i para que sombree el boton segun la pagina donde nos encontramos
+                }else{
+                    $tabla .= '<li class="page-item">
+                                    <a class="page-link" href="'.$url.$i.'/">'.$i.'</a>
+                                </li>'; //se le quita el active
+                }
+                $ci++;
+            }
+
+            if ($pagina == $Npaginas) { //cuando la paginacion esta en la pagina 1 se deshabilita el boton para regresar
+                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fa-solid fa-angles-right"></i></a></li>';
+            }else{ //se habilita
+                $tabla.='<li class="page-item">
+                            <a class="page-link" href="'.$url.($pagina+1).'/">Anterior</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="'.$url.$Npaginas.'/">
+                                <i class="fa-solid fa-angles-right"></i>
+                            </a>
+                        </li>'; //en el href enviamos al usuario a la pag 1 y con -1 va retrocediendo en las paginas
+            }
+            $tabla.='</ul></nav>'; //concatenamos el final de la navegacion
+            return $tabla; //retornamos toda la paginacion
+        }
     }
