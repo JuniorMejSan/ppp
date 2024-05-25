@@ -12,7 +12,36 @@ formularios_ajax.forEach(formularios => {
 
 //funcion para las alertas
 function alertas_ajax(alerta) {
-    if (alerta.Aleta==="simple") {
-        
+    if (alerta.Alerta==="simple") {
+        Swal.fire({
+            title: alerta.Titulo,
+            text: alerta.Texto,
+            icon: alerta.Tipo,
+            confirmButtonText: 'Aceptar'
+        });
+    }else if (alerta.Alerta==="recargar") {//al dar clic en aceptar se va a recargar la pagina
+        Swal.fire({
+            title: alerta.Titulo,
+            text: alerta.Texto,
+            icon: alerta.Tipo,
+            confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                location.reload();
+            }
+        });
+    }else if (alerta.Alerta==="limpiar") {//una vez se le da a aceptar se limpian todos los valores ingresados
+        Swal.fire({
+            title: alerta.Titulo,
+            text: alerta.Texto,
+            icon: alerta.Tipo,
+            confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                document.querySelector(".FormularioAjax").reset();//solo selecciona un unico documento, el que se esta enviando o intentando limpiar
+            }
+        });
+    }else if (alerta.Alerta==="redireccionar") {//no en todos se va a mostrar alertas, simplemente se envian datos mediante ajax
+        window.location.href = alerta.URL;
     }
 }
