@@ -4,9 +4,9 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
     e.preventDefault();//previene redireccionar a la url donde se envian datos
 
     let data = new FormData(this);//arreglo para indicar de donde queremos obtener los datos
-    let method = this.getAttribue("method");//indica el metodo que se va a utilizar para el envio de datos
-    let action = this.getAttribue("action");//indica la url donde se va a enviar los datos
-    let tipo = this.getAttribue("data-form");//indica el tipo de formulario es decir el "data-form"
+    let method = this.getAttribute("method");//indica el metodo que se va a utilizar para el envio de datos
+    let action = this.getAttribute("action");//indica la url donde se va a enviar los datos
+    let tipo = this.getAttribute("data-form");//indica el tipo de formulario es decir el "data-form"
 
     let encabezados = new Headers();//encabezado de los datos enviados por ajax Headers() sirve para obtener los encabezados
     
