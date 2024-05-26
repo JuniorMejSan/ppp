@@ -7,4 +7,8 @@ if ($peticionAjax) {//cuando e sun apeticion ajax el archivo se va a ejecutar en
 
 class usuarioControlador extends usuarioModelo{
 
+    //controlador para agregar usuario
+    public function agregar_usuario_controlador(){//controlador para agregar losd atos del usaurio
+
+    }
 }
