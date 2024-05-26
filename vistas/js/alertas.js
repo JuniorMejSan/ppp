@@ -2,12 +2,7 @@ const formularios_ajax = document.querySelectorAll(".FormularioAjax");//para sel
 
 function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los formularios 
     e.preventDefault();//previene redireccionar a la url donde se envian datos
-}
 
-//para el envio de los datos del formulario mediante metodo post
-formularios_ajax.forEach(formularios => {
-    formularios.addEventListener("submit", enviar_formulario_ajax);//esperando el evento submit a ejecutar y se ejecuta la funcion enviar_formulario_ajax
-    
     let data = new FormData(this);//arreglo para indicar de donde queremos obtener los datos
     let method = this.getAttribue("method");//indica el metodo que se va a utilizar para el envio de datos
     let action = this.getAttribue("action");//indica la url donde se va a enviar los datos
@@ -57,6 +52,12 @@ formularios_ajax.forEach(formularios => {
                 })
         }
     });
+}
+
+//para el envio de los datos del formulario mediante metodo post
+formularios_ajax.forEach(formularios => {
+    formularios.addEventListener("submit", enviar_formulario_ajax);//esperando el evento submit a ejecutar y se ejecuta la funcion enviar_formulario_ajax
+    
 });
 
 //funcion para las alertas
