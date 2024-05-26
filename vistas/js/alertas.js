@@ -12,7 +12,7 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
     
     let config = { //json para el envio de datos por ajaxarray con toda la configuracion del envio de datos
         method: method,
-        eaders: encabezados,
+        headers: encabezados,
         mode: 'cors',
         cache: 'no-cache',
         body: data
@@ -57,7 +57,7 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
 //para el envio de los datos del formulario mediante metodo post
 formularios_ajax.forEach(formularios => {
     formularios.addEventListener("submit", enviar_formulario_ajax);//esperando el evento submit a ejecutar y se ejecuta la funcion enviar_formulario_ajax
-    
+
 });
 
 //funcion para las alertas
