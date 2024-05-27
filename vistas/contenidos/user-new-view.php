@@ -36,7 +36,7 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="usuario_dni" class="bmd-label-floating">DNI</label>
-                            <input type="text" pattern="[0-9-]{1,20}" class="form-control" name="usuario_dni_reg"
+                            <input type="text" pattern="[0-9-]{8,20}" class="form-control" name="usuario_dni_reg"
                                 id="usuario_dni" maxlength="20" required>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                             actualizar</p>
                         <p><span class="badge badge-dark">Registrar</span> Solo permisos para registrar</p>
                         <div class="form-group">
-                            <select class="form-control" name="usuario_privilegio_reg" required>
+                            <select class="form-control" name="usuario_privilegio_reg">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
                                 <option value="1">Control total</option>
                                 <option value="2">Edición</option>

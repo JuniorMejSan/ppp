@@ -36,5 +36,19 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit(); //deja de ejecutarse el codigo y muestra la alerta
         }
+
+        //verificar integridad de datos, es decir que sigan el pattern
+        if(mainModel::verificar_datos("[0-9-]{8,20}", $dni)){
+            //si entra es porque si se tienen errores en ese dato
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DNI no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
     }
 }
