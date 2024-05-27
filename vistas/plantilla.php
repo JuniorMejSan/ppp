@@ -31,6 +31,7 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 	if ($vistas == "login" || $vistas == "404") {  //pregunta si la respuesta del controlador es login o 404 
 		require_once "./vistas/contenidos/" . $vistas . "-view.php";
 	} else {
+		session_start(['name' => 'ppp']);
 	?>
 		<!-- Main container -->
 		<main class="full-box main-container">

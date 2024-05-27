@@ -5,7 +5,7 @@
             <i class="far fa-times-circle show-nav-lateral"></i>
             <img src="<?php echo server_url; ?>vistas/assets/img/usqay_logo2.png" class="img-fluid" alt="Avatar">
             <figcaption class="roboto-medium text-center">
-                USQAY <br><small class="roboto-condensed-light">Sistema Kardex</small>
+                <?php echo $_SESSION['nombre_ppp']." ".$_SESSION['apellido_ppp']; ?> <br><small class="roboto-condensed-light">Sistema Kardex</small>
             </figcaption>
         </figure>
         <nav class="full-box nav-lateral-menu">
