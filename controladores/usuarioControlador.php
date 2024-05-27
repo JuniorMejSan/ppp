@@ -121,5 +121,77 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }
+
+        //comprobacion de que el DNI no esté previamente registrado
+        $query_check_dni = "select dni from usuario where dni = '$dni'";
+        $check_dni = mainModel::ejecutar_consulta_simple($query_check_dni);
+        if ($check_dni -> rowCount() > 0) { //verificamos si la consulta trajo datos
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DNI ya se encuentra registrado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //comprobando existencia del usuario
+        $query_check_usuario = "select user from usuario where user = '$usuario'";
+        $check_usuario = mainModel::ejecutar_consulta_simple($query_check_usuario);
+        if ($check_usuario -> rowCount() > 0) { //verificamos si la consulta trajo datos
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE DE USUARIO ya se encuentra registrado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //comprobando existencia del CORREO y tenga el formato adecuado
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {//fucnion de php para verificar formato de correo
+            $query_check_email = "select email from usuario where email = '$email'";
+            $check_email = mainModel::ejecutar_consulta_simple($query_check_email);
+            if ($check_email -> rowCount() > 0) { //verificamos si la consulta trajo datos
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El CORREO ingresado ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El CORREO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //comprobacion de contraseña iguales en ambos campos
+        if ($clave1 != $clave2) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Las CONTRASEÑAS deben coincidir",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }else{
+
+        }
     }
 }
