@@ -110,14 +110,13 @@ class usuarioControlador extends usuarioModelo{
             exit();
         }
 
-        if (mainModel::verificar_datos("a-zA-Z0-9$@.-]{7,100}", $clave1) || mainModel::verificar_datos("a-zA-Z0-9$@.-]{7,100}", $clave2)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "Las CONTRASEÑAS no coincide con el formato solicitado",
-                "Tipo" => "error"
+        if(mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}",$clave1) || mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}",$clave2)){
+            $alerta=[
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrió un error inesperado",
+                "Texto"=>"Las CLAVES no coinciden con el formato solicitado",
+                "Tipo"=>"error"
             ];
-
             echo json_encode($alerta);
             exit();
         }
@@ -191,7 +190,8 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }else{
-
+            $clave = mainModel::encryption($clave1); //asignamos la constraseña a una variable pero la encriptamos
+            
         }
     }
 }
