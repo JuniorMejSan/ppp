@@ -190,8 +190,21 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }else{
-            $clave = mainModel::encryption($clave1); //asignamos la constraseña a una variable pero la encriptamos
-            
+            $clave = mainModel::encryption($clave1);
+
+        }
+
+        //comprobacion de privilegio
+        if ($privilegio < 1 || $privilegio > 3) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El privilegio seleccionado no es valido",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
         }
     }
 }
