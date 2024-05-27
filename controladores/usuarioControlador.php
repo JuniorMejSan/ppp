@@ -230,7 +230,7 @@ class usuarioControlador extends usuarioModelo{
                 "Alerta" => "limpiar",
                 "Titulo" => "Usuario registrado",
                 "Texto"=> "Los datos del usuario han sido registrado con exito",
-                "Tipo" => "succes"
+                "Tipo" => "success"
             ];
         }else{
             $alerta = [
