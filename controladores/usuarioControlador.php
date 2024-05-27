@@ -178,7 +178,7 @@ class usuarioControlador extends usuarioModelo{
             exit();
         }
 
-        //comprobacion de contraseña iguales en ambos campos
+        //comprobacion de contraseña iguales en ambos campos y si no son iguales se asigna a una variable y se procesa por el hash
         if ($clave1 != $clave2) {
             $alerta = [
                 "Alerta" => "simple",
@@ -206,5 +206,41 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }
+
+        //array de datos a enviar, se esta jalando los indices del usuarioModel
+        $datos_usuario_reg = [
+            "DNI" => $dni,
+            "Nombre" => $nombre,
+            "Apellido" => $apellido,
+            "Telefono" => $telefono,
+            "Direccion" => $direccion,
+            "User" => $usuario,
+            "Email" => $email,
+            "Password" => $clave, //esta es la variable procesada por el hash
+            "Estado" => "Activa", //por defecto el usuario estara activo
+            "Privilegio" => $privilegio
+        ];
+
+        //variable para alamcenar lo qeu nos devuelve usuarioModel
+        $agregar_usuario = usuarioModelo::agregar_usuario_modelo($datos_usuario_reg);
+
+        //condicional para preguntar si se almacenoel registro en la bd
+        if ($agregar_usuario -> rowCount() == 1) {
+            $alerta = [
+                "Alerta" => "limpiar",
+                "Titulo" => "Usuario registrado",
+                "Texto"=> "Los datos del usuario han sido registrado con exito",
+                "Tipo" => "succes"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se pudo agregar el usuario",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+        //ya no se coloca exit por que aqui termina el codigo
     }
 }
