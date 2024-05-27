@@ -20,7 +20,6 @@ class loginControlador extends loginModelo{
                 Swal.fire({
                     title: "Ocurrio un error",
                     text: "Los campos no pueden estar vacios",
-                    type: "error",
                     icon: "error",
                     confirmButtonText: "Aceptar"
                 })
@@ -34,7 +33,6 @@ class loginControlador extends loginModelo{
                 Swal.fire({
                     title: "Ocurrio un error",
                     text: "El nombre de USUARIO no coincide con el formato requerido",
-                    type: "error",
                     icon: "error",
                     confirmButtonText: "Aceptar"
                 })
@@ -47,7 +45,6 @@ class loginControlador extends loginModelo{
                 Swal.fire({
                     title: "Ocurrio un error",
                     text: "El CLAVE no coincide con el formato requerido",
-                    type: "error",
                     icon: "error",
                     confirmButtonText: "Aceptar"
                 })
@@ -83,7 +80,6 @@ class loginControlador extends loginModelo{
                 Swal.fire({
                     title: "Ocurrio un error",
                     text: "USUARIO o CLAVE incorrectos",
-                    type: "error",
                     icon: "error",
                     confirmButtonText: "Aceptar"
                 })
