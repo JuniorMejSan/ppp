@@ -7,7 +7,7 @@ class loginModelo extends mainModel{
         $query_conexion = "select * from usuario where user = :User and password = :Password and estado = 'Activa'";
         $sql = mainModel::conectar() -> prepare($query_conexion);
 
-        $sql -> bindParam(":Usuario", $datos['Usuario']);
+        $sql -> bindParam(":User", $datos['Usuario']);
         $sql -> bindParam(':Password', $datos['Password']);
         $sql -> execute();
         return $sql;

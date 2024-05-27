@@ -57,7 +57,7 @@ class loginControlador extends loginModelo{
         //array que contendrá los datos
         $datos_login = [
             "Usuario" => $usuario,
-            "password" => $password
+            "Password" => $password
         ];
 
         //consulta a la base de datos con el modelo
