@@ -30,24 +30,6 @@ $(document).ready(function(){
 		}
 	});
 
-	/*  Exit system buttom */
-	$('.btn-exit-system').on('click', function(e){
-		e.preventDefault();
-		Swal.fire({
-			title: 'Estás seguro de cerrar sesión?',
-			text: "Estás a punto de salir del sistema",
-			type: 'question',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Sí, salir!',
-			cancelButtonText: 'No, cancelar'
-		}).then((result) => {
-			if (result.value) {
-				window.location="index.html";
-			}
-		});
-	});
     
 });
 (function($){
