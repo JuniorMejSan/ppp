@@ -101,5 +101,33 @@ class loginControlador extends loginModelo{
             return header("Location: ".server_url."login/");
         }
     }
+
+    //controlador para cierre de sesion
+    public function cerrar_sesion_controlador(){
+        session_start(['name' => 'ppp']);//todas las sesiones llevan este nombre
+
+        $token = mainModel::decryption($_POST['token']);
+        $usuario = mainModel::decryption($_POST['usuario']);
+
+        //comprobacion antes de cerra sesion si es las variables que se envian al darle clic a cerrar son las mismas que se tiene en la sesion
+        if ($token == $_SESSION['token_ppp'] && $usuario == $_SESSION['usuario_ppp']) {
+            //se destruye la sesion
+            session_unset();
+            session_destroy();
+            //redireccionamos al login
+            $alerta = [
+                "Alerta" => "redireccionar",
+                "URL" => server_url."login/"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se pudo cerrar sesion",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta); //se parsea para que pueda ser entendido por JS
+    }
     
 } 
