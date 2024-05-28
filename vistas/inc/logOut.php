@@ -15,7 +15,9 @@
 			cancelButtonText: 'No, cancelar'
 		}).then((result) => {
 			if (result.value) {
-				window.location="index.html";
+				//codigo para el envio de los parametros para el cierre de sesion
+                let url = '<?php echo server_url; ?>ajax/loginAjax.php';//concatenamos el archivo a donde lo mandamos
+                let token = '<?php echo $lc -> encryption($_SESSION['token_ppp']) ?>';
 			}
 		});
     });
