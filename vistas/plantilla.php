@@ -33,6 +33,7 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 	} else {
 		//en caso de que sea un usuario logueado
 		session_start(['name' => 'ppp']);
+		//session_destroy();
 		//para el cierre de sesion forzado, seguridad para evitar el acceso a vistas sin permiso
 		require_once "./controladores/loginControlador.php";
 		$lc = new  loginControlador();

@@ -71,7 +71,7 @@ class loginControlador extends loginModelo{
             $row = $datos_cuenta -> fetch(); //permite hacer un array de datos mediante la consulta realizada
             //variables de sesion
             session_start(['name' => 'ppp']);//nombre clave en las varibales de sesion
-            $_SESSION['id_ppp'] = $row['id_Usuario']; //esta variable asignamos el valor que hay en la bd
+            $_SESSION['id_ppp'] = $row['idUsuario']; //esta variable asignamos el valor que hay en la bd
             $_SESSION['nombre_ppp'] = $row['nombre'];
             $_SESSION['apellido_ppp'] = $row['apellido'];
             $_SESSION['usuario_ppp'] = $row['user'];
@@ -96,9 +96,7 @@ class loginControlador extends loginModelo{
         session_destroy();
         //redireccionamos al usuario
         if(headers_sent()){//verifica si se estan enviando encabezado mediante php
-            return "<script>
-                window.location.href = '".server_url."login/';
-            </script>";
+            return "<script> window.location.href = '".server_url."login/'; </script>";
         }else{//se redireccion al login
             return header("Location: ".server_url."login/");
         }
