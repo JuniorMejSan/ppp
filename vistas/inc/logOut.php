@@ -18,6 +18,22 @@
 				//codigo para el envio de los parametros para el cierre de sesion
                 let url = '<?php echo server_url; ?>ajax/loginAjax.php';//concatenamos el archivo a donde lo mandamos
                 let token = '<?php echo $lc -> encryption($_SESSION['token_ppp']) ?>';
+                let usuario = '<?php echo $lc -> encryption($_SESSION['usuario_ppp']) ?>';
+
+                //enviamos los datos mediante fetch
+                let datos = new FormData();
+                datos.append('token', token);
+                datos.append('usuario', usuario);
+
+                fetch(url, {
+                    method: 'POST',
+                    body: datos
+                })
+                .then(respuesta => respuesta.json())
+                .then(respuesta => {
+                    return alertas_ajax(respuesta);
+                });
+
 			}
 		});
     });
