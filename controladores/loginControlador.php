@@ -24,6 +24,7 @@ class loginControlador extends loginModelo{
                     confirmButtonText: "Aceptar"
                 })
             </script>';
+            exit();
         }
 
         //verificar la integridad de datos
@@ -37,6 +38,7 @@ class loginControlador extends loginModelo{
                     confirmButtonText: "Aceptar"
                 })
             </script>';
+            exit();
         }
 
         if(mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}", $password)){//el filtro es el patern del input en la vista
@@ -49,6 +51,7 @@ class loginControlador extends loginModelo{
                     confirmButtonText: "Aceptar"
                 })
             </script>';
+            exit();
         }
 
         //encriptamos la clave
@@ -84,6 +87,20 @@ class loginControlador extends loginModelo{
                     confirmButtonText: "Aceptar"
                 })
             </script>';
+        }
+    }
+
+    //controlador para forzar cierre de sesion
+    public function forzar_cierre_sesion_controlador(){
+        session_unset();
+        session_destroy();
+        //redireccionamos al usuario
+        if(headers_sent()){//verifica si se estan enviando encabezado mediante php
+            return "<script>
+                window.location.href = '".server_url."login/';
+            </script>";
+        }else{//se redireccion al login
+            return header("Location: ".server_url."login/");
         }
     }
     

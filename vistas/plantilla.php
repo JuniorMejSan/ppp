@@ -31,7 +31,17 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 	if ($vistas == "login" || $vistas == "404") {  //pregunta si la respuesta del controlador es login o 404 
 		require_once "./vistas/contenidos/" . $vistas . "-view.php";
 	} else {
+		//en caso de que sea un usuario logueado
 		session_start(['name' => 'ppp']);
+		//para el cierre de sesion forzado, seguridad para evitar el acceso a vistas sin permiso
+		require_once "./controladores/loginControlador.php";
+		$lc = new  loginControlador();
+
+		//si es que no viene definido ninguna de esas variables de sesion quiere decir que no se ha iniciado sesion
+		if(!isset($_SESSION['token_ppp']) || !isset($_SESSION['usuario_ppp']) || !isset($_SESSION['privilegio_ppp']) || !isset($_SESSION['id_ppp'])){
+			echo $lc -> forzar_cierre_sesion_controlador();
+			exit();
+		}
 	?>
 		<!-- Main container -->
 		<main class="full-box main-container">
