@@ -1,6 +1,6 @@
 <script>
     //detectar que se presiona el boton para cerrar sesion
-    let btn_salir = document.querySelector("btn-exit-system");//clase del boton, está en navBar
+    let btn_salir = document.querySelector(".btn-exit-system");//clase del boton, está en navBar
     btn_salir.addEventListener('click', function(e){//el boton espera el click
         e.preventDefault();//previene el evento por defecto
         //alerta del cierre de sesion
