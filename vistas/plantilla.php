@@ -59,6 +59,7 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 			</section>
 		</main>
 	<?php
+		include "./vistas/inc/logOut.php";
 	}
 	//archivos js
 	include "./vistas/inc/scripts.php";
