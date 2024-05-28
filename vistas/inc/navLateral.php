@@ -72,7 +72,7 @@
                         </li>
                     </ul>
                 </li>
-
+                <?php if($_SESSION['privilegio_ppp'] == 1){//control de modulos a los que tienen acceso los direntes tipos de usuarios ?>
                 <li>
                     <a href="#" class="nav-btn-submenu"><i class="fas  fa-user-secret fa-fw"></i> &nbsp; Usuarios <i
                             class="fas fa-chevron-down"></i></a>
@@ -89,7 +89,7 @@
                         </li>
                     </ul>
                 </li>
-
+                <?php } ?>
                 <li>
                     <a href="<?php echo server_url; ?>empresa/"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Empresa</a>
                 </li>

@@ -43,7 +43,7 @@
             <p>700 Registrados</p>
         </div>
     </a>
-
+    <?php if($_SESSION['privilegio_ppp'] == 1){//control de modulos a los que tienen acceso los direntes tipos de usuarios ?>
     <a href="<?php echo server_url; ?>user-list/" class="tile">
         <div class="tile-tittle">Usuarios</div>
         <div class="tile-icon">
@@ -51,6 +51,7 @@
             <p>50 Registrados</p>
         </div>
     </a>
+    <?php } ?>
 
     <a href="<?php echo server_url; ?>empresa/" class="tile">
         <div class="tile-tittle">Proveedores</div>

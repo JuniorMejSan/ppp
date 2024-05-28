@@ -1,3 +1,9 @@
+<?php
+    if ($_SESSION['privilegio_ppp'] != 1) { //para que no pueda entrar sin privilegios mayor a 1
+        echo $lc -> forzar_cierre_sesion_controlador();
+        exit();
+    }
+?>
 <!-- Page header -->
 <div class="full-box page-header">
     <h3 class="text-left">

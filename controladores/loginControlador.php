@@ -46,7 +46,7 @@ class loginControlador extends loginModelo{
             echo '<script> 
                 Swal.fire({
                     title: "Ocurrio un error",
-                    text: "El CLAVE no coincide con el formato requerido",
+                    text: "La CLAVE no coincide con el formato requerido",
                     type: "error",
                     confirmButtonText: "Aceptar"
                 })
