@@ -345,6 +345,11 @@ class usuarioControlador extends usuarioModelo{
         //cierre de las etiquetas
         $tabla .= '</tbody></table></div>';
 
+        //colocamos los botones para la paginacion de la tabla que muestra los usuarios
+        if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
+            $tabla .= mainModel::paginador_tablas( $pagina, $Npaginas, $url, 7);
+        }
+
         return $tabla;
 
     }
