@@ -309,6 +309,7 @@ class usuarioControlador extends usuarioModelo{
         if($total >= 1 && $pagina <= $Npaginas){//hay registros en la bd
             
             $contador = $inicio + 1;
+            $reg_inicio = $inicio + 1; //variable para mostrar cuantos registros se estan mostrando en la tabla
             foreach ($datos as $rows) {
                 $tabla .= '<tr class="text-center">
                                 <td>'.$contador.'</td>
@@ -323,20 +324,26 @@ class usuarioControlador extends usuarioModelo{
                                     </a>
                                 </td>
                                 <td>
-                                    <form action="">
-                                        <button type="button" class="btn btn-warning">
+                                    <form class = "form-neon FormularioAjax" action="'.server_url.'ajax/usuarioAjax.php" method="POST" data-form="delete" autocomplete="off">
+                                    <inpy type = "hidden" name = "usuario_id_del" value = "'.mainModel::encryption($rows['idUsuario']).'">
+                                        <button type="submit" class="btn btn-warning">
                                             <i class="far fa-trash-alt"></i>
                                         </button>
                                     </form>
                                 </td>
                             </tr>';
-                            $contador++;
+                $contador++;
             }
+
+            //fin de la cantidad de registros que se mustran en la pagina de la tabla
+            $reg_final = $inicio - 1;
+
         }else{//no hay registros en la bd
             if($total >= 1){//si hy mas de un registro 
                 $tabla .= '<tr class="text-center" ><td colspan = "9">
                 <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
                 </tr>';
+
             }else{
                 $tabla .= '<tr class="text-center" ><td colspan = "9"></td>No hay registros en el sistema</tr>';
             }
@@ -344,6 +351,13 @@ class usuarioControlador extends usuarioModelo{
 
         //cierre de las etiquetas
         $tabla .= '</tbody></table></div>';
+
+        //condicional para mostrar el texto de cuantos registros se estan mostrando
+        if($total >= 1){
+            $tabla .= '<p class = "text-right">Mostrando registros del '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
+        }else{
+            $tabla .= '<p class = "text-right">Mostrando registros del 0 al 0 de un total de '.$total.' registros"></p>';
+        }
 
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
         if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
