@@ -353,10 +353,8 @@ class usuarioControlador extends usuarioModelo{
         $tabla .= '</tbody></table></div>';
 
         //condicional para mostrar el texto de cuantos registros se estan mostrando
-        if($total >= 1){
+        if($total >= 1 && $pagina <= $Npaginas){
             $tabla .= '<p class = "text-right">Mostrando registros del '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
-        }else{
-            $tabla .= '<p class = "text-right">Mostrando registros del 0 al 0 de un total de '.$total.' registros"></p>';
         }
 
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
