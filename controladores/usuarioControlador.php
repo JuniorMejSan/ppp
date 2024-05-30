@@ -243,4 +243,111 @@ class usuarioControlador extends usuarioModelo{
         echo json_encode($alerta);
         //ya no se coloca exit por que aqui termina el codigo
     }
+
+    //controlador para listar usuarios en la vista
+    public function paginador_usuario_controlador($pagina, $registros, $privilegio, $id, $url, $busqueda){//recibe la pagina actual, cuantos registros quiero que se muestren por pagina ,el privilegio para ocultar algunas opciones como actualizar o eliminar y el id del usario para que no aparezca en el listado (el edita sus datos desde el boton superior), la url para los enlaces de cada boton de la paginacion, busqueda para el listado normal o el de la funcion busqueda
+        $pagina = mainModel::limpiar_cadena($pagina); //para evitar inyeccion sql
+        $registros = mainModel::limpiar_cadena($registros);
+        $privilegio = mainModel::limpiar_cadena($privilegio);
+        $id = mainModel::limpiar_cadena($id);
+
+        $url = mainModel::limpiar_cadena($url);
+        $url = server_url.$url."/";
+
+        $busqueda = mainModel::limpiar_cadena($busqueda);
+        $tabla = "";//tabla creada con los usuarios
+
+        //validaciones segun la pagina de la tabla, para que no se pueda modificar la url de cada pagina de la tabla
+        $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;//es decir si la pagina viene definida se parsea a entero y si no se le asigna el valor o no es un numero se redirecciona a la pag 1
+
+        //variable para ver desde que registro empezamos acontar
+        $inicio = ($pagina > 0) ? (($pagina * $registros)-$registros) : 0;
+
+        //condicion para la consulta a la base de datos, si es listado normal o de busqueda
+        if(isset($busqueda) && $busqueda != ""){ //significa que estamos mandando datos desde el formluario de busqueda en la vista de usuarios
+
+            //consulta para que el resultado coindica con la busqueda realizada
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario where ((idUsuario != '$id' and idUsuario != '1') and (dni LIKE '%$busqueda%' OR nombre LIKE '%$busqueda%' OR apellido LIKE '%$busqueda%' or telefono LIKE '%$busqueda%' or user LIKE '%$busqueda%' or email LIKE '%$busqueda%)) order by nombre asc limit $inicio, $registros";
+        }else{
+            //se muestran todos los registros excepto los que tengan el privilegio de administrador y el que este logueado
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario where idUsuario != '$id' and idUsuario != '1' order by nombre asc limit $inicio, $registros";
+        }
+
+        //variable de conexion
+        $conexion = mainModel::conectar();
+
+        //almacena todos los datos seleccionados desde la bd
+        $datos = $conexion -> query($consulta);
+        //array de datos
+        $datos = $datos -> fetchAll();
+
+        //conteo del total de registros
+        $query_conteo = "SELECT FOUND_ROWS()";
+        $total = $conexion -> query($query_conteo);
+        $total = (int)$total -> fetchColumn(); //parse a entero y lo almacena en la variable
+        
+        //numero de paginas totales
+        $Npaginas = ceil($total / $registros);//ceil duncion de php para redondear el numero de paginas
+
+        //variable para tabla
+        $tabla.= '<div class="table-responsive">
+            <table class="table table-dark table-sm">
+                <thead>
+                    <tr class="text-center roboto-medium">
+                        <th>#</th>
+                        <th>DNI</th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>TELÉFONO</th>
+                        <th>USUARIO</th>
+                        <th>EMAIL</th>
+                        <th>ACTUALIZAR</th>
+                        <th>ELIMINAR</th>
+                    </tr>
+                </thead>
+                <tbody>';
+        
+        if($total >= 1 && $pagina <= $Npaginas){//hay registros en la bd
+            
+            $contador = $inicio + 1;
+            foreach ($datos as $rows) {
+                $tabla .= '<tr class="text-center">
+                                <td>1</td>
+                                <td>03045643</td>
+                                <td>NOMBRE DE USUARIO</td>
+                                <td>APELLIDO DE USUARIO</td>
+                                <td>2345456</td>
+                                <td>NOMBRE DE USUARIO</td>
+                                <td>ADMIN@ADMIN.COM</td>
+                                <td>
+                                    <a href="<?php echo server_url; ?>user-update/" class="btn btn-success">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <form action="">
+                                        <button type="button" class="btn btn-warning">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>';
+                            $contador++;
+            }
+        }else{//no hay registros en la bd
+            if($total >= 1){//si hy mas de un registro 
+                $tabla .= '<tr class="text-center" ><td colspan = "9">
+                <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
+                </tr>';
+            }else{
+                $tabla .= '<tr class="text-center" ><td colspan = "9"></td>No hay registros en el sistema</tr>';
+            }
+        }
+
+        //cierre de las etiquetas
+        $tabla .= '</tbody></table></div>';
+
+        
+
+    }
 }

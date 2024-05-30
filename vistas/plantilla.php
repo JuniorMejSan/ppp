@@ -34,6 +34,11 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 		//en caso de que sea un usuario logueado
 		session_start(['name' => 'ppp']);
 		//session_destroy();
+
+		//variable global para evio de parametros en la funcion de listar pagina de usuarios
+		$pagina = explode("/", $_GET['views']); //contiene todos los parametros de la url
+		
+
 		//para el cierre de sesion forzado, seguridad para evitar el acceso a vistas sin permiso
 		require_once "./controladores/loginControlador.php";
 		$lc = new  loginControlador();
