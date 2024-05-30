@@ -336,7 +336,7 @@ class usuarioControlador extends usuarioModelo{
             }
 
             //fin de la cantidad de registros que se mustran en la pagina de la tabla
-            $reg_final = $inicio - 1;
+            $reg_final = $contador - 1;
 
         }else{//no hay registros en la bd
             if($total >= 1){//si hy mas de un registro 
