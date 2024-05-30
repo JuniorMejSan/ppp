@@ -318,7 +318,7 @@ class usuarioControlador extends usuarioModelo{
                                 <td>'.$rows['user'].'</td>
                                 <td>'.$rows['email'].'</td>
                                 <td>
-                                    <a href="<?php echo server_url; ?>user-update/" class="btn btn-success">
+                                    <a href="'.server_url.'user-update/'.mainModel::encryption($rows['idUsuario']).'/" class="btn btn-success">
                                         <i class="fas fa-sync-alt"></i>
                                     </a>
                                 </td>
