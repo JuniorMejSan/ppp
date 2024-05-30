@@ -297,7 +297,6 @@ class usuarioControlador extends usuarioModelo{
                         <th>#</th>
                         <th>DNI</th>
                         <th>NOMBRE</th>
-                        <th>APELLIDO</th>
                         <th>TELÉFONO</th>
                         <th>USUARIO</th>
                         <th>EMAIL</th>
@@ -312,13 +311,12 @@ class usuarioControlador extends usuarioModelo{
             $contador = $inicio + 1;
             foreach ($datos as $rows) {
                 $tabla .= '<tr class="text-center">
-                                <td>1</td>
-                                <td>03045643</td>
-                                <td>NOMBRE DE USUARIO</td>
-                                <td>APELLIDO DE USUARIO</td>
-                                <td>2345456</td>
-                                <td>NOMBRE DE USUARIO</td>
-                                <td>ADMIN@ADMIN.COM</td>
+                                <td>'.$contador.'</td>
+                                <td>'.$rows['dni'].'</td>
+                                <td>'.$rows['nombre'].' '.$rows['apellido'].'</td>
+                                <td>'.$rows['telefono'].'</td>
+                                <td>'.$rows['user'].'</td>
+                                <td>'.$rows['email'].'</td>
                                 <td>
                                     <a href="<?php echo server_url; ?>user-update/" class="btn btn-success">
                                         <i class="fas fa-sync-alt"></i>
