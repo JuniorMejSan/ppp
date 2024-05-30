@@ -347,7 +347,7 @@ class usuarioControlador extends usuarioModelo{
         //cierre de las etiquetas
         $tabla .= '</tbody></table></div>';
 
-        
+        return $tabla;
 
     }
 }
