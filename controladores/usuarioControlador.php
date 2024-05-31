@@ -324,7 +324,7 @@ class usuarioControlador extends usuarioModelo{
                                     </a>
                                 </td>
                                 <td>
-                                    <form class = "form-neon FormularioAjax" action="'.server_url.'ajax/usuarioAjax.php" method="POST" data-form="delete" autocomplete="off">
+                                    <form class = "FormularioAjax" action="'.server_url.'ajax/usuarioAjax.php" method="POST" data-form="delete" autocomplete="off">
                                     <input type = "hidden" name = "usuario_id_del" value = "'.mainModel::encryption($rows['idUsuario']).'">
                                         <button type="submit" class="btn btn-warning">
                                             <i class="far fa-trash-alt"></i>
