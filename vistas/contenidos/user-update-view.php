@@ -174,9 +174,9 @@
                             <select class="form-control" name="usuario_privilegio_up">
                                 <option value="1" <?php if($campos['privilegio'] == 1){ echo 'selected=""'; } ?>>Control total <?php if($campos['privilegio'] == 1){ echo '(Actual)'; } ?></option>
 
-                                <option value="2" <?php if($campos['privilegio'] == 2){ echo 'selected=""'; } ?>>Edición <?php if($campos['privilegio'] == 1){ echo '(Actual)'; } ?></option>
+                                <option value="2" <?php if($campos['privilegio'] == 2){ echo 'selected=""'; } ?>>Edición <?php if($campos['privilegio'] == 2){ echo '(Actual)'; } ?></option>
 
-                                <option value="3" <?php if($campos['privilegio'] == 3){ echo 'selected=""'; } ?>>Registrar <?php if($campos['privilegio'] == 1){ echo '(Actual)'; } ?></option>
+                                <option value="3" <?php if($campos['privilegio'] == 3){ echo 'selected=""'; } ?>>Registrar <?php if($campos['privilegio'] == 3){ echo '(Actual)'; } ?></option>
                             </select>
                         </div>
                     </div>
