@@ -400,7 +400,7 @@ class usuarioControlador extends usuarioModelo{
 
         //comprobamos que el usuario a eliminar no tenga ventas realizadas, si tiene ventas no se puede eliminar
         $query_check_venta = "SELECT idUsuario FROM venta WHERE idUsuario = '$id' LIMIT 1";
-        $check_venta = mainModel::ejecutar_consulta_simple($query_check_usaurio);
+        $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
 
         if($check_venta -> rowCount() > 0){
 
