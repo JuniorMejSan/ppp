@@ -45,7 +45,7 @@
         if($datos_usuario -> rowCount() == 1){//existe usaurio con el id en la bd
             $campos = $datos_usuario -> fetch();//con fetch llenamos el array $campos con todos los datos del usuario
     ?>
-    <form action="" class="form-neon" autocomplete="off">
+    <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/usuarioAjax.php" method="POST" data-form="update" autocomplete="off">
         <fieldset>
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
             <div class="container-fluid">
