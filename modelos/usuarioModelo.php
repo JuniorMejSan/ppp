@@ -31,4 +31,23 @@ class usuarioModelo extends mainModel{
 
         return $sql;
     }
+
+    //modelo para seleccionar datos del usuario
+    protected static function datos_usuario_modelo($tipo, $id){//el tipo es para saber si queremos los datos para actualizar al usuario o para mostrar el conteo de todos los usuarios existentes, el id para seleccionar los datos segun el id
+
+        //condicional para detectar que tipo de seleccion de datos se hara
+        if($tipo == "Unico"){//seleccion de datos para cargarlos en el form de actualizar
+
+            $query_seleccionar_datos = "SELECT * FROM usuario WHERE idUsuario = :ID";
+            $sql = mainModel::conectar() -> prepare($query_seleccionar_datos);
+
+            $sql -> bindParam(":ID", $id);
+        }else if($tipo == "Conteo"){//para conteo de datos
+            $query_conteo_datos = "SELECT idUsuario FROM usuario WHERE idUsuario != '1'";
+            $sql = mainModel::conectar() -> prepare($query_conteo_datos);
+        }
+        $sql -> execute();
+
+        return $sql;
+    }
 }

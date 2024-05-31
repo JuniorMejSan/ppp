@@ -449,4 +449,16 @@ class usuarioControlador extends usuarioModelo{
         }
         echo json_encode($alerta);
     }
+
+    //controlador para seleccionar datos del usuario
+    public function datos_usuario_controlador($tipo, $id){
+
+        //limpiamos para prevenir la inyeccion sql
+        $tipo = mainModel::limpiar_cadena($tipo);
+        $id = mainModel::decryption($id);//desencriptamos
+        $id = mainModel::limpiar_cadena($id);
+
+        return usuarioModelo::datos_usuario_modelo($tipo, $id);//le enviamos los parametros al modelo
+
+    }
 }
