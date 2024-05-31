@@ -1,4 +1,12 @@
 <!-- Page header -->
+<?php  
+    if($lc -> encryption($_SESSION['id_ppp']) != $pagina[1]){//comprabar si el id encriptado que pasa la url es igual al id del user logueado, se coloca $pagina[1] por que en la url la posicion 1 es la que trae el id encriptado
+        if($_SESSION['privilegio_ppp'] == 1){//verificamos si tiene los permisos necesarios
+            echo $lc -> forzar_cierre_sesion_controlador();
+            exit();
+        }
+    }
+?>
 <div class="full-box page-header">
     <h3 class="text-left">
         <i class="fas fa-sync-alt fa-fw"></i> &nbsp; ACTUALIZAR USUARIO
@@ -9,6 +17,7 @@
     </p>
 </div>
 
+<?php if($_SESSION['privilegio_ppp'] == 1){ //esta parte solo se muestra si el usuario es admin?>
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
@@ -22,9 +31,20 @@
         </li>
     </ul>
 </div>
+<?php }?>
 
 <!-- Content -->
 <div class="container-fluid">
+    <?php //seleccion de datos y comprobacion si existen en la bd
+
+        require_once "./controladores/usuarioControlador.php";
+        $ins_usuario = new usuarioControlador();//instanciamos
+
+        $datos_usuario = $ins_usuario -> datos_usuario_controlador("Unico", $pagina[1]);
+        
+        if($datos_usuario -> rowCount() == 1){//existe usaurio con el id en la bd
+            $campos = $datos_usuario -> fetch();//con fetch llenamos el array $campos con todos los datos del usuario
+    ?>
     <form action="" class="form-neon" autocomplete="off">
         <fieldset>
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
@@ -174,10 +194,16 @@
                 ACTUALIZAR</button>
         </p>
     </form>
+    <?php
+        }else{//si no existe el usuario en la bd se muestra el error de abajo
+    ?>
 
     <div class="alert alert-danger text-center" role="alert">
         <p><i class="fas fa-exclamation-triangle fa-5x"></i></p>
         <h4 class="alert-heading">¡Ocurrió un error inesperado!</h4>
         <p class="mb-0">Lo sentimos, no podemos mostrar la información solicitada debido a un error.</p>
     </div>
+    <?php
+        }
+    ?>
 </div>
