@@ -102,11 +102,11 @@
         protected static function paginador_tablas($pagina, $Npaginas, $url, $botones){//$pagina recive la pagina actual de la tabla, $Npagians la cantidad de paginas que tiene el listado, $url la pagina a la que lleva cada boton, $botones la cantidad de botones que se van a mostrar
             $tabla = '<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">'; //esto es la navegacion de botones de una tabla en la vista
             if ($pagina == 1) { //cuando la paginacion esta en la pagina 1 se deshabilita el boton para regresar
-                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fa-solid fa-angles-left"></i></a></li>';
+                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fas fa-arrow-left"></i></a></li>';
             }else{ //se habilita
                 $tabla.='<li class="page-item">
                             <a class="page-link" href="'.$url.'1/">
-                                <i class="fa-solid fa-angles-left"></i>
+                                <i class="fas fa-arrow-left"></i>
                             </a>
                         </li>
                         <li class="page-item">
@@ -134,14 +134,14 @@
             }
 
             if ($pagina == $Npaginas) { //cuando la paginacion esta en la pagina 1 se deshabilita el boton para regresar
-                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fa-solid fa-angles-right"></i></a></li>';
+                $tabla.='<li class="page-item disabled"><a class="page-link"><i class="fas fa-arrow-right"></i></a></li>';
             }else{ //se habilita
                 $tabla.='<li class="page-item">
-                            <a class="page-link" href="'.$url.($pagina+1).'/">Anterior</a>
+                            <a class="page-link" href="'.$url.($pagina+1).'/">Siguiente</a>
                         </li>
                         <li class="page-item">
                             <a class="page-link" href="'.$url.$Npaginas.'/">
-                                <i class="fa-solid fa-angles-right"></i>
+                                <i class="fas fa-arrow-right"></i>
                             </a>
                         </li>'; //en el href enviamos al usuario a la pag 1 y con -1 va retrocediendo en las paginas
             }
