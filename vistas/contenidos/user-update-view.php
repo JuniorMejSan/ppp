@@ -209,6 +209,11 @@
                 </div>
             </div>
         </fieldset>
+        <?php if($lc -> encryption($_SESSION['id_ppp']) != $pagina[1]){ //condicional para verificar si el id le pertenece al usaurio que está editando ?>
+        <input type="hidden" name = "tipo_cuenta" value="Impropia"> <!-- No le pertenece la cuenta -->
+        <?php }else{ ?>
+        <input type="hidden" name = "tipo_cuenta" value="Propia"> <!-- Le pertenece la cuenta -->
+        <?php } ?>
         <p class="text-center" style="margin-top: 40px;">
             <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp;
                 ACTUALIZAR</button>
