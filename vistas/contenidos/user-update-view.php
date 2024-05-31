@@ -47,7 +47,7 @@
     ?>
     <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/usuarioAjax.php" method="POST" data-form="update" autocomplete="off">
     <!-- Input que contiene el id del usuario a actualizar -->
-    <input type="hidden" name="usuario_id_up" value="<? echo $pagina[1]; ?>"> 
+    <input type="hidden" name="usuario_id_up" value="<?php echo $pagina[1]; ?>"> 
         <fieldset>
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
             <div class="container-fluid">
