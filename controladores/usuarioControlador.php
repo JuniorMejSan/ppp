@@ -352,17 +352,101 @@ class usuarioControlador extends usuarioModelo{
         //cierre de las etiquetas
         $tabla .= '</tbody></table></div>';
 
-        //condicional para mostrar el texto de cuantos registros se estan mostrando
-        if($total >= 1 && $pagina <= $Npaginas){
-            $tabla .= '<p class = "text-right">Mostrando registros del '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
-        }
-
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
         if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
+            $tabla .= '<p class = "text-right">Mostrando registros del '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
             $tabla .= mainModel::paginador_tablas( $pagina, $Npaginas, $url, 7);
         }
 
         return $tabla;
 
+    }
+
+    //controlador para eliminar usuarios
+    public function eliminar_usuario_controlador(){
+
+        //recive el id del usuario y lo desencripta
+        $id = mainModel::decryption($_POST['usuario_id_del']);
+        //para evitar inyecciones sql limpiamos la cadena
+        $id = mainModel::limpiar_cadena($id);
+
+        //preugntamos si es el id 1, porque ese no se puede eliminar, es el admin
+        if($id == 1){
+            $alerta =[
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"No se puede eliminar el usuario administrador",
+                "Tipo"=>"error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //comprobar que el id del usuario existe en la bd 
+        $query_check_usaurio = "SELECT idUsuario FROM usuario WHERE idUsuario = '$id'";
+        $check_usuario = mainModel::ejecutar_consulta_simple($query_check_usaurio);
+
+        if($check_usuario -> rowCount() <= 0){ //no existe ningun registro que coincida
+
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"El usuario que intenta eliminar no existe en el sistema",
+                "Tipo"=>"error"
+            ];
+            echo json_encode( $alerta);
+            exit();
+        }
+
+        //comprobamos que el usuario a eliminar no tenga ventas realizadas, si tiene ventas no se puede eliminar
+        $query_check_venta = "SELECT idUsuario FROM venta WHERE idUsuario = '$id' LIMIT 1";
+        $check_venta = mainModel::ejecutar_consulta_simple($query_check_usaurio);
+
+        if($check_venta -> rowCount() > 0){
+
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"No es posible eliminar este usuario porque tiene ventas asociadas, se recomienda deshabilitarlo si ya no será usado",
+                "Tipo"=>"error"
+            ];
+            echo json_encode( $alerta);
+            exit();
+        }
+
+        //comprobar el privilegio del usuario que esta eliminando(accion)
+        session_start(['name' => 'ppp']);//iniciamos sesion
+
+        if($_SESSION['privilegio_ppp'] != 1){ //si el usuario no es admin, no podrá eliminar otros usuarios
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"No es posible eliminar este usuario porque no tiene los permisos necesarios",
+                "Tipo"=>"error"
+            ];
+            echo json_encode( $alerta);
+            exit();
+        }
+
+        //elimar usuario
+        $eliminar_usuario = usuarioModelo::eliminar_usuario_modelo($id);
+
+        //condicional para comprobar si se ha elimiando el usuario del sistema
+        if($eliminar_usuario -> rowCount() == 1){
+            $alerta = [
+                "Alerta"=>"recargar",
+                "Titulo"=>"Usuario eliminado",
+                "Texto"=>"El usuario se ha eliminato exitosamente",
+                "Tipo"=>"success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"No se ha podido eliminar el usuario, por favor intente nuevamente",
+                "Tipo"=>"error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }
