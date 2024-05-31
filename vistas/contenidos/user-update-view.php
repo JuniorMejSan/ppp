@@ -110,19 +110,26 @@
                                 maxlength="70" value=" <?php echo $campos['email']; ?> ">
                         </div>
                     </div>
+
+                    <?php
+                    if($_SESSION['privilegio_ppp'] == 1 && $campos['idUsuario'] != 1){ //editar estado de usuario solo se muestra para admin, ademas la cuenta del asmin no se puede deshabiitar
+                    ?>
                     <div class="col-12">
                         <div class="form-group">
-                            <span>Estado de la cuenta &nbsp; <?php if($campos['estado'] == 'Activa'){
+                            <span>Estado de la cuenta &nbsp; <?php if($campos['estado'] == 'Activa'){ //muestra el estado de la cuenta en la bd
                                 echo '<span class="badge badge-info">Activa</span>';
                             }else{
                                 echo '<span class="badge badge-danger">Deshabilitada</span>';
                             } ?> </span>
                             <select class="form-control" name="usuario_estado_up">
-                                <option value="Activa" <?php if($campos['estado'] == 'Activa'){ echo 'selected=""'; } ?>>Activa</option>
-                                <option value="Deshabilitada" <?php if($campos['estado'] == 'Deshabilitada'){ echo 'selected=""'; } ?>>Deshabilitada</option>
+                                <option value="Activa" <?php if($campos['estado'] == 'Activa'){ echo 'selected=""'; } //coloca en el select el estado que tiene el usuario en la bd ?>>Activa</option>
+                                <option value="Deshabilitada" <?php if($campos['estado'] == 'Deshabilitada'){ echo 'selected=""'; } //coloca en el select el estado que tiene el usuario en la bd?>>Deshabilitada</option>
                             </select>
                         </div>
                     </div>
+                    <?php 
+                    }
+                    ?>    
                 </div>
             </div>
         </fieldset>
@@ -137,14 +144,14 @@
                         <div class="form-group">
                             <label for="usuario_clave_nueva_1" class="bmd-label-floating">Contraseña</label>
                             <input type="password" class="form-control" name="usuario_clave_nueva_1"
-                                id="usuario_clave_nueva_1" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100">
+                                id="usuario_clave_nueva_1" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" autocomplete="off">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_clave_nueva_2" class="bmd-label-floating">Repetir contraseña</label>
                             <input type="password" class="form-control" name="usuario_clave_nueva_2"
-                                id="usuario_clave_nueva_2" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100">
+                                id="usuario_clave_nueva_2" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" autocomplete="off">
                         </div>
                     </div>
                 </div>
