@@ -1,7 +1,7 @@
 <!-- Page header -->
 <?php  
     if($lc -> encryption($_SESSION['id_ppp']) != $pagina[1]){//comprabar si el id encriptado que pasa la url es igual al id del user logueado, se coloca $pagina[1] por que en la url la posicion 1 es la que trae el id encriptado
-        if($_SESSION['privilegio_ppp'] == 1){//verificamos si tiene los permisos necesarios
+        if($_SESSION['privilegio_ppp'] != 1){//verificamos si tiene los permisos necesarios
             echo $lc -> forzar_cierre_sesion_controlador();
             exit();
         }
