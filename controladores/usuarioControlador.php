@@ -464,6 +464,73 @@ class usuarioControlador extends usuarioModelo{
 
     //controlador para acualizar datos de usuario
     public function actualizar_usuario_controlador(){
+
+        //recivimos el id que viene encriptado
+        $id = mainModel::decryption($_POST['usuario_apellido_up']);
+        $id = mainModel::limpiar_cadena($id);
+
+        //verificando que el id existe en la bd
+        $query_check_user = "SELECT * FROM usuario WHERE idUsuario = '$id'";
+        $check_user = mainModel::ejecutar_consulta_simple($query_check_user);
+
+        //verificamos si trae registros
+        if($check_user -> rowCount() <= 0){//no existe
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"El usuario que intenta actualizar no existe en el sistema",
+                "Tipo"=>"error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }else{//existe
+
+            //creamos array de datos y lo llenamos
+            $campos = $check_user->fetch();
+        }
+
+        //alamcenamos en variables todos los campos que manda el form
+        $dni = mainModel::limpiar_cadena($_POST['usuario_dni_up']);//usamos limpiar_cadena del main model para evitar injecciones sql y le pasamos el name del input del form
+        $nombre = mainModel::limpiar_cadena($_POST['usuario_nombre_up']);
+        $apellido = mainModel::limpiar_cadena($_POST['usuario_apellido_up']);
+        $telefono = mainModel::limpiar_cadena($_POST['usuario_telefono_up']);
+        $direccion = mainModel::limpiar_cadena($_POST['usuario_direccion_up']);
         
+        $usuario = mainModel::limpiar_cadena($_POST['usuario_usuario_up']);
+        $email = mainModel::limpiar_cadena($_POST['usuario_email_up']);
+
+        //verificamos si el estado vienen definido
+        if(isset($_POST['usuario_estado_up'])){
+            $estado = mainModel::limpiar_cadena( $_POST['usuario_estado_up']);
+        }else{
+            $estado = $campos['estado'];
+        }
+
+        //verificamos si el privilegio vienen definido
+        if(isset($_POST['usuario_privilegio_up'])){
+            $privilegio = mainModel::limpiar_cadena( $_POST['usuario_privilegio_up']);
+        }else{
+            $estado = $campos['privilegio'];
+        }
+
+        //verificacion de credenciales en el form para permitir actualizar datos
+        $admin_usuario = mainModel::limpiar_cadena($_POST['usuario_admin']);
+        $admin_clave = mainModel::limpiar_cadena($_POST['clave_admin']);
+        $admin_clave = mainModel::encryption($admin_clave);
+
+        //verificamos el tipo de cuenta
+        $tipo_cuenta = mainModel::limpiar_cadena($_POST['tipo_cuenta']);
+
+        //compraobamos que los datos no vengan vacios
+        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "" || $usuario == "" || $email == "" || $admin_usuario == "" || $admin_clave == "") {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han completado los campos",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
     }
 }
