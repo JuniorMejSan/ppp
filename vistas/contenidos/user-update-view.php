@@ -56,7 +56,7 @@
                         <div class="form-group">
                             <label for="usuario_dni" class="bmd-label-floating">DNI</label>
                             <input type="text" pattern="[0-9-]{1,20}" class="form-control" name="usuario_dni_up"
-                                id="usuario_dni" maxlength="20">
+                                id="usuario_dni" maxlength="20" value=" <?php echo $campos['dni']; ?> ">
                         </div>
                     </div>
 
@@ -64,28 +64,28 @@
                         <div class="form-group">
                             <label for="usuario_nombre" class="bmd-label-floating">Nombres</label>
                             <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" class="form-control"
-                                name="usuario_nombre_up" id="usuario_nombre" maxlength="35">
+                                name="usuario_nombre_up" id="usuario_nombre" maxlength="35" value=" <?php echo $campos['nombre']; ?> ">
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="usuario_apellido" class="bmd-label-floating">Apellidos</label>
                             <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" class="form-control"
-                                name="usuario_apellido_up" id="usuario_apellido" maxlength="35">
+                                name="usuario_apellido_up" id="usuario_apellido" maxlength="35" value=" <?php echo $campos['apellido']; ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_telefono" class="bmd-label-floating">Teléfono</label>
                             <input type="text" pattern="[0-9()+]{8,20}" class="form-control" name="usuario_telefono_up"
-                                id="usuario_telefono" maxlength="20">
+                                id="usuario_telefono" maxlength="20" value=" <?php echo $campos['telefono']; ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_direccion" class="bmd-label-floating">Dirección</label>
                             <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}" class="form-control"
-                                name="usuario_direccion_up" id="usuario_direccion" maxlength="190">
+                                name="usuario_direccion_up" id="usuario_direccion" maxlength="190" value=" <?php echo $campos['direccion']; ?>">
                         </div>
                     </div>
                 </div>
@@ -100,19 +100,23 @@
                         <div class="form-group">
                             <label for="usuario_usuario" class="bmd-label-floating">Nombre de usuario</label>
                             <input type="text" pattern="[a-zA-Z0-9]{1,35}" class="form-control"
-                                name="usuario_usuario_up" id="usuario_usuario" maxlength="35">
+                                name="usuario_usuario_up" id="usuario_usuario" maxlength="35" value=" <?php echo $campos['user']; ?> ">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_email" class="bmd-label-floating">Email</label>
                             <input type="email" class="form-control" name="usuario_email_up" id="usuario_email"
-                                maxlength="70">
+                                maxlength="70" value=" <?php echo $campos['email']; ?> ">
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <span>Estado de la cuenta &nbsp; <span class="badge badge-info">Activa</span></span>
+                            <span>Estado de la cuenta &nbsp; <?php if($campos['estado'] == 'Activa'){
+                                echo '<span class="badge badge-info">Activa</span>';
+                            }else{
+                                echo '<span class="badge badge-danger">Deshabilitada</span>';
+                            } ?> </span>
                             <select class="form-control" name="usuario_estado_up">
                                 <option value="Activa" selected="">Activa</option>
                                 <option value="Deshabilitada">Deshabilitada</option>
