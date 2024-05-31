@@ -461,4 +461,9 @@ class usuarioControlador extends usuarioModelo{
         return usuarioModelo::datos_usuario_modelo($tipo, $id);//le enviamos los parametros al modelo
 
     }
+
+    //controlador para acualizar datos de usuario
+    public function actualizar_usuario_controlador(){
+        
+    }
 }

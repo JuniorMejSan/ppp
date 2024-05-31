@@ -50,4 +50,25 @@ class usuarioModelo extends mainModel{
 
         return $sql;
     }
+
+    //modelo para actualizar datos del usuario
+    protected static function actualizar_usuario_modelo($datos){//recive un array de datos para actualizar el usuario
+        $query_actualizar_datos = "UPDATE usuario SET dni = :DNI, nombre = :Nombre, apellido = :Apellido, telefono = :Telefono, direccion = :Direccion, email = :Email, user = :User, password = :Password, estado = :Estado, privilegio = :Privilegio WHERE idUsuario = :ID";
+        $sql = mainModel::conectar() -> prepare($query_actualizar_datos);
+
+        $sql -> bindParam(":DNI", $datos['DNI']);
+        $sql -> bindParam(':Nombre', $datos['Nombre']);
+        $sql -> bindParam(':Apellido', $datos['Apellido']);
+        $sql -> bindParam(':Telefono', $datos['Telefono']);
+        $sql -> bindParam(':Direccion', $datos['Direccion']);
+        $sql -> bindParam(':Email', $datos['Email']);
+        $sql -> bindParam(':User', $datos['User']);
+        $sql -> bindParam(':Password', $datos['Password']);
+        $sql -> bindParam(':Estado', $datos['Estado']);
+        $sql -> bindParam(':Privilegio', $datos['Privilegio']);
+        $sql -> bindParam(':ID', $datos['ID']);
+
+        $sql -> execute();
+        return $sql;
+    }
 }
