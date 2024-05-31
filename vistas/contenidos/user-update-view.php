@@ -157,6 +157,9 @@
                 </div>
             </div>
         </fieldset>
+        <?php
+        if ($_SESSION['privilegio_ppp'] == 1 && $campos['idUsuario'] != 1) { //editar privilegios de usuario solo se muestra para admin, ademas la cuenta del admin no puede cambiar de privilegio
+        ?>
         <br><br><br>
         <fieldset>
             <legend><i class="fas fa-medal"></i> &nbsp; Nivel de privilegio</legend>
@@ -169,16 +172,20 @@
                         <p><span class="badge badge-dark">Registrar</span> Solo permisos para registrar</p>
                         <div class="form-group">
                             <select class="form-control" name="usuario_privilegio_up">
-                                <option value="" selected="" disabled="">Seleccione una opción</option>
-                                <option value="1">Control total</option>
-                                <option value="2">Edición</option>
-                                <option value="3">Registrar</option>
+                                <option value="1" <?php if($campos['privilegio'] == 1){ echo 'selected=""'; } ?>>Control total</option>
+
+                                <option value="2" <?php if($campos['privilegio'] == 2){ echo 'selected=""'; } ?>>Edición</option>
+
+                                <option value="3" <?php if($campos['privilegio'] == 3){ echo 'selected=""'; } ?>>Registrar</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
         </fieldset>
+        <?php
+        }
+        ?>
         <br><br><br>
         <fieldset>
             <p class="text-center">Para poder guardar los cambios en esta cuenta debe de ingresar su nombre de usuario y
