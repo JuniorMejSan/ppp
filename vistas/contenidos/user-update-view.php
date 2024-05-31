@@ -118,8 +118,8 @@
                                 echo '<span class="badge badge-danger">Deshabilitada</span>';
                             } ?> </span>
                             <select class="form-control" name="usuario_estado_up">
-                                <option value="Activa" selected="">Activa</option>
-                                <option value="Deshabilitada">Deshabilitada</option>
+                                <option value="Activa" <?php if($campos['estado'] == 'Activa'){ echo 'selected=""'; } ?>>Activa</option>
+                                <option value="Deshabilitada" <?php if($campos['estado'] == 'Deshabilitada'){ echo 'selected=""'; } ?>>Deshabilitada</option>
                             </select>
                         </div>
                     </div>
