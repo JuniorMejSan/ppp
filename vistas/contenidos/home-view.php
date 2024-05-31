@@ -43,12 +43,19 @@
             <p>700 Registrados</p>
         </div>
     </a>
-    <?php if($_SESSION['privilegio_ppp'] == 1){//control de modulos a los que tienen acceso los direntes tipos de usuarios ?>
+    <?php 
+        if($_SESSION['privilegio_ppp'] == 1){//control de modulos a los que tienen acceso los direntes tipos de usuarios 
+
+            require_once "./controladores/usuarioControlador.php";//para poder mostrar el conteo de usuario registrados
+            $ins_usuario = new usuarioControlador();//instanciamos
+            $total_usuarios = $ins_usuario -> datos_usuario_controlador("Conteo", 0);//como es solo de conteo, el parametro del id lo colocamos en 0
+        
+    ?>
     <a href="<?php echo server_url; ?>user-list/" class="tile">
         <div class="tile-tittle">Usuarios</div>
         <div class="tile-icon">
             <i class="fas fa-user-secret fa-fw"></i>
-            <p>50 Registrados</p>
+            <p><?php echo $total_usuarios -> rowCount(); ?> Registrados</p>
         </div>
     </a>
     <?php } ?>
