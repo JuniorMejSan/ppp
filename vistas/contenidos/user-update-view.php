@@ -100,7 +100,7 @@
                         <div class="form-group">
                             <label for="usuario_usuario" class="bmd-label-floating">Nombre de usuario</label>
                             <input type="text" pattern="[a-zA-Z0-9]{1,35}" class="form-control"
-                                name="usuario_usuario_up" id="usuario_usuario" maxlength="35" value=" <?php echo $campos['user']; ?> ">
+                                name="usuario_usuario_up" id="usuario_usuario" maxlength="35" value=" <?php echo mainModel::limpiar_cadena($campos['user']); ?> ">
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
