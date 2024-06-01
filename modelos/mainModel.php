@@ -48,36 +48,42 @@
         }
 
         //funcion para evitar inyecciones sql, va a limpiar textos o caracteres cuando se envien datos mediante formularios
-        protected static function limpiar_cadena($cadena){
-            $cadena = trim($cadena); //devuelve la cadena de texto sin de los espacios en blanco en ambos extremos
-            $cadena = stripslashes($cadena); //quita las barras de un string 
-            $cadena = str_ireplace("<script>","", $cadena); //busca si el string contiene "<script>" y lo reemplaza por vacio
-            $cadena = str_ireplace("</script>","", $cadena);
-            $cadena = str_ireplace("<script src","", $cadena);
-            $cadena = str_ireplace("<script type=","", $cadena);
-            $cadena = str_ireplace("SELECT * FROM","", $cadena);
-            $cadena = str_ireplace("DELETE * FROM","", $cadena);
-            $cadena = str_ireplace("INSERT INTO","", $cadena);
-            $cadena = str_ireplace("DROP TABLE","", $cadena);
-            $cadena = str_ireplace("DROP DATABASE","", $cadena);
-            $cadena = str_ireplace("TRUNCATE TABLE","", $cadena);
-            $cadena = str_ireplace("SHOW TABLES","", $cadena);
-            $cadena = str_ireplace("SHOW DATABASES","", $cadena);
-            $cadena = str_ireplace("<?php","", $cadena);
-            $cadena = str_ireplace("?>","", $cadena);
-            $cadena = str_ireplace("--","", $cadena);
-            $cadena = str_ireplace("<","", $cadena);
-            $cadena = str_ireplace(">","", $cadena);
-            $cadena = str_ireplace("[","", $cadena);
-            $cadena = str_ireplace("]","", $cadena);
-            $cadena = str_ireplace("^","", $cadena);
-            $cadena = str_ireplace("==","", $cadena);
-            $cadena = str_ireplace(";","", $cadena);
-            $cadena = str_ireplace("::","", $cadena);
+        protected static function limpiar_cadena($cadena) {
+            // Elimina espacios en blanco al inicio y al final
+            $cadena = trim($cadena);
+            
+            // Quita las barras de un string
+            $cadena = stripslashes($cadena);
+            
+            // Remueve etiquetas y contenido de <script>
+            $cadena = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $cadena);
+            
+            // Remueve etiquetas PHP
+            $cadena = preg_replace('#<\?php(.*?)\?>#is', '', $cadena);
+            
+            // Remueve los patrones SQL comunes de inyección
+            $sql_keywords = [
+                'SELECT', 'DELETE', 'INSERT INTO', 'DROP TABLE', 'DROP DATABASE',
+                'TRUNCATE TABLE', 'SHOW TABLES', 'SHOW DATABASES'
+            ];
+            foreach ($sql_keywords as $keyword) {
+                $cadena = preg_replace('/\b' . preg_quote($keyword, '/') . '\b/i', '', $cadena);
+            }
+            
+            // Remueve caracteres potencialmente peligrosos
+            $cadena = str_ireplace(
+                ["<", ">", "[", "]", "^", "==", ";", "::", "--"],
+                "",
+                $cadena
+            );
+            
+            // Quita las barras de nuevo y los espacios
             $cadena = stripslashes($cadena);
             $cadena = trim($cadena);
+        
             return $cadena;
         }
+        
 
         //funcion para validar datos string
         protected static function verificar_datos($filtro, $cadena){//$filtro son los caracteres permitidos y $cadena el dato a validar
