@@ -466,7 +466,7 @@ class usuarioControlador extends usuarioModelo{
     public function actualizar_usuario_controlador(){
 
         //recivimos el id que viene encriptado
-        $id = mainModel::decryption($_POST['usuario_apellido_up']);
+        $id = mainModel::decryption($_POST['usuario_id_up']);
         $id = mainModel::limpiar_cadena($id);
 
         //verificando que el id existe en la bd
