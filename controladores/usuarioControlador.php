@@ -694,6 +694,82 @@ class usuarioControlador extends usuarioModelo{
                 exit();
             }
         }
-        
+
+        //si el valor del EMAIL que viene por el formulario es distinto al que está en la base de datos, es decir que lo esta cambiando
+        if($email != $campos['email'] && $email != ""){
+            if(filter_var($email, FILTER_VALIDATE_EMAIL)){//verificamos que tenga formato de correo
+                $query_check_email = "select email from usuario where email = '$email'";
+                $check_email = mainModel::ejecutar_consulta_simple($query_check_email);
+                if ($check_email -> rowCount() > 0) { //verificamos si la consulta trajo datos
+                    $alerta = [
+                        "Alerta" => "simple",
+                        "Titulo" => "Ocurrio un error",
+                        "Texto"=> "El CORREO DE USUARIO ya se encuentra registrado",
+                        "Tipo" => "error"
+                    ];
+
+                    echo json_encode($alerta);
+                    exit();
+                }
+            }else{
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "Ha ingresado un correo no valido",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+
+        //comprobando claves
+        if($_POST['usuario_clave_nueva_1'] != "" || $_POST['usuario_clave_nueva_2'] != "" ){//preguntamos si no vienen definido, es decir que vengan vacios
+            if($_POST['usuario_clave_nueva_1'] != $_POST['usuario_clave_nueva_2']){//verificamos si coinciden
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "Las contraseñas ingresados no coinciden",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }else{
+                if(mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}", $_POST['usuario_clave_nueva_1']) || mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}", $_POST['usuario_clave_nueva_2'])){//verificamos si tiene el formato solicitado
+                    $alerta = [
+                        "Alerta" => "simple",
+                        "Titulo" => "Ocurrio un error",
+                        "Texto"=> "Las contraseñas no coinciden con el formato solicitado",
+                        "Tipo" => "error"
+                    ];
+                }
+                $clave = mainModel::encryption($_POST['usuario_clave_nueva_1']);
+            }
+        }else{
+            $clave = $campos['password'];
+        }
+
+        //verificamos que las credenciales para actualizar sean correctas
+        if($tipo_cuenta == "Propia"){
+            $query_check_cuenta = "select idUsuario from usuario where idUsuario = '$admin_usuario' AND password = '$admin_clave' AND idUsuario = '$id'";
+            $check_cuenta = mainModel::ejecutar_consulta_simple($query_check_cuenta);
+        }else{
+            session_start(['name' => 'ppp']);//verificamos que tenga los permisos necesarios
+            if($_SESSION['privilegio_ppp'] != 1){//no tiene permisos necesarios
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "No tiene los permisos necesarios para actualizar el usuario",
+                    "Tipo" => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
+            $query_check_cuenta = "select idUsuario from usuario where idUsuario = '$admin_usuario' AND password = '$admin_clave'";
+            $check_cuenta = mainModel::ejecutar_consulta_simple($query_check_cuenta);
+        }
+
     }
 }
