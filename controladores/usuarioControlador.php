@@ -771,5 +771,50 @@ class usuarioControlador extends usuarioModelo{
             $check_cuenta = mainModel::ejecutar_consulta_simple($query_check_cuenta);
         }
 
+        //contamos cuantos registros fueron seleccionados
+        if($check_cuenta -> rowCount() <= 0){//quiere decir que no se ha seleccionado ningun registro en la base de datos
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Nombre o clave de administrados no validos",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+
+        }
+
+        //preparando datos para enviarlos al  mdoelo
+        $datos_usuario_up = [
+            "DNI" => $dni,
+            "Nombre" => $nombre,
+            "Apellido" => $apellido,
+            "Telefono" => $telefono,
+            "Direccion" => $direccion,
+            "Email"=> $email,
+            "User" => $usuario,
+            "Password" => $clave,
+            "Estado" => $estado,
+            "Privilegio" => $privilegio,
+            "ID" => $id
+        ];
+
+        //para actualizar los datos
+        if(usuarioModelo::actualizar_usuario_modelo($datos_usuario_up)){
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Usuario actualizado",
+                "Texto"=> "Los datos del usuario han sido actualizado",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se pudo actualizar el usuario",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }
