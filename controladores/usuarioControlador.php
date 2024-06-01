@@ -516,7 +516,6 @@ class usuarioControlador extends usuarioModelo{
         //verificacion de credenciales en el form para permitir actualizar datos
         $admin_usuario = mainModel::limpiar_cadena($_POST['usuario_admin']);
         $admin_clave = mainModel::limpiar_cadena($_POST['clave_admin']);
-        $admin_clave = mainModel::encryption($admin_clave);
 
         //verificamos el tipo de cuenta
         $tipo_cuenta = mainModel::limpiar_cadena($_POST['tipo_cuenta']);
@@ -532,5 +531,169 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }
+
+        //verificamos que cada dato enviado tenga el formato requerido
+        if(mainModel::verificar_datos("[0-9-]{8,20}", $dni)){
+            //si entra es porque si se tienen errores en ese dato
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DNI no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{4,35}", $nombre)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{4,35}", $apellido)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El APELLIDO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9()+]{9,20}", $telefono)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El TELÉFONO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}", $direccion)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-Z0-9]{1,35}", $usuario)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE DE USUARIO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos si las credenciales ingresadas para poder actualizar tiene el formato solicitado
+        if (mainModel::verificar_datos("[a-zA-Z0-9]{1,35}", $admin_usuario)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Su nombre de USUARIO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-Z0-9$@.-]{7,100}", $admin_clave)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Su CONTRASEÑA no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //encriptamos la clave del usuario
+        $admin_clave = mainModel::encryption($admin_clave);
+
+        //
+        if($privilegio < 1 || $privilegio > 3){ //si el privilegio no es valido o esta fuera de rango
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"El privilegio seleccionado no es valido",
+                "Tipo"=>"error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos que el estado tenga los valores adecuados
+        if($estado != "Activa" && $estado != "Deshabilitada"){
+            $alerta = [
+                "Alerta"=>"simple",
+                "Titulo"=>"Ocurrio un error",
+                "Texto"=>"El estado seleccionado no es valido",
+                "Tipo"=>"error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //si el valor del DNI que viene por el formulario es distinto al que está en la base de datos, es decir que lo esta cambiando
+        if($dni !=  $campos['dni']){
+            $query_check_dni = "select dni from usuario where dni = '$dni'";
+            $check_dni = mainModel::ejecutar_consulta_simple($query_check_dni);
+            if ($check_dni -> rowCount() > 0) { //verificamos si la consulta trajo datos
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El DNI ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+        
+
+        //si el valor del USUARIO que viene por el formulario es distinto al que está en la base de datos, es decir que lo esta cambiando
+        if($usuario !=  $campos['user']){
+            $query_check_usuario = "select user from usuario where user = '$usuario'";
+            $check_usuario = mainModel::ejecutar_consulta_simple($query_check_usuario);
+            if ($check_usuario -> rowCount() > 0) { //verificamos si la consulta trajo datos
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El NOMBRE DE USUARIO ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+        
     }
 }
