@@ -510,7 +510,7 @@ class usuarioControlador extends usuarioModelo{
         if(isset($_POST['usuario_privilegio_up'])){
             $privilegio = mainModel::limpiar_cadena( $_POST['usuario_privilegio_up']);
         }else{
-            $estado = $campos['privilegio'];
+            $privilegio = $campos['privilegio'];
         }
 
         //verificacion de credenciales en el form para permitir actualizar datos
@@ -594,7 +594,7 @@ class usuarioControlador extends usuarioModelo{
             exit();
         }
 
-        if (mainModel::verificar_datos("[a-zA-Z0-9]{1,35}", $usuario)) {
+        if (mainModel::verificar_datos("[a-zA-Z0-9 ]{1,35}", $usuario)) {
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
@@ -611,7 +611,7 @@ class usuarioControlador extends usuarioModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "Su nombre de USUARIO no coincide con el formato solicitado",
+                "Texto"=> "Su NOMNBRE DE USUARIO no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -630,7 +630,7 @@ class usuarioControlador extends usuarioModelo{
             echo json_encode($alerta);
             exit();
         }
-
+        
         //encriptamos la clave del usuario
         $admin_clave = mainModel::encryption($admin_clave);
 
@@ -682,7 +682,7 @@ class usuarioControlador extends usuarioModelo{
         if($usuario !=  $campos['user']){
             $query_check_usuario = "select user from usuario where user = '$usuario'";
             $check_usuario = mainModel::ejecutar_consulta_simple($query_check_usuario);
-            if ($check_usuario -> rowCount() > 0) { //verificamos si la consulta trajo datos
+            if ($check_usuario -> rowCount() > 0) { //verificamos si la consulta trajo datos, SI NO TRAJO ES PORQUE NO EXISTE
                 $alerta = [
                     "Alerta" => "simple",
                     "Titulo" => "Ocurrio un error",
@@ -753,7 +753,7 @@ class usuarioControlador extends usuarioModelo{
 
         //verificamos que las credenciales para actualizar sean correctas
         if($tipo_cuenta == "Propia"){
-            $query_check_cuenta = "select idUsuario from usuario where idUsuario = '$admin_usuario' AND password = '$admin_clave' AND idUsuario = '$id'";
+            $query_check_cuenta = "select idUsuario from usuario where user = '$admin_usuario' AND password = '$admin_clave' AND idUsuario = '$id'";
             $check_cuenta = mainModel::ejecutar_consulta_simple($query_check_cuenta);
         }else{
             session_start(['name' => 'ppp']);//verificamos que tenga los permisos necesarios
@@ -767,7 +767,7 @@ class usuarioControlador extends usuarioModelo{
                 echo json_encode($alerta);
                 exit();
             }
-            $query_check_cuenta = "select idUsuario from usuario where idUsuario = '$admin_usuario' AND password = '$admin_clave'";
+            $query_check_cuenta = "select idUsuario from usuario where user = '$admin_usuario' AND password = '$admin_clave'";
             $check_cuenta = mainModel::ejecutar_consulta_simple($query_check_cuenta);
         }
 

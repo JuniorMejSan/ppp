@@ -81,9 +81,9 @@ class loginControlador extends loginModelo{
         }else{//no existen las credenciales
             echo '<script> 
                 Swal.fire({
+                    icon: "error",
                     title: "Ocurrio un error",
                     text: "USUARIO o CLAVE incorrectos",
-                    type: "error",
                     confirmButtonText: "Aceptar"
                 })
             </script>';
