@@ -267,7 +267,7 @@ class usuarioControlador extends usuarioModelo{
         if(isset($busqueda) && $busqueda != ""){ //significa que estamos mandando datos desde el formluario de busqueda en la vista de usuarios
 
             //consulta para que el resultado coindica con la busqueda realizada
-            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario where ((idUsuario != '$id' and idUsuario != '1') and (dni LIKE '%$busqueda%' OR nombre LIKE '%$busqueda%' OR apellido LIKE '%$busqueda%' or telefono LIKE '%$busqueda%' or user LIKE '%$busqueda%' or email LIKE '%$busqueda%)) order by nombre asc limit $inicio, $registros";
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario where ((idUsuario != '$id' and idUsuario != '1') and (dni LIKE '%$busqueda%' OR nombre LIKE '%$busqueda%' OR apellido LIKE '%$busqueda%' or telefono LIKE '%$busqueda%' or user LIKE '%$busqueda%' or email LIKE '%$busqueda%')) order by nombre asc limit $inicio, $registros";
         }else{
             //se muestran todos los registros excepto los que tengan el privilegio de administrador y el que este logueado
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM usuario where idUsuario != '$id' and idUsuario != '1' order by nombre asc limit $inicio, $registros";
@@ -277,14 +277,25 @@ class usuarioControlador extends usuarioModelo{
         $conexion = mainModel::conectar();
 
         //almacena todos los datos seleccionados desde la bd
-        $datos = $conexion -> query($consulta);
+        $datos = $conexion->query($consulta);
+        if(!$datos){
+            // Manejo del error de consulta
+            $errorInfo = $conexion->errorInfo();
+            die("Error en la consulta SQL: " . $errorInfo[2]);
+        }
         //array de datos
         $datos = $datos -> fetchAll();
 
         //conteo del total de registros
         $query_conteo = "SELECT FOUND_ROWS()";
         $total = $conexion -> query($query_conteo);
-        $total = (int)$total -> fetchColumn(); //parse a entero y lo almacena en la variable
+        $total = $conexion->query($query_conteo);
+        if(!$total){
+            // Manejo del error de consulta
+            $errorInfo = $conexion->errorInfo();
+            die("Error en la consulta SQL para el conteo: " . $errorInfo[2]);
+        }
+        $total = (int)$total->fetchColumn(); //parse a entero y lo almacena en la variable
         
         //numero de paginas totales
         $Npaginas = ceil($total / $registros);//ceil duncion de php para redondear el numero de paginas

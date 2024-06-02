@@ -28,7 +28,7 @@
     </a>
 
 
-    <a href="<?php echo server_url; ?>reservation-pending/" class="tile">
+    <a href="<?php echo server_url; ?>venta-pending/" class="tile">
         <div class="tile-tittle">Ventas</div>
         <div class="tile-icon">
             <i class="fas fa-hand-holding-usd fa-fw"></i>
@@ -36,7 +36,7 @@
         </div>
     </a>
 
-    <a href="<?php echo server_url; ?>reservation-list/" class="tile">
+    <a href="<?php echo server_url; ?>venta-list/" class="tile">
         <div class="tile-tittle">Finalizados</div>
         <div class="tile-icon">
             <i class="fas fa-clipboard-list fa-fw"></i>

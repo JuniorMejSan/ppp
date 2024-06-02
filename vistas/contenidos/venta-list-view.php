@@ -1,7 +1,7 @@
 <!-- Page header -->
 <div class="full-box page-header">
     <h3 class="text-left">
-        <i class="far fa-calendar-alt fa-fw"></i> &nbsp; RESERVACIONES
+        <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADOS
     </h3>
     <p class="text-justify">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia fugiat est ducimus inventore, repellendus
@@ -13,20 +13,20 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a href="<?php echo server_url; ?>reservation-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO</a>
+            <a href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO</a>
         </li>
         <li>
-            <a class="active" href="<?php echo server_url; ?>reservation-reservation/"><i class="far fa-calendar-alt"></i> &nbsp;
-                RESERVACIONES</a>
+            <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt"></i> &nbsp; RESERVACIONES</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp; PRÉSTAMOS</a>
+            <a href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp; PRÉSTAMOS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADOS</a>
+            <a class="active" href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp;
+                FINALIZADOS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
+            <a href="<?php echo server_url; ?>venta-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
         </li>
     </ul>
 </div>
@@ -53,15 +53,15 @@
                     <td>NOMBRE CLIENTE</td>
                     <td>2017/10/8</td>
                     <td>2017/10/10</td>
-                    <td><span class="badge badge-warning">Reservacion</span></td>
-                    <td><span class="badge badge-danger">Pendiente</span></td>
+                    <td><span class="badge badge-dark">Finalizado</span></td>
+                    <td><span class="badge badge-primary">Cancelado</span></td>
                     <td>
                         <a href="#" class="btn btn-info">
                             <i class="fas fa-file-pdf"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -78,15 +78,15 @@
                     <td>NOMBRE CLIENTE</td>
                     <td>2017/10/8</td>
                     <td>2017/10/10</td>
-                    <td><span class="badge badge-warning">Reservacion</span></td>
-                    <td><span class="badge badge-danger">Pendiente</span></td>
+                    <td><span class="badge badge-dark">Finalizado</span></td>
+                    <td><span class="badge badge-primary">Cancelado</span></td>
                     <td>
                         <a href="#" class="btn btn-info">
                             <i class="fas fa-file-pdf"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -103,7 +103,7 @@
                     <td>NOMBRE CLIENTE</td>
                     <td>2017/10/8</td>
                     <td>2017/10/10</td>
-                    <td><span class="badge badge-warning">Reservacion</span></td>
+                    <td><span class="badge badge-dark">Finalizado</span></td>
                     <td><span class="badge badge-primary">Cancelado</span></td>
                     <td>
                         <a href="#" class="btn btn-info">
@@ -111,7 +111,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -128,15 +128,15 @@
                     <td>NOMBRE CLIENTE</td>
                     <td>2017/10/8</td>
                     <td>2017/10/10</td>
-                    <td><span class="badge badge-warning">Reservacion</span></td>
-                    <td><span class="badge badge-danger">Pendiente</span></td>
+                    <td><span class="badge badge-dark">Finalizado</span></td>
+                    <td><span class="badge badge-primary">Cancelado</span></td>
                     <td>
                         <a href="#" class="btn btn-info">
                             <i class="fas fa-file-pdf"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>

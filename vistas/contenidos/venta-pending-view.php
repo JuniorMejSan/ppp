@@ -13,20 +13,20 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a href="<?php echo server_url; ?>reservation-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO</a>
+            <a href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-reservation/"><i class="far fa-calendar-alt"></i> &nbsp; RESERVACIONES</a>
+            <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt"></i> &nbsp; RESERVACIONES</a>
         </li>
         <li>
-            <a class="active" href="<?php echo server_url; ?>reservation-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp;
+            <a class="active" href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp;
                 PRÉSTAMOS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADOS</a>
+            <a href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADOS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>reservation-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
+            <a href="<?php echo server_url; ?>venta-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
         </li>
     </ul>
 </div>
@@ -61,7 +61,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -86,7 +86,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -111,7 +111,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
@@ -136,7 +136,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="<?php echo server_url; ?>reservation-update/" class="btn btn-success">
+                        <a href="<?php echo server_url; ?>venta-update/" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
                         </a>
                     </td>
