@@ -346,4 +346,14 @@ class clienteControlador extends clienteModelo{
         }
         echo json_encode($alerta);
     }
+
+    //controlador para seleccionar los datos de los clientes
+    public function datos_cliente_controlador($tipo, $id){
+        $tipo = mainModel::limpiar_cadena($tipo);
+
+        $id = mainModel::decryption($id);
+        $id = mainModel::limpiar_cadena($id);
+
+        return clienteModelo::datos_cliente_modelo($tipo, $id);
+    }
 }

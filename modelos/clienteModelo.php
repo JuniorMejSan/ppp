@@ -31,4 +31,20 @@ class clienteModelo extends mainModel{
         return $sql;
     }
     
+    //modelo para seleccionar los datos del cliente
+    protected static function datos_cliente_modelo($tipo, $id){//tipos de consulta y el is del cliente a eliminar
+        if($tipo == "Unico"){//verificamos el tipo de seleccion de datos
+            $query_seleccionar_cliente = "SELECT * FROM cliente WHERE cliente_id = :ID";
+            $sql = mainModel::conectar() -> prepare($query_seleccionar_cliente);
+
+            $sql -> bindParam(":ID", $id);
+
+            return $sql;
+        }elseif($tipo == "Conteo"){
+            $query_seleccionar_cliente = "SELECT cliente_id FROM cliente";
+            $sql = mainModel::conectar() -> prepare($query_seleccionar_cliente);
+        }
+        $sql -> execute();
+        return $sql;
+    }
 }
