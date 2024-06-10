@@ -38,13 +38,28 @@ class clienteModelo extends mainModel{
             $sql = mainModel::conectar() -> prepare($query_seleccionar_cliente);
 
             $sql -> bindParam(":ID", $id);
-
-            return $sql;
         }elseif($tipo == "Conteo"){
             $query_seleccionar_cliente = "SELECT cliente_id FROM cliente";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_cliente);
         }
         $sql -> execute();
+        return $sql;
+    }
+
+    //modelo para actualizar cliente
+    protected static function actualizar_cliente_modelo($datos){
+        $query_actualizar_cliente = "UPDATE cliente SET cliente_dni = :DNI, cliente_nombre = :Nombre, cliente_apellido = :Apellido, cliente_telefono = :Telefono, cliente_direccion = :Direccion WHERE cliente_id = :ID";
+        $sql = mainModel::conectar() -> prepare($query_actualizar_cliente);
+
+        $sql -> bindParam(":DNI", $datos['DNI']);
+        $sql -> bindParam(":Nombre", $datos['Nombre']);
+        $sql -> bindParam(":Apellido", $datos['Apellido']);
+        $sql -> bindParam(":Telefono", $datos['Telefono']);
+        $sql -> bindParam(":Direccion", $datos['Direccion']);
+        $sql -> bindParam(":ID", $datos['ID']);
+
+        $sql -> execute();
+
         return $sql;
     }
 }

@@ -356,4 +356,171 @@ class clienteControlador extends clienteModelo{
 
         return clienteModelo::datos_cliente_modelo($tipo, $id);
     }
+
+    //controlador para actualizar cliente
+    public function actualizar_cliente_controlador(){
+        //recuperamos el id
+        $id = mainModel::decryption($_POST['cliente_id_up']);
+        $id = mainModel::limpiar_cadena($id);
+
+        //comprobamos cliente en la bd
+        $query_check_cliente = "SELECT * FROM cliente WHERE cliente_id = '$id'";
+        $check_cliente = mainModel::ejecutar_consulta_simple($query_check_cliente);
+
+        //verificamos que el cliente exista
+        if($check_cliente -> rowCount() <= 0){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El cliente que intenta actualizar no se encuentra registrado en el sistema",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }else{
+            $campos = $check_cliente -> fetch();
+        }
+
+        $dni = mainModel::limpiar_cadena($_POST['cliente_dni_up']);
+        $nombre = mainModel::limpiar_cadena($_POST['cliente_nombre_up']);
+        $apellido = mainModel::limpiar_cadena($_POST['cliente_apellido_up']);
+        $telefono = mainModel::limpiar_cadena($_POST['cliente_telefono_up']);
+        $direccion = mainModel::limpiar_cadena($_POST['cliente_direccion_up']);
+
+        //verificamos que los campos no vengan vacios
+        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "") {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han completado los campos",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+        
+        if(mainModel::verificar_datos("[0-9-]{1,27}", $dni)){
+            //si entra es porque si se tienen errores en ese dato
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DNI no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $nombre)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $apellido)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El APELLIDO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+        if (mainModel::verificar_datos("[0-9()+]{8,20}", $telefono)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El TELÉFONO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}", $direccion)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificar DNI para que no se repita en la bd
+        if($dni != $campos['cliente_dni']){
+            $query_check_dni = "SELECT cliente_dni FROM cliente WHERE cliente_dni ='$dni'";
+            $check_dni = mainModel::ejecutar_consulta_simple($query_check_dni);
+
+            //comprobar que el dni no este registrando mediante el conteo de rows que trae
+            if($check_dni -> rowCount() > 0) {//ya existe dni en la bd
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El DNI ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+
+        //verificamos privilegios
+        session_start(['name' => 'ppp']);
+
+        if($_SESSION['privilegio_ppp'] < 1 || $_SESSION['privilegio_ppp'] > 2){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No cuenta con los privilegios necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //array para actualizar datos
+        $datos_cliente_up = [
+            "DNI" => $dni,
+            "Nombre" => $nombre,
+            "Apellido" => $apellido,
+            "Telefono" => $telefono,
+            "Direccion" => $direccion,
+            "ID" => $id
+        ];
+
+        if(clienteModelo::actualizar_cliente_modelo($datos_cliente_up)){
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Cliente actualizado",
+                "Texto"=> "Los datos del cliente han sido actualizados exitosamente",
+                "Tipo" => "success"
+            ];
+
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Cliente actualizado",
+                "Texto"=> "No se han podido actualizar los datos del cliente, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+        
+    }
 }
