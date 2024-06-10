@@ -289,7 +289,6 @@ class usuarioControlador extends usuarioModelo{
         //conteo del total de registros
         $query_conteo = "SELECT FOUND_ROWS()";
         $total = $conexion -> query($query_conteo);
-        $total = $conexion->query($query_conteo);
         if(!$total){
             // Manejo del error de consulta
             $errorInfo = $conexion->errorInfo();
@@ -356,7 +355,7 @@ class usuarioControlador extends usuarioModelo{
                 </tr>';
 
             }else{
-                $tabla .= '<tr class="text-center" ><td colspan = "9"></td>No hay registros en el sistema</tr>';
+                $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
             }
         }
 
