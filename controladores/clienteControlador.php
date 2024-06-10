@@ -7,7 +7,7 @@ if ($peticionAjax) {//cuando e sun apeticion ajax el archivo se va a ejecutar en
 
 class clienteControlador extends clienteModelo{
 
-    //cliente para registrar cliente
+    //controlador para registrar cliente
     public static function agregar_cliente_controlador(){
 
         //recibimos los datos que se envian desde el form
@@ -275,5 +275,75 @@ class clienteControlador extends clienteModelo{
 
         return $tabla;
 
+    }
+
+    //controaldor para eliminar cliente
+    public function eliminar_cliente_controlador(){
+        //recivimos el id
+        $id = mainModel::decryption($_POST['cliente_id_del']);//lo que recive desde el input del form
+        $id = mainModel::limpiar_cadena($id);//evitamos inyeccion sql
+
+        //comprobamos que no este registrado en la bd
+        $query_check_cliente = "SELECT cliente_id FROM cliente WHERE cliente_id = '$id'";
+        $check_cliente = mainModel::ejecutar_consulta_simple($query_check_cliente);
+        if($check_cliente -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos encontrado el cliente a eliminar en el sistema",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificar que el cliente no tenga ventas amarradas
+        $query_check_venta = "SELECT cliente_id FROM venta WHERE cliente_id = '$id' LIMIT 1";
+        $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
+        if($check_venta -> rowCount() >= 1){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No es posible eliminar el cliente seleccionado, tiene ventas asocidas",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos privilegios del usario que está eliminando
+        session_start(['name' => 'ppp']);//iniciamos sesion
+        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //eliminar cliente
+        $eliminar_cliente = clienteModelo::eliminar_cliente_modelo($id);
+        if($eliminar_cliente -> rowCount() == 1){//si se eliminó
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Cliente eliminado",
+                "Texto"=> "El cliente ha sido eliminado exitosamente",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se puede eliminar el cliente, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }
