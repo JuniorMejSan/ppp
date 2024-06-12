@@ -21,7 +21,7 @@ class clienteModelo extends mainModel{
 
     //modelo para eliminar cliente
     protected static function eliminar_cliente_modelo($id){
-        $query_eliminar_cliente = "DELETE FROM cliente WHERE cliente_id = :ID";
+        $query_eliminar_cliente = "UPDATE cliente SET cliente_estado = 'Inhabilitado' WHERE cliente_id = :ID";
         $sql = mainModel::conectar() -> prepare($query_eliminar_cliente);
 
         $sql -> bindParam(":ID", $id);

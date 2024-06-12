@@ -66,11 +66,20 @@
     </a>
     <?php } ?>
 
-    <a href="<?php echo server_url; ?>empresa/" class="tile">
+    <a href="<?php echo server_url; ?>proveedor-list/" class="tile">
         <div class="tile-tittle">Proveedores</div>
+        <div class="tile-icon">
+            <i class="fa fa-truck"></i>
+            <p>1 Registrada</p>
+        </div>
+    </a>
+
+    <a href="<?php echo server_url; ?>empresa/" class="tile">
+        <div class="tile-tittle">Empresa</div>
         <div class="tile-icon">
             <i class="fas fa-store-alt fa-fw"></i>
             <p>1 Registrada</p>
         </div>
     </a>
+
 </div>

@@ -91,6 +91,21 @@
                 </li>
                 <?php } ?>
                 <li>
+                    <a href="#" class="nav-btn-submenu"><i class="fa fa-truck"></i> &nbsp; Proveedores <i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li>
+                            <a href="<?php echo server_url; ?>proveedor-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Agregar Proveedores</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>proveedor-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Lista de
+                                Proveedores</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>proveedor-search/"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar Proveedores</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
                     <a href="<?php echo server_url; ?>empresa/"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Empresa</a>
                 </li>
             </ul>

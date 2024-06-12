@@ -162,9 +162,19 @@ class clienteControlador extends clienteModelo{
         if(isset($busqueda) && $busqueda != ""){ //significa que estamos mandando datos desde el formluario de busqueda en la vista de cleinte
 
             //consulta para que el resultado coindica con la busqueda realizada
-            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente where cliente_dni LIKE '%$busqueda%' OR cliente_nombre LIKE '%$busqueda%' OR cliente_apellido LIKE '%$busqueda%' or cliente_telefono LIKE '%$busqueda%' order by cliente_nombre asc limit $inicio, $registros";
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente 
+            WHERE cliente_estado = 'Habilitado' 
+            AND (cliente_dni LIKE '%$busqueda%' 
+            OR cliente_nombre LIKE '%$busqueda%' 
+            OR cliente_apellido LIKE '%$busqueda%' 
+            OR cliente_telefono LIKE '%$busqueda%') 
+            ORDER BY cliente_nombre ASC 
+            LIMIT $inicio, $registros";
         }else{
-            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente order by cliente_nombre asc limit $inicio, $registros";
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente 
+            WHERE cliente_estado = 'Habilitado' 
+            order by cliente_nombre asc 
+            limit $inicio, $registros";
         }
 
         //variable de conexion
