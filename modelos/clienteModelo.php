@@ -6,7 +6,7 @@ class clienteModelo extends mainModel{
     //modelo para registrar cliente
     protected static function agregar_cliente_modelo($datos){
 
-        $query_agregar_cliente = "INSERT INTO cliente(`cliente_dni`, `cliente_nombre`, `cliente_apellido`, `cliente_telefono`, `cliente_direccion`) VALUES (:DNI, :Nombre, :Apellido, :Telefono, :Direccion)";
+        $query_agregar_cliente = "INSERT INTO cliente(`cliente_dni`, `cliente_nombre`, `cliente_apellido`, `cliente_telefono`, `cliente_direccion`,  `cliente_estado`) VALUES (:DNI, :Nombre, :Apellido, :Telefono, :Direccion, 'Habilitado')";
         $sql = mainModel::conectar() -> prepare($query_agregar_cliente);
 
         $sql -> bindParam(":DNI", $datos['DNI']);

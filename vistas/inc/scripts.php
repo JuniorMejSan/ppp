@@ -19,3 +19,6 @@
 
 <script src="<?php echo server_url; ?>vistas/js/main.js"></script>
 <script src="<?php echo server_url; ?>vistas/js/alertas.js"></script>
+
+<!-- Script para validacion de datos -->
+<script src="<?php echo server_url; ?>vistas/js/proveedor-new.js.php"></script>
