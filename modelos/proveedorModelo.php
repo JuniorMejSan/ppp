@@ -17,4 +17,16 @@ class proveedorModelo extends mainModel{
 
         return $sql;
     }
+
+        //modelo para eliminar proveedor
+        protected static function eliminar_proveedor_modelo($id){
+            $query_eliminar_proveedor= "UPDATE proveedor SET proveedor_estado = 'Inhabilitado' WHERE proveedor_id = :ID";
+            $sql = mainModel::conectar() -> prepare($query_eliminar_proveedor);
+    
+            $sql -> bindParam(":ID", $id);
+    
+            $sql -> execute();
+    
+            return $sql;
+        }
 }

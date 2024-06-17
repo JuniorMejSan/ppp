@@ -315,7 +315,7 @@ class clienteControlador extends clienteModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "No es posible eliminar el cliente seleccionado, tiene ventas asocidas",
+                "Texto"=> "No es posible eliminar el cliente seleccionado, tiene ventas asociadas",
                 "Tipo" => "error"
             ];
 

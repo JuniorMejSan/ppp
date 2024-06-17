@@ -85,7 +85,7 @@ class proveedorControlador extends proveedorModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
+                "Texto"=> "El TELEFONO no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -151,7 +151,7 @@ class proveedorControlador extends proveedorModelo{
         $url = server_url.$url."/";
 
         $busqueda = mainModel::limpiar_cadena($busqueda);
-        $tabla = "";//tabla creada con los cliente
+        $tabla = "";//tabla creada con los Proveedor
 
         //validaciones segun la pagina de la tabla, para que no se pueda modificar la url de cada pagina de la tabla
         $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;//es decir si la pagina viene definida se parsea a entero y si no se le asigna el valor o no es un numero se redirecciona a la pag 1
@@ -285,11 +285,80 @@ class proveedorControlador extends proveedorModelo{
 
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
         if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
-            $tabla .= '<p class = "text-right">Mostrando cliente '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
+            $tabla .= '<p class = "text-right">Mostrando proveedor '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
             $tabla .= mainModel::paginador_tablas( $pagina, $Npaginas, $url, 7);
         }
 
         return $tabla;
 
+    }
+
+    public function eliminar_proveedor_controlador(){
+        //recivimos el id
+        $id = mainModel::decryption($_POST['proveedor_id_del']);//lo que recive desde el input del form
+        $id = mainModel::limpiar_cadena($id);//evitamos inyeccion sql
+
+        //comprobamos que no este registrado en la bd
+        $query_check_proveedor = "SELECT proveedor_id FROM proveedor WHERE proveedor_id = '$id'";
+        $check_proveedor = mainModel::ejecutar_consulta_simple($query_check_proveedor);
+        if($check_proveedor -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos encontrado el proveedor a eliminar en el sistema",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificar que el proveedor no tenga ventas amarradas
+        $query_check_venta = "SELECT proveedor_id FROM venta WHERE proveedor_id = '$id' LIMIT 1";
+        $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
+        if($check_venta -> rowCount() >= 1){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No es posible eliminar el proveedor seleccionado, tiene ventas asociadas",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos privilegios del usario que está eliminando
+        session_start(['name' => 'ppp']);//iniciamos sesion
+        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //eliminar Proveedor
+        $eliminar_proveedor = proveedorModelo::eliminar_proveedor_modelo($id);
+        if($eliminar_proveedor -> rowCount() == 1){//si se eliminó
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Proveedor eliminado",
+                "Texto"=> "El proveedor ha sido eliminado exitosamente",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se puede eliminar el proveedor, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }
