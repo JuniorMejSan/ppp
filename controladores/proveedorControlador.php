@@ -400,7 +400,7 @@ class proveedorControlador extends proveedorModelo{
         $direccion = mainModel::limpiar_cadena($_POST['proveedor_direccion_up']);
         $pais = mainModel::limpiar_cadena($_POST['proveedor_pais_up']);
         $telefono = mainModel::limpiar_cadena($_POST['proveedor_telefono_up']);
-        $email = mainModel::limpiar_cadena($_POST['email']);
+        $email = mainModel::limpiar_cadena($_POST['proveedor_email_up']);
 
         //verificamos que los campos no vengan vacios
         if ($ruc == "" || $nombre == "" || $direccion == "" || $pais == "" || $telefono == "" || $email == "") {
@@ -454,7 +454,7 @@ class proveedorControlador extends proveedorModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "El PAÌS no coincide con el formato solicitado",
+                "Texto"=> "El PAIS no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -467,18 +467,6 @@ class proveedorControlador extends proveedorModelo{
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
                 "Texto"=> "El TELEFONO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[0-9()+]{8,20}", $email)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El EMAIL no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 

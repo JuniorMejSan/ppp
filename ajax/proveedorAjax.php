@@ -3,7 +3,7 @@ $peticionAjax = true;
 require_once "../config/app.php";
 
 //detectar si los datos se envian esde un formulario para ejecutar los controladores o funciones
-if (isset($_POST['proveedor_ruc_reg']) || isset($_POST['proveedor_id_del']) || isset($_POST['cliente_id_up'])) { //si se esta enviando datos desde un formulario, puede ser registrar, elimiar o actualizar
+if (isset($_POST['proveedor_ruc_reg']) || isset($_POST['proveedor_id_del']) || isset($_POST['proveedor_id_up'])) { //si se esta enviando datos desde un formulario, puede ser registrar, elimiar o actualizar
 
     //instanciamos al controlador
     require_once "../controladores/proveedorControlador.php";
