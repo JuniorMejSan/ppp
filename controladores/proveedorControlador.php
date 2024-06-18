@@ -361,4 +361,193 @@ class proveedorControlador extends proveedorModelo{
         }
         echo json_encode($alerta);
     }
+
+    public function datos_proveedor_controlador($tipo, $id){
+        $tipo = mainModel::limpiar_cadena($tipo);
+
+        $id = mainModel::decryption($id);
+        $id = mainModel::limpiar_cadena($id);
+
+        return proveedorModelo::datos_proveedor_modelo($tipo, $id);
+    }
+
+    public function actualizar_proveedor_controlador(){
+        //recuperamos el id
+        $id = mainModel::decryption($_POST['proveedor_id_up']);
+        $id = mainModel::limpiar_cadena($id);
+
+        //comprobamos proveedor en la bd
+        $query_check_proveedor = "SELECT * FROM proveedor WHERE proveedor_id = '$id'";
+        $check_proveedor = mainModel::ejecutar_consulta_simple($query_check_proveedor);
+
+        //verificamos que el cliente exista
+        if($check_proveedor -> rowCount() <= 0){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El proveedor que intenta actualizar no se encuentra registrado en el sistema",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }else{
+            $campos = $check_proveedor -> fetch();
+        }
+
+        $ruc = mainModel::limpiar_cadena($_POST['proveedor_ruc_up']);
+        $nombre = mainModel::limpiar_cadena($_POST['proveedor_nombre_up']);
+        $direccion = mainModel::limpiar_cadena($_POST['proveedor_direccion_up']);
+        $pais = mainModel::limpiar_cadena($_POST['proveedor_pais_up']);
+        $telefono = mainModel::limpiar_cadena($_POST['proveedor_telefono_up']);
+        $email = mainModel::limpiar_cadena($_POST['email']);
+
+        //verificamos que los campos no vengan vacios
+        if ($ruc == "" || $nombre == "" || $direccion == "" || $pais == "" || $telefono == "" || $email == "") {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han completado los campos",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+        
+        if(mainModel::verificar_datos("\d{11}", $ruc)){
+            //si entra es porque si se tienen errores en ese dato
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El RUC no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $nombre)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}", $direccion)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La DIRECCIÓN no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $pais)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El PAÌS no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9()+]{8,20}", $telefono)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El TELEFONO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9()+]{8,20}", $email)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El EMAIL no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificar ruc para que no se repita en la bd
+        if($ruc != $campos['proveedor_ruc']){
+            $query_check_ruc = "SELECT proveedor_ruc FROM proveedor WHERE proveedor_ruc ='$ruc'";
+            $check_ruc= mainModel::ejecutar_consulta_simple($query_check_ruc);
+
+            //comprobar que el dni no este registrando mediante el conteo de rows que trae
+            if($check_ruc -> rowCount() > 0) {//ya existe ruc en la bd
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El RUC ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+
+        //verificamos privilegios
+        session_start(['name' => 'ppp']);
+
+        if($_SESSION['privilegio_ppp'] < 1 || $_SESSION['privilegio_ppp'] > 2){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No cuenta con los privilegios necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //array para actualizar datos
+        $datos_proveedor_up = [
+            "RUC" => $ruc,
+            "Nombre" => $nombre,
+            "Direccion" => $direccion,
+            "Pais" => $pais,
+            "Telefono" => $telefono,
+            "Email" => $email,
+            "ID" => $id
+        ];
+
+        if(proveedorModelo::actualizar_proveedor_modelo($datos_proveedor_up)){
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Proveedor actualizado",
+                "Texto"=> "Los datos del proveedor han sido actualizados exitosamente",
+                "Tipo" => "success"
+            ];
+
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Proveedor actualizado",
+                "Texto"=> "No se han podido actualizar los datos del proveedor, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+        
+    }
 }

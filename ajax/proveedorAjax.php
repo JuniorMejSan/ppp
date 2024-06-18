@@ -20,8 +20,8 @@ if (isset($_POST['proveedor_ruc_reg']) || isset($_POST['proveedor_id_del']) || i
     }
 
     //condicion para actualizar un cliente
-    if(isset($_POST['cliente_id_up'])){
-        echo $ins_cliente -> actualizar_cliente_controlador();
+    if(isset($_POST['proveedor_id_up'])){
+        echo $ins_proveedor -> actualizar_proveedor_controlador();
     }
 
 }else { //si no significa que se esta intentando acceder desde el navegador

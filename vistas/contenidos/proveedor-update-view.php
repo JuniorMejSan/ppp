@@ -39,50 +39,63 @@
 
         $datos_proveedor = $ins_proveedor -> datos_proveedor_controlador("Unico", $pagina[1]);
 
-        if($datos_cliente -> rowCount() == 1){
+        if($datos_proveedor -> rowCount() == 1){
             
             //todos los datos del cliente seleccionado
-            $campos = $datos_cliente -> fetch();
+            $campos = $datos_proveedor -> fetch();
     ?>
-    <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/clienteAjax.php" method="POST" data-form="update" autocomplete="off">
-    <input type="hidden" name="cliente_id_up" value="<?php echo $pagina[1]; ?>">     
+    <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/proveedorAjax.php" method="POST" data-form="update" autocomplete="off">
+    <input type="hidden" name="proveedor_id_up" value="<?php echo $pagina[1]; ?>">     
         <fieldset>
             <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-12 col-md-6">
+                    <!-- RUC-->
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label for="cliente_dni" class="bmd-label-floating">DNI</label>
-                            <input type="text" pattern="[0-9-]{1,27}" class="form-control" name="cliente_dni_up"
-                                id="cliente_dni" maxlength="27" value="<?php echo $campos['cliente_dni']; ?>">
+                            <label for="proveedor_ruc" class="bmd-label-floating">RUC</label>
+                            <input type="text" pattern="\d{11}" class="form-control" name="proveedor_ruc_up"
+                                id="proveedor_ruc" maxlength="11" value="<?php echo $campos['proveedor_ruc']; ?>" required>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <!-- Nombre-->
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label for="cliente_nombre" class="bmd-label-floating">Nombre</label>
+                            <label for="proveedor_nombre" class="bmd-label-floating">Nombre</label>
                             <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" class="form-control"
-                                name="cliente_nombre_up" id="cliente_nombre" maxlength="40" value="<?php echo $campos['cliente_nombre']; ?>">
+                                name="proveedor_nombre_up" id="proveedor_nombre" maxlength="40" value="<?php echo $campos['proveedor_nombre']; ?>" required>
                         </div>
                     </div>
+                    <!-- Direccion-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label for="cliente_apellido" class="bmd-label-floating">Apellido</label>
-                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" class="form-control"
-                                name="cliente_apellido_up" id="cliente_apellido" maxlength="40" value="<?php echo $campos['cliente_apellido']; ?>">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="form-group">
-                            <label for="cliente_telefono" class="bmd-label-floating">Teléfono</label>
-                            <input type="text" pattern="[0-9()+]{8,20}" class="form-control" name="cliente_telefono_up"
-                                id="cliente_telefono" maxlength="20" value="<?php echo $campos['cliente_telefono']; ?>">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="form-group">
-                            <label for="cliente_direccion" class="bmd-label-floating">Dirección</label>
+                            <label for="proveedor_direccion" class="bmd-label-floating">Dirección</label>
                             <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}" class="form-control"
-                                name="cliente_direccion_up" id="cliente_direccion" maxlength="150" value="<?php echo $campos['cliente_direccion']; ?>">
+                                name="proveedor_direccion_up" id="proveedor_direccion" maxlength="40" value="<?php echo $campos['proveedor_direccion']; ?>">
+                        </div>
+                    </div>
+                    <!-- País-->
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="proveedor_pais" class="bmd-label-floating">País</label>
+                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" class="form-control" name="proveedor_pais_up"
+                                id="proveedor_pais" maxlength="40" required value="<?php echo $campos['proveedor_pais']; ?>">
+                        </div>
+                    </div>
+                    <!-- Telefono-->
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="proveedor_telefono" class="bmd-label-floating">Teléfono</label>
+                            <input type="text" pattern="[0-9()+]{8,20}" class="form-control"
+                                name="proveedor_telefono_up" id="proveedor_telefono" maxlength="20" required value="<?php echo $campos['proveedor_telefono']; ?>">
+                        </div>
+                    </div>
+                    <!-- Email-->
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="proveedor_email" class="bmd-label-floating">Email</label>
+                            <input type="email" class="form-control" name="proveedor_email_up" id="proveedor_email"
+                                maxlength="70" value=" <?php echo $campos['proveedor_email']; ?> ">
                         </div>
                     </div>
                 </div>
@@ -106,3 +119,27 @@
         }
     ?>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de RUC
+    setupNumberInput('proveedor_ruc', 11);
+
+    // Configurar campo de teléfono
+    setupNumberInput('proveedor_telefono', 9);
+
+});
+</script>
