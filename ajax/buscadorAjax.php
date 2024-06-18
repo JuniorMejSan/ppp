@@ -8,6 +8,7 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
     $data_url = [
         "usuario" => "user-search",
         "cliente" => "client-search",
+        "proveedor" => "proveedor-search",
         "item" => "item-search",
         "venta" => "venta-search"
     ];

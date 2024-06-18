@@ -165,11 +165,7 @@ class proveedorControlador extends proveedorModelo{
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM proveedor 
             WHERE proveedor_estado = 'Habilitado' 
-            AND (proveedor_nombre LIKE '%$busqueda%' 
-            OR proveedor_direccion LIKE '%$busqueda%' 
-            OR proveedor_pais LIKE '%$busqueda%' 
-            OR proveedor_telefono LIKE '%$busqueda%' 
-            OR proveedor_email LIKE '%$busqueda%') 
+            AND proveedor_ruc LIKE '%$busqueda%' 
             ORDER BY proveedor_nombre ASC 
             LIMIT $inicio, $registros";
         }else{
