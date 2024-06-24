@@ -66,11 +66,17 @@
     </a>
     <?php } ?>
 
+    <?php
+        require_once "./controladores/proveedorControlador.php";
+        $ins_proveedor = new proveedorControlador();
+
+        $total_proveedores = $ins_proveedor -> datos_proveedor_controlador("Conteo", 0);
+    ?>
     <a href="<?php echo server_url; ?>proveedor-list/" class="tile">
         <div class="tile-tittle">Proveedores</div>
         <div class="tile-icon">
             <i class="fa fa-truck"></i>
-            <p>1 Registrada</p>
+            <p><?php echo $total_proveedores -> rowCount(); ?> Registrados</p>
         </div>
     </a>
 

@@ -39,7 +39,7 @@ class clienteModelo extends mainModel{
 
             $sql -> bindParam(":ID", $id);
         }elseif($tipo == "Conteo"){
-            $query_seleccionar_cliente = "SELECT cliente_id FROM cliente";
+            $query_seleccionar_cliente = "SELECT cliente_id FROM cliente WHERE cliente_estado = 'Habilitado'";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_cliente);
         }
         $sql -> execute();

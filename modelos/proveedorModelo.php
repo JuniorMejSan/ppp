@@ -37,7 +37,7 @@ class proveedorModelo extends mainModel{
 
             $sql -> bindParam(":ID", $id);
         }elseif($tipo == "Conteo"){
-            $query_seleccionar_proveedor = "SELECT proveedor_id FROM proveedor";
+            $query_seleccionar_proveedor = "SELECT proveedor_id FROM proveedor WHERE proveedor_estado = 'Habilitado'";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_proveedor);
         }
         $sql -> execute();
