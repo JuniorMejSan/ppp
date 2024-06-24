@@ -33,6 +33,7 @@ if(!isset($_SESSION['busqueda_proveedor']) && empty($_SESSION['busqueda_proveedo
     <input type="hidden" name="modulo" value="proveedor">
         <div class="container-fluid">
             <div class="row justify-content-md-center">
+                <!-- Tremino de busqueda -->
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="inputSearch" class="bmd-label-floating">¿Qué proveedor estas buscando?</label>
@@ -91,3 +92,24 @@ if(!isset($_SESSION['busqueda_proveedor']) && empty($_SESSION['busqueda_proveedo
 
 }
 ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de RUC
+    setupNumberInput('inputSearch', 11);
+});
+</script>

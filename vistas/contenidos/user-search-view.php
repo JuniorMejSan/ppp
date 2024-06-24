@@ -10,8 +10,7 @@
         <i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR USUARIO
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa
-        blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
+        Por favor, a continuación ingrese el DNI del USUARIO que desea buscar.
     </p>
 </div>
 
@@ -41,6 +40,7 @@ if(!isset($_SESSION['busqueda_usuario']) && empty($_SESSION['busqueda_usuario'])
         <div class="container-fluid">
             <div class="row justify-content-md-center">
                 <div class="col-12 col-md-6">
+                    <!-- Termino de busqueda -->
                     <div class="form-group">
                         <label for="inputSearch" class="bmd-label-floating">¿Qué usuario estas buscando?</label>
                         <input type="text" class="form-control" name="busqueda_inicial" id="inputSearch" maxlength="30">
@@ -99,3 +99,25 @@ if(!isset($_SESSION['busqueda_usuario']) && empty($_SESSION['busqueda_usuario'])
 
 }
 ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de DNI
+    setupNumberInput('inputSearch', 8);
+
+});
+</script>

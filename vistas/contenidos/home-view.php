@@ -4,8 +4,7 @@
         <i class="fab fa-dashcube fa-fw"></i> &nbsp; DASHBOARD
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa
-        blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
+        SISTEMA WEB PARA LA GESTIÓN DEL KARDEX Y VENTA DE EQUIPOS TECNOLÓGICOS
     </p>
 </div>
 

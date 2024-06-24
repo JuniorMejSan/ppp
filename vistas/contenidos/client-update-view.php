@@ -10,9 +10,7 @@
         <i class="fas fa-sync-alt fa-fw"></i> &nbsp; ACTUALIZAR CLIENTE
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem odit amet asperiores quis minus, dolorem
-        repellendus optio doloremque error a omnis soluta quae magnam dignissimos, ipsam, temporibus sequi, commodi
-        accusantium!
+        Edite los campos que desea actualizar.
     </p>
 </div>
 
@@ -50,13 +48,15 @@
             <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
             <div class="container-fluid">
                 <div class="row">
+                    <!-- DNI-->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="cliente_dni" class="bmd-label-floating">DNI</label>
                             <input type="text" pattern="[0-9-]{1,27}" class="form-control" name="cliente_dni_up"
-                                id="cliente_dni" maxlength="27" value="<?php echo $campos['cliente_dni']; ?>">
+                                id="cliente_dni" maxlength="8" value="<?php echo $campos['cliente_dni']; ?>">
                         </div>
                     </div>
+                    <!-- Nombre-->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="cliente_nombre" class="bmd-label-floating">Nombre</label>
@@ -64,6 +64,7 @@
                                 name="cliente_nombre_up" id="cliente_nombre" maxlength="40" value="<?php echo $campos['cliente_nombre']; ?>">
                         </div>
                     </div>
+                    <!-- Apellido-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="cliente_apellido" class="bmd-label-floating">Apellido</label>
@@ -71,13 +72,15 @@
                                 name="cliente_apellido_up" id="cliente_apellido" maxlength="40" value="<?php echo $campos['cliente_apellido']; ?>">
                         </div>
                     </div>
+                    <!-- Telefono-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="cliente_telefono" class="bmd-label-floating">Teléfono</label>
                             <input type="text" pattern="[0-9()+]{8,20}" class="form-control" name="cliente_telefono_up"
-                                id="cliente_telefono" maxlength="20" value="<?php echo $campos['cliente_telefono']; ?>">
+                                id="cliente_telefono" maxlength="9" value="<?php echo $campos['cliente_telefono']; ?>">
                         </div>
                     </div>
+                    <!-- Direccion-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="cliente_direccion" class="bmd-label-floating">Dirección</label>
@@ -106,3 +109,28 @@
         }
     ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de RUC
+    setupNumberInput('cliente_dni', 8);
+
+    // Configurar campo de teléfono
+    setupNumberInput('cliente_telefono', 9);
+
+});
+</script>

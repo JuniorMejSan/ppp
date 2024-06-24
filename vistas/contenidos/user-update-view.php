@@ -12,8 +12,7 @@
         <i class="fas fa-sync-alt fa-fw"></i> &nbsp; ACTUALIZAR USUARIO
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa
-        blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
+        Edite los campos que desea actualizar.
     </p>
 </div>
 
@@ -52,6 +51,7 @@
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
             <div class="container-fluid">
                 <div class="row">
+                    <!-- DNI -->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="usuario_dni" class="bmd-label-floating">DNI</label>
@@ -59,7 +59,7 @@
                                 id="usuario_dni" maxlength="20" value=" <?php echo $campos['dni']; ?> ">
                         </div>
                     </div>
-
+                    <!-- Nombre -->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="usuario_nombre" class="bmd-label-floating">Nombres</label>
@@ -67,6 +67,7 @@
                                 name="usuario_nombre_up" id="usuario_nombre" maxlength="35" value=" <?php echo $campos['nombre']; ?> ">
                         </div>
                     </div>
+                    <!-- Apellido -->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="usuario_apellido" class="bmd-label-floating">Apellidos</label>
@@ -74,6 +75,7 @@
                                 name="usuario_apellido_up" id="usuario_apellido" maxlength="35" value=" <?php echo $campos['apellido']; ?>">
                         </div>
                     </div>
+                    <!-- Telefono -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_telefono" class="bmd-label-floating">Teléfono</label>
@@ -81,6 +83,7 @@
                                 id="usuario_telefono" maxlength="20" value=" <?php echo $campos['telefono']; ?>">
                         </div>
                     </div>
+                    <!-- Direccion -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_direccion" class="bmd-label-floating">Dirección</label>
@@ -96,6 +99,7 @@
             <legend><i class="fas fa-user-lock"></i> &nbsp; Información de la cuenta</legend>
             <div class="container-fluid">
                 <div class="row">
+                    <!-- Nombre de usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_usuario" class="bmd-label-floating">Nombre de usuario</label>
@@ -103,6 +107,7 @@
                                 name="usuario_usuario_up" id="usuario_usuario" maxlength="35" value=" <?php echo $campos['user']; ?> ">
                         </div>
                     </div>
+                    <!-- Correo de usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_email" class="bmd-label-floating">Email</label>
@@ -110,7 +115,8 @@
                                 maxlength="70" value=" <?php echo $campos['email']; ?> ">
                         </div>
                     </div>
-
+                    
+                    <!-- Estado del usuario (solo administrador) -->
                     <?php
                     if($_SESSION['privilegio_ppp'] == 1 && $campos['idUsuario'] != 1){ //editar estado de usuario solo se muestra para admin, ademas la cuenta del asmin no se puede deshabiitar
                     ?>
@@ -140,6 +146,7 @@
                 desee actualizarla debe dejar vacíos los dos campos de las contraseñas.</p>
             <div class="container-fluid">
                 <div class="row">
+                    <!-- Clave 1 de usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_clave_nueva_1" class="bmd-label-floating">Contraseña</label>
@@ -147,6 +154,7 @@
                                 id="usuario_clave_nueva_1" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" autocomplete="off">
                         </div>
                     </div>
+                    <!-- Clave 2 de usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_clave_nueva_2" class="bmd-label-floating">Repetir contraseña</label>
@@ -156,6 +164,7 @@
                     </div>
                 </div>
             </div>
+        <!-- Nivel de privilegio de usuario -->
         </fieldset>
         <?php
         if ($_SESSION['privilegio_ppp'] == 1 && $campos['idUsuario'] != 1) { //editar privilegios de usuario solo se muestra para admin, ademas la cuenta del admin no puede cambiar de privilegio
@@ -192,6 +201,7 @@
                 contraseña</p>
             <div class="container-fluid">
                 <div class="row">
+                    <!-- Usuario del admin para poder editar usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="usuario_admin" class="bmd-label-floating">Nombre de usuario</label>
@@ -199,6 +209,7 @@
                                 id="usuario_admin" maxlength="35" required="">
                         </div>
                     </div>
+                    <!-- Contraseña del admin para poder editar usuario -->
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="clave_admin" class="bmd-label-floating">Contraseña</label>
@@ -232,3 +243,26 @@
         }
     ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de DNI
+    setupNumberInput('usuario_dni', 8);
+
+    setupNumberInput('usuario_telefono', 9);
+});
+</script>

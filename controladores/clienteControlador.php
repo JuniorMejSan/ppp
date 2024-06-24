@@ -164,10 +164,7 @@ class clienteControlador extends clienteModelo{
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente 
             WHERE cliente_estado = 'Habilitado' 
-            AND (cliente_dni LIKE '%$busqueda%' 
-            OR cliente_nombre LIKE '%$busqueda%' 
-            OR cliente_apellido LIKE '%$busqueda%' 
-            OR cliente_telefono LIKE '%$busqueda%') 
+            AND cliente_dni LIKE '%$busqueda%' 
             ORDER BY cliente_nombre ASC 
             LIMIT $inicio, $registros";
         }else{

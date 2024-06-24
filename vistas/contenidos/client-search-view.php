@@ -4,8 +4,7 @@
         <i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR CLIENTE
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex.
-        Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
+        Por favor, a continuación ingrese el DNI del CLIENTE que desea buscar
     </p>
 </div>
 
@@ -35,6 +34,7 @@ if(!isset($_SESSION['busqueda_cliente']) && empty($_SESSION['busqueda_cliente'])
     <input type="hidden" name="modulo" value="cliente">
         <div class="container-fluid">
             <div class="row justify-content-md-center">
+                <!-- Termino de busqueda -->
                 <div class="col-12 col-md-6">
                     <div class="form-group">
                         <label for="inputSearch" class="bmd-label-floating">¿Qué cliente estas buscando?</label>
@@ -93,3 +93,25 @@ if(!isset($_SESSION['busqueda_cliente']) && empty($_SESSION['busqueda_cliente'])
 
 }
 ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Función para filtrar y limitar la entrada a solo números y máximo caracteres
+    function setupNumberInput(inputId, maxLength) {
+        var input = document.getElementById(inputId);
+        
+        input.addEventListener('input', function (e) {
+            // Reemplaza todo lo que no sea un dígito con una cadena vacía
+            this.value = this.value.replace(/\D/g, '');
+            // Limita la longitud al máximo especificado
+            if (this.value.length > maxLength) {
+                this.value = this.value.slice(0, maxLength);
+            }
+        });
+    }
+
+    // Configurar campo de DNI
+    setupNumberInput('inputSearch', 8);
+
+});
+</script>

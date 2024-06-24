@@ -4,9 +4,7 @@
         <i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR PROVEEDOR
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem odit amet asperiores quis minus, dolorem
-        repellendus optio doloremque error a omnis soluta quae magnam dignissimos, ipsam, temporibus sequi, commodi
-        accusantium!
+        Ingrese los datos del PROVEEDOR que son requeridos.
     </p>
 </div>
 
@@ -32,10 +30,10 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- RUC-->
-                    <div class="col-12 col-md-4">
+                    <r class="col-12 col-md-4">
                         <label for="proveedor_ruc" class="bmd-label-floating">RUC</label>
                         <input type="text" class="form-control" name="proveedor_ruc_reg" id="proveedor_ruc" maxlength="11" required pattern="\d{11}">
-                    </div>
+                    </r>
                     <!-- Nombre-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
