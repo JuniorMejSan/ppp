@@ -53,8 +53,16 @@
                                 id="item_stock" maxlength="9" required>
                         </div>
                     </div>
+                    <!-- Precio de item-->
+                    <div class="col-12 col-md-2">
+                        <div class="form-group">
+                            <label for="item_precio" class="bmd-label-floating">Precio</label>
+                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_reg"
+                                id="item_precio" maxlength="9" required>
+                        </div>
+                    </div>
                     <!-- Estado de item-->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label for="item_estado" class="bmd-label-floating">Estado</label>
                             <select class="form-control" name="item_estado_reg" id="item_estado" required>
@@ -65,7 +73,7 @@
                         </div>
                     </div>
                     <!-- Detalle de item-->
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label for="item_detalle" class="bmd-label-floating">Detalle</label>
                             <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}" class="form-control"
