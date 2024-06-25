@@ -393,6 +393,7 @@ class itemControlador extends itemModelo{
         echo json_encode($alerta);
     }
 
+    //controlador para habilitar item
     public function habilitar_item_controlador(){
         //recivimos el id
         $id = mainModel::decryption($_POST['item_id_enable']);//lo recive desde la tabla, en esta caso que esta en el controlador paginador
@@ -445,5 +446,172 @@ class itemControlador extends itemModelo{
             ];
         }
         echo json_encode($alerta);
+    }
+
+    //controlador para seleccionar los datos de los items
+    public function datos_item_controlador($tipo, $id){
+        $tipo = mainModel::limpiar_cadena($tipo);
+
+        $id = mainModel::decryption($id);
+        $id = mainModel::limpiar_cadena($id);
+
+        return itemModelo::datos_item_modelo($tipo, $id);
+    }
+
+    //controlador para actualizar item
+    public function actualizar_item_controlador(){
+        //recuperamos el id
+        $id = mainModel::decryption($_POST['item_id_up']);
+        $id = mainModel::limpiar_cadena($id);
+
+        //comprobamos item en la bd
+        $query_check_item = "SELECT * FROM item WHERE item_id = '$id'";
+        $check_item = mainModel::ejecutar_consulta_simple($query_check_item);
+
+        //verificamos que el item exista
+        if($check_item -> rowCount() <= 0){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El item que intenta actualizar no se encuentra registrado en el sistema",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }else{
+            $campos = $check_item -> fetch();
+        }
+
+        $codigo = mainModel::limpiar_cadena($_POST['item_codigo_up']);
+        $nombre = mainModel::limpiar_cadena($_POST['item_nombre_up']);
+        $stock = mainModel::limpiar_cadena($_POST['item_stock_up']);
+        $precio = mainModel::limpiar_cadena($_POST['item_precio_up']);
+        $estado = mainModel::limpiar_cadena($_POST['item_estado_up']);
+        $detalle = mainModel::limpiar_cadena($_POST['item_detalle_up']);
+
+        //verificamos que los campos no vengan vacios
+        if ($codigo == "" || $nombre == "" || $stock == "" || $precio == "" || $estado == "") {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han completado los campos",
+                "Tipo" => "error"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+        
+        if(mainModel::verificar_datos("[a-zA-Z0-9-]{1,45}", $codigo)){
+            //si entra es porque si se tienen errores en ese dato
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El CODIGO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[a-zA-záéíóúÁÉÍÓÚñÑ0-9 ]{1,140}", $nombre)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9]{1,9}", $stock)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El STOCK no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+        if (mainModel::verificar_datos("[0-9]{1,9}", $precio)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El PRECIO no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificar CODIGO para que no se repita en la bd
+        if($codigo != $campos['item_codigo']){
+            $query_check_codigo = "SELECT item_codigo FROM item WHERE item_codigo ='$codigo'";
+            $check_codigo = mainModel::ejecutar_consulta_simple($query_check_codigo);
+
+            //comprobar que el codigo no este registrando mediante el conteo de rows que trae
+            if($check_codigo -> rowCount() > 0) {//ya existe dni en la bd
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrio un error",
+                    "Texto"=> "El CODIGO ya se encuentra registrado",
+                    "Tipo" => "error"
+                ];
+
+                echo json_encode($alerta);
+                exit();
+            }
+        }
+
+        //verificamos privilegios
+        session_start(['name' => 'ppp']);
+
+        if($_SESSION['privilegio_ppp'] < 1 || $_SESSION['privilegio_ppp'] > 2){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No cuenta con los privilegios necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //array para actualizar datos
+        $datos_item_up = [
+            "Codigo" => $codigo,
+            "Nombre" => $nombre,
+            "Stock" => $stock,
+            "Precio" => $precio,
+            "Estado" => $estado,
+            "Detalle" => $detalle,
+            "ID" => $id
+        ];
+
+        if(itemModelo::actualizar_item_modelo($datos_item_up)){
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Item actualizado",
+                "Texto"=> "Los datos del ITEM han sido actualizados exitosamente",
+                "Tipo" => "success"
+            ];
+
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han podido actualizar los datos del cliente, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+        
     }
 }

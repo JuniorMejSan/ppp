@@ -522,7 +522,7 @@ class clienteControlador extends clienteModelo{
         }else{
             $alerta = [
                 "Alerta" => "simple",
-                "Titulo" => "Cliente actualizado",
+                "Titulo" => "Ocurrio un error",
                 "Texto"=> "No se han podido actualizar los datos del cliente, por favor intente nuevamente",
                 "Tipo" => "error"
             ];
