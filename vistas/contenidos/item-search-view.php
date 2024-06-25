@@ -14,7 +14,12 @@
             <a href="<?php echo server_url; ?>item-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR ITEM</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE ITEMS</a>
+            <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
+                ITEMS HABILITADOS</a>
+        </li>
+        <li>
+            <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
+                ITEMS INHABILITADOS</a>
         </li>
         <li>
             <a class="active" href="<?php echo server_url; ?>item-search/"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR ITEM</a>
@@ -84,7 +89,7 @@ if(!isset($_SESSION['busqueda_item']) && empty($_SESSION['busqueda_item'])){//si
     //intanciamos el controlador
     $ins_item = new itemControlador();
 
-    echo $ins_item -> paginador_item_controlador($pagina[1],15, $_SESSION['privilegio_ppp'], $pagina[0], $_SESSION['busqueda_item']);
+    echo $ins_item -> paginador_item_controlador($pagina[1],15, $_SESSION['privilegio_ppp'], $pagina[0], $_SESSION['busqueda_item'], "");
 ?>
 </div>
 <?php

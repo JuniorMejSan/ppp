@@ -290,7 +290,7 @@ class clienteControlador extends clienteModelo{
         $id = mainModel::decryption($_POST['cliente_id_del']);//lo que recive desde el input del form
         $id = mainModel::limpiar_cadena($id);//evitamos inyeccion sql
 
-        //comprobamos que no este registrado en la bd
+        //comprobamos que este registrado en la bd
         $query_check_cliente = "SELECT cliente_id FROM cliente WHERE cliente_id = '$id'";
         $check_cliente = mainModel::ejecutar_consulta_simple($query_check_cliente);
         if($check_cliente -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)

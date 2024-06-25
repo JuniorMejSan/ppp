@@ -14,11 +14,11 @@
             <a href="<?php echo server_url; ?>item-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR ITEM</a>
         </li>
         <li>
-            <a class="active" href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
+            <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
                 ITEMS HABILITADOS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>item-list-disable/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
+            <a class="active" href="<?php echo server_url; ?>item-list-disable/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
                 ITEMS INHABILITADOS</a>
         </li>
         <li>
@@ -35,6 +35,6 @@
     //instanciamos el controlador
     $ins_item = new itemControlador();
 
-    echo $ins_item->paginador_item_controlador($pagina[1],15, $_SESSION['privilegio_ppp'], $pagina[0], "", 'Habilitado');
+    echo $ins_item->paginador_item_controlador($pagina[1],15, $_SESSION['privilegio_ppp'], $pagina[0], "", 'Inhabilitado');
 ?>
 </div>

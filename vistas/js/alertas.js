@@ -23,7 +23,7 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
     if (tipo === "save") {//cuando se guardan datos
         texto_alerta = "Los datos quedarán guardados en el sistema";
     }else if (tipo === "delete") {//cuando se eliminan datos
-        texto_alerta = "Los datos se eliminarán del sistema";
+        texto_alerta = "Los datos se eliminarán del listado";
     }else if (tipo === "update") {//cuando se actualizan datos
         texto_alerta = "Los datos se actualizarán en el sistema";
     }else if (tipo === "search") {//cuando se buscan datos

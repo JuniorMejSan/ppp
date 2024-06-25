@@ -19,4 +19,28 @@ class itemModelo extends mainModel{
 
         return $sql;
     }
+
+    //modelo para eliminar item
+    protected static function eliminar_item_modelo($id){
+        $query_eliminar_item = "UPDATE item SET item_estado = 'Inhabilitado' WHERE item_id = :ID";
+        $sql = mainModel::conectar() -> prepare($query_eliminar_item);
+
+        $sql -> bindParam(":ID", $id);
+
+        $sql -> execute();
+
+        return $sql;
+    }
+    
+    //modelo para habilitar item
+    protected static function habilitar_item_modelo($id){
+        $query_habilitar_item = "UPDATE item SET item_estado = 'Habilitado' WHERE item_id = :ID";
+        $sql = mainModel::conectar() -> prepare($query_habilitar_item);
+
+        $sql -> bindParam(":ID", $id);
+
+        $sql -> execute();
+
+        return $sql;
+    }
 }

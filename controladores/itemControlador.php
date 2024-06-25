@@ -175,7 +175,7 @@ class itemControlador extends itemModelo{
     }
 
     //controlador para listar items y para realizar busqueda
-    public function paginador_item_controlador($pagina, $registros, $privilegio, $url, $busqueda){//recibe la pagina actual, cuantos registros quiero que se muestren por pagina ,el privilegio para ocultar algunas opciones como actualizar o eliminar, la url para los enlaces de cada boton de la paginacion, busqueda para el listado normal o el de la funcion busqueda
+    public function paginador_item_controlador($pagina, $registros, $privilegio, $url, $busqueda, $tipo_item){//recibe la pagina actual, cuantos registros quiero que se muestren por pagina ,el privilegio para ocultar algunas opciones como actualizar o eliminar, la url para los enlaces de cada boton de la paginacion, busqueda para el listado normal o el de la funcion busqueda
         $pagina = mainModel::limpiar_cadena($pagina); //para evitar inyeccion sql
         $registros = mainModel::limpiar_cadena($registros);
         $privilegio = mainModel::limpiar_cadena($privilegio);
@@ -197,13 +197,17 @@ class itemControlador extends itemModelo{
 
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM item 
-            WHERE item_estado = 'Habilitado' 
-            AND (item_codigo LIKE '%$busqueda%' OR item_nombre LIKE '%$busqueda%') 
+            WHERE (item_codigo LIKE '%$busqueda%' OR item_nombre LIKE '%$busqueda%') 
             ORDER BY item_nombre ASC 
             LIMIT $inicio, $registros";
-        }else{
+        }elseif($tipo_item == 'Habilitado'){
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM item 
             WHERE item_estado = 'Habilitado' 
+            order by item_nombre asc 
+            limit $inicio, $registros";
+        }else{
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM item 
+            WHERE item_estado = 'Inhabilitado' 
             order by item_nombre asc 
             limit $inicio, $registros";
         }
@@ -249,8 +253,10 @@ class itemControlador extends itemModelo{
                         if($privilegio == 1 || $privilegio == 2){
                             $tabla.= '<th>ACTUALIZAR</th>';
                         }
-                        if($privilegio == 1){
+                        if($privilegio == 1 && $tipo_item == 'Habilitado'){
                             $tabla.= '<th>ELIMINAR</th>';
+                        }elseif($privilegio == 1 && $tipo_item == 'Inhabilitado'){
+                            $tabla.= '<th>HABILITAR</th>';
                         }
                         
                         $tabla.= '</tr>
@@ -281,12 +287,21 @@ class itemControlador extends itemModelo{
                                     </a>
                                 </td>';
                             }
-                            if($privilegio == 1){
+                            if($privilegio == 1  && $tipo_item == 'Habilitado'){
                                 $tabla .= '<td>
                                     <form class = "FormularioAjax" action="'.server_url.'ajax/itemAjax.php" method="POST" data-form="delete" autocomplete="off">
                                     <input type = "hidden" name = "item_id_del" value = "'.mainModel::encryption($rows['item_id']).'">
                                         <button type="submit" class="btn btn-warning">
                                             <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>';
+                            }elseif($privilegio == 1 && $tipo_item == 'Inhabilitado'){
+                                $tabla .= '<td>
+                                    <form class = "FormularioAjax" action="'.server_url.'ajax/itemAjax.php" method="POST" data-form="enable" autocomplete="off">
+                                    <input type = "hidden" name = "item_id_enable" value = "'.mainModel::encryption($rows['item_id']).'">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-check"></i>
                                         </button>
                                     </form>
                                 </td>';
@@ -321,5 +336,114 @@ class itemControlador extends itemModelo{
 
         return $tabla;
 
+    }
+
+    //controlador para eliminar item
+    public function eliminar_item_controlador(){
+        //recivimos el id
+        $id = mainModel::decryption($_POST['item_id_del']);//lo recive desde la tabla, en esta caso que esta en el controlador paginador
+        $id = mainModel::limpiar_cadena($id);//evitamos inyeccion sql
+
+        //comprobamos que este registrado en la bd
+        $query_check_item = "SELECT item_id FROM item WHERE item_id = '$id'";
+        $check_item = mainModel::ejecutar_consulta_simple($query_check_item);
+        if($check_item -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos encontrado el ITEM a eliminar en el sistema",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos privilegios del usario que está eliminando
+        session_start(['name' => 'ppp']);//iniciamos sesion
+        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //eliminar item
+        $eliminar_item = itemModelo::eliminar_item_modelo($id);
+        if($eliminar_item -> rowCount() == 1){//si se eliminó
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Item eliminado",
+                "Texto"=> "El ITEM ha sido eliminado exitosamente, por favor revisar el modulo 'Items Inhabilitados'",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se puede eliminar el ITEM, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+    }
+
+    public function habilitar_item_controlador(){
+        //recivimos el id
+        $id = mainModel::decryption($_POST['item_id_enable']);//lo recive desde la tabla, en esta caso que esta en el controlador paginador
+        $id = mainModel::limpiar_cadena($id);//evitamos inyeccion sql
+
+        //comprobamos que este registrado en la bd
+        $query_check_item = "SELECT item_id FROM item WHERE item_id = '$id'";
+        $check_item = mainModel::ejecutar_consulta_simple($query_check_item);
+        if($check_item -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos encontrado el ITEM a habilitar en el sistema",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos privilegios del usario que está eliminando
+        session_start(['name' => 'ppp']);//iniciamos sesion
+        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //habilitar item
+        $habilitar_item = itemModelo::habilitar_item_modelo($id);
+        if($habilitar_item -> rowCount() == 1){//si se eliminó
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Item Habilitado",
+                "Texto"=> "El ITEM ha sido habilitado exitosamente, por favor revisar el modulo 'Items Habilitados'",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se puede habilitar el ITEM, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }
