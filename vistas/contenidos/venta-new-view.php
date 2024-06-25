@@ -1,28 +1,26 @@
 <!-- Page header -->
 <div class="full-box page-header">
     <h3 class="text-left">
-        <i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO
+        <i class="fas fa-plus fa-fw"></i> &nbsp; NUEVA VENTA
     </h3>
     <p class="text-justify">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium quod harum vitae, fugit quo soluta.
-        Molestias officiis voluptatum delectus doloribus at tempore, iste optio quam recusandae numquam non inventore
-        dolor.
+        GESTION DE VENTAS
     </p>
 </div>
 
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a class="active" href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO PRÉSTAMO</a>
+            <a class="active" href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVA VENTA</a>
         </li>
         <li>
             <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt"></i> &nbsp; RESERVACIONES</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp; PRÉSTAMOS</a>
+            <a href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp; VENTAS</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADOS</a>
+            <a href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADAS</a>
         </li>
         <li>
             <a href="<?php echo server_url; ?>venta-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
@@ -242,50 +240,19 @@
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="form-group">
-                        <label for="input_cliente" class="bmd-label-floating">DNI, Nombre, Apellido, Telefono</label>
-                        <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]{1,30}" class="form-control"
-                            name="input_cliente" id="input_cliente" maxlength="30">
+                        <label for="input_cliente" class="bmd-label-floating">DNI</label>
+                        <input type="number" pattern="[0-9]{1,8}" class="form-control"
+                            name="input_cliente" id="input_cliente" maxlength="8">
                     </div>
                 </div>
                 <br>
                 <div class="container-fluid" id="tabla_clientes">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-sm">
-                            <tbody>
-                                <tr class="text-center">
-                                    <td>0000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-user-plus"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>0000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-user-plus"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>0000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-user-plus"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- Aqui se miestran los resultados de la busqueda de clientes para las ventas -->
                 </div>
-                <div class="alert alert-warning" role="alert">
-                    <p class="text-center mb-0">
-                        <i class="fas fa-exclamation-triangle fa-2x"></i><br>
-                        No hemos encontrado ningún cliente en el sistema que coincida con <strong>“Busqueda”</strong>
-                    </p>
-                </div>
+                
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar</button>
+                <button type="button" class="btn btn-primary" onclick="buscar_cliente()"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar</button>
                 &nbsp; &nbsp;
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
@@ -426,3 +393,7 @@
         </form>
     </div>
 </div>
+
+<?php
+    include_once "./vistas/inc/venta.php";
+?>
