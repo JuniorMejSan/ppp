@@ -30,10 +30,12 @@
             <div class="container-fluid">
                 <div class="row">
                     <!-- RUC-->
-                    <r class="col-12 col-md-4">
-                        <label for="proveedor_ruc" class="bmd-label-floating">RUC</label>
-                        <input type="text" class="form-control" name="proveedor_ruc_reg" id="proveedor_ruc" maxlength="11" required pattern="\d{11}">
-                    </r>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="proveedor_ruc" class="bmd-label-floating">RUC</label>
+                            <input type="text" class="form-control" name="proveedor_ruc_reg" id="proveedor_ruc" maxlength="11" required pattern="\d{11}">
+                        </div>
+                    </div>
                     <!-- Nombre-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
