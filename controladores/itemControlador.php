@@ -198,7 +198,7 @@ class itemControlador extends itemModelo{
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM item 
             WHERE item_estado = 'Habilitado' 
-            AND (item_codigo LIKE '%$busqueda%' OR item_nombre LIKE '%busqueda%') 
+            AND (item_codigo LIKE '%$busqueda%' OR item_nombre LIKE '%$busqueda%') 
             ORDER BY item_nombre ASC 
             LIMIT $inicio, $registros";
         }else{
@@ -244,6 +244,7 @@ class itemControlador extends itemModelo{
                         <th>NOMBRE</th>
                         <th>STOCK</th>
                         <th>PRECIO</th>
+                        <th>ESTADO</th>
                         <th>DETALLE</th>';
                         if($privilegio == 1 || $privilegio == 2){
                             $tabla.= '<th>ACTUALIZAR</th>';
@@ -267,6 +268,7 @@ class itemControlador extends itemModelo{
                                 <td>'.$rows['item_nombre'].'</td>
                                 <td>'.$rows['item_stock'].'</td>
                                 <td>'.$rows['item_precio'].'</td>
+                                <td>'.$rows['item_estado'].'</td>
                                 <td>
                                     <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" title="'.$rows['item_nombre'].'" data-content="'.($rows['item_detalle'] ? $rows['item_detalle'] : '-').'">
                                     <i class="fas fa-info-circle"></i>

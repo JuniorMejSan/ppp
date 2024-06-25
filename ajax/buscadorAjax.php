@@ -79,7 +79,7 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
                 $alerta = [
                     "Alerta" => "simple",
                     "Titulo" => "Ocurrio un error",
-                    "Texto"=> "Por favor introducir untermino para proceder con la busqueda",
+                    "Texto"=> "Por favor introducir un termino para proceder con la busqueda",
                     "Tipo" => "error"
                 ];
                 echo json_encode($alerta);
