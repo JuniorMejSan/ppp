@@ -161,6 +161,8 @@
                     </div>
                 </div>
             </fieldset>
+
+            
             <fieldset>
                 <legend><i class="fas fa-history"></i> &nbsp; Fecha y hora de entrega</legend>
                 <div class="container-fluid">
@@ -221,6 +223,8 @@
                     </div>
                 </div>
             </fieldset>
+
+
             <br><br><br>
             <p class="text-center" style="margin-top: 40px;">
                 <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i>
@@ -288,50 +292,11 @@
                 </div>
                 <br>
                 <div class="container-fluid" id="tabla_items">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-sm">
-                            <tbody>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del item</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-box-open"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del item</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-box-open"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del item</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-box-open"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del item</td>
-                                    <td>
-                                        <button type="button" class="btn btn-primary"><i
-                                                class="fas fa-box-open"></i></button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    <p class="text-center mb-0">
-                        <i class="fas fa-exclamation-triangle fa-2x"></i><br>
-                        No hemos encontrado ningún item en el sistema que coincida con <strong>“Busqueda”</strong>
-                    </p>
+                    <!-- Aqui se miestran los resultados de la busqueda de items para las ventas -->
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar</button>
+                <button type="button" class="btn btn-primary" onclick = "buscar_item()"><i class="fas fa-search fa-fw"></i> &nbsp; Buscar</button>
                 &nbsp; &nbsp;
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
@@ -354,7 +319,7 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" name="id_agregar_item" id="id_agregar_item">
-                <div class="container-fluid">
+                <div cs="container-fluid">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">

@@ -120,6 +120,7 @@ class ventaControlador extends ventaModelo{
         }
     }
 
+    //funcion para eliminar cliente de la venta
     public function eliminar_cliente_venta_controlador(){
 
         //iniciamos la sesion
@@ -145,5 +146,62 @@ class ventaControlador extends ventaModelo{
             ];
         }
         echo json_encode($alerta);
+    }
+
+    //funcion para agregar items a la venta
+    public function buscar_item_venta_controlador(){
+    
+        //recivimos el termino de busqueda
+        $item = mainModel::limpiar_cadena($_POST["buscar_item"]);
+
+        //verificamos que no venga vacia
+        if($item == ""){
+            return '<div class="alert alert-warning" role="alert">
+                    <p class="text-center mb-0">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i><br>
+                        Debe introducir el codigo o nombre del Item
+                    </p>
+                </div>';
+                exit(); //hacemos que se detenga la ejecucion del codigo
+        }
+
+        //comprobar texto en la bd
+        $query_datos_item = "SELECT * FROM item WHERE (item_codigo LIKE '%$item%' OR item_nombre LIKE '%$item%') AND (item_estado = 'Habilitado') ORDER BY item_codigo ASC";
+        $datos_item = mainModel::ejecutar_consulta_simple($query_datos_item);
+
+        //verificamos si hay datos
+        if($datos_item -> rowCount() >= 1){
+
+            $datos_item = $datos_item -> fetchAll(); //reasignamos todos los datos que trae la consulta al arreglo
+
+            //tabla que mostrara los datos del item buscado
+            $tabla = '<div class="table-responsive">
+                        <table class="table table-hover table-bordered table-sm">
+                            <tbody>';
+
+            //recorremos los registros que trajo la consulta para poder mostrarlos
+            foreach($datos_item as $rows){
+                $tabla.= '<tr class="text-center">
+                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].'</td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" onclick = "modal_agregar_item('.$rows['item_id'].')"><i
+                                                class="fas fa-box-open"></i></button>
+                                    </td>
+                                </tr>';
+            }
+
+            $tabla.= '      </tbody>
+                        </table>
+                    </div>';
+
+            return $tabla;
+        }else{
+            return '<div class="alert alert-warning" role="alert">
+                    <p class="text-center mb-0">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i><br>
+                        No hemos encontrado ningún item en el sistema que coincida con <strong>“'.$item.'”</strong>
+                    </p>
+                </div>';
+        }
     }
 }

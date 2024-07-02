@@ -83,4 +83,36 @@
             }
         });
     }//fin de funcion
+
+    //funcion para buscar item por su codigo o nombre
+    function buscar_item(){
+
+        let input_item = document.querySelector('#input_item').value; //seleccionamos un elemento del dom mediante un selector
+        input_item = input_item.trim(); //quita espacios en los extremos
+
+        //si el input viene vacio
+        if(input_item != ""){
+
+            let datos = new FormData(); //array de datos del cliente a buscar
+            datos.append("buscar_item", input_item);//le asignamos los valores
+
+            fetch("<?php echo server_url ?>ajax/ventaAjax.php", {
+                method: 'POST',
+                body:datos
+            }) //se envia la url y las configuraciones
+                .then(respuesta => respuesta.text())//llega el dato desde el html
+                .then(respuesta => {
+                    let tabla_items = document.querySelector('#tabla_items'); //capturamos la tabla donde se mostraran los datos
+                    tabla_items.innerHTML = respuesta;
+                })
+
+        }else{ //mostramos alerta para que ingrese termino de busqueda
+            Swal.fire({
+                title: 'Ocurrio un error',
+                text: 'Debes introducir el codigo o nombre del Item',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    }//fin de funcion
 </script>
