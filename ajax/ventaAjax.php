@@ -3,7 +3,7 @@ $peticionAjax = true;
 require_once "../config/app.php";
 
 //detectar si los datos se envian esde un formulario para ejecutar los controladores o funciones
-if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente'])) {//busca desde el valor ingresado en el modal del cliente, 
+if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || isset($_POST['id_eliminar_cliente'])) {//busca desde el valor ingresado en el modal del cliente, 
 
     //instanciamos al controlador
     require_once "../controladores/ventaControlador.php";
@@ -17,6 +17,11 @@ if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente'])) {//b
     //agregar cliente a la venta
     if(isset($_POST['id_agregar_cliente'])){
         echo $ins_venta -> agregar_cliente_venta_controlador();
+    }
+
+    //el9minar cliente a la venta
+    if(isset($_POST['id_eliminar_cliente'])){
+        echo $ins_venta -> eliminar_cliente_venta_controlador();
     }
 
 }else { //si no significa que se esta intentando acceder desde el navegador

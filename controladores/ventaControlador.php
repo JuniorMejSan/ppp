@@ -120,4 +120,30 @@ class ventaControlador extends ventaModelo{
         }
     }
 
+    public function eliminar_cliente_venta_controlador(){
+
+        //iniciamos la sesion
+        session_start(['name' => 'ppp']);
+
+        //quitamos la sesion para que se elimine el cliente agregado
+        unset($_SESSION['datos_cliente']);
+
+        //comprobramos que la variable de sesion ya no existe o no tiene datos
+        if (empty($_SESSION['datos_cliente'])) {
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Cliente removido",
+                "Texto"=> "Los datos del cliente han sido removimos exitosamente",
+                "Tipo" => "success"
+            ];
+        }else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han podido remover los datos del cliente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+    }
 }
