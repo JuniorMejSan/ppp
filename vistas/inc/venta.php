@@ -17,9 +17,9 @@
     // Configurar campo de DNI
     setupNumberInput('input_cliente', 8);
 
-
     });
 
+    //funcion para buscar cliente por su DNI
     function buscar_cliente(){
 
         let input_cliente = document.querySelector('#input_cliente').value; //seleccionamos un elemento del dom mediante un selector
@@ -49,5 +49,38 @@
             confirmButtonText: 'Aceptar'
         });
         }
-    }
+    }//fin de funcion
+
+    //funcion para agregar cliente a la venta
+    function agregar_cliente(id){
+
+        $('#ModalCliente').modal('hide');
+
+        Swal.fire({//boton de confirmacion de la alerta
+            title: '¿Quieres agregar este cliente?',
+            text: 'Se agregara el cliente para realizar la venta',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#f06a11',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, agregar',
+            cancelButtonText: 'No, Cancelar'
+        }).then((result) => {
+            if(result.value) {
+                let datos = new FormData(); //array de datos del cliente a buscar
+                datos.append("id_agregar_cliente", id);//le asignamos los valores
+
+                fetch("<?php echo server_url ?>ajax/ventaAjax.php", {
+                    method: 'POST',
+                    body:datos
+                }) //se envia la url y las configuraciones
+                .then(respuesta => respuesta.json())//llega el dato desde el html
+                .then(respuesta => {
+                    return alertas_ajax(respuesta);
+                })
+            }else{
+                $('#ModalCliente').modal('show');
+            }
+        });
+    }//fin de funcion
 </script>

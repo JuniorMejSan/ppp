@@ -52,7 +52,7 @@
                         Ventas <i class="fas fa-chevron-down"></i></a>
                     <ul>
                         <li>
-                            <a href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Nuevo préstamo</a>
+                            <a href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Nueva venta</a>
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt fa-fw"></i> &nbsp;

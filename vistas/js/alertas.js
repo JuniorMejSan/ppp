@@ -44,7 +44,7 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
         confirmButtonText: 'Aceptar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
-        if(result.isConfirmed) {
+        if(result.value) {
             fetch(action, config) //se envia la url y las configuraciones
                 .then(respuesta => respuesta.json())//parsea los datos que llegan a json
                 .then(respuesta => {

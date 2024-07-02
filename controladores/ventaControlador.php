@@ -63,5 +63,61 @@ class ventaControlador extends ventaModelo{
                 </div>';
         }
     }
-    
+
+    //controlador para agregar cliente a la venta
+    public function agregar_cliente_venta_controlador(){
+
+        //recuperamos el id del cliente seleccionado 
+        $id = mainModel::limpiar_cadena(($_POST['id_agregar_cliente']));
+
+        //comprobamos cliente en la base de datos
+        $query_check_clinte = "SELECT * FROM cliente WHERE cliente_id = '$id'";
+        $check_cliente = mainModel::ejecutar_consulta_simple($query_check_clinte);
+
+        if ($check_cliente -> rowCount() <= 0){//no existe el cliente en la base de datos
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos podido encontrar el cliente en el sistema",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }else{
+            $campos = $check_cliente -> fetch();
+        }
+
+        //iniciamos la sesion
+        session_start(['name' => 'ppp']);
+
+        if(empty($_SESSION['datos_cliente'])){//variable de sesion que tendran todos los datos que se agregue
+            //si viene vacio lo llenamos
+            $_SESSION['datos_cliente'] = [
+                "ID" => $campos['cliente_id'],
+                "DNI" => $campos['cliente_dni'],
+                "Nombre" => $campos['cliente_nombre'],
+                "Apellido" => $campos['cliente_apellido']
+            ];
+
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Cliente agregado",
+                "Texto"=> "Cliente agregado a la venta satisfactoriamente",
+                "Tipo" => "success"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+        }else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se ha podido agregar el cliente a la venta o esta venta ya tiene un cliente, intentelo nuevamente",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+        }
+    }
+
 }

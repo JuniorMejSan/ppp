@@ -33,40 +33,49 @@
         <div class="container-fluid">
             <p class="text-center roboto-medium">AGREGAR CLIENTE O ITEMS</p>
             <p class="text-center">
+                <?php if(empty($_SESSION['datos_cliente'])){ ?>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCliente"><i
                         class="fas fa-user-plus"></i> &nbsp; Agregar cliente</button>
+                <?php } ?>
+
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalItem"><i
                         class="fas fa-box-open"></i> &nbsp; Agregar item</button>
             </p>
             <div>
                 <span class="roboto-medium">CLIENTE:</span>
-                <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un
-                    cliente</span>
-                <form action="" style="display: inline-block !important;">
-                    Carlos Alfaro
-                    <button type="button" class="btn btn-danger"><i class="fas fa-user-times"></i></button>
-                </form>
+                <?php if(empty($_SESSION['datos_cliente'])){ ?>
+
+                    <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un
+                        cliente</span>
+
+                <?php }else{?>
+
+                    <form class="FormularioAjax" action="<?php echo server_url ?>ajax/ventaAjax.php" method="POST" data-form = "venta" style="display: inline-block !important;">
+                        <input type="hidden" name="id_eliminar_cliente" value="<?php echo $_SESSION['datos_cliente']['ID'] ?>">
+                    <?php echo $_SESSION['datos_cliente']['Nombre']." ".$_SESSION['datos_cliente']['Apellido']." - ".$_SESSION['datos_cliente']['DNI']?>
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-user-times"></i></button>
+                    </form>
+
+                <?php } ?>
             </div>
             <div class="table-responsive">
                 <table class="table table-dark table-sm">
                     <thead>
                         <tr class="text-center roboto-medium">
                             <th>ITEM</th>
-                            <th>CANTIDAD</th>
-                            <th>TIEMPO</th>
-                            <th>COSTO</th>
-                            <th>SUBTOTAL</th>
+                            <th>STOCK</th>
+                            <th>COSTO S/.</th>
+                            <th>SUBTOTAL S/.</th>
                             <th>DETALLE</th>
                             <th>ELIMINAR</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="text-center">
-                            <td>Silla plastica</td>
+                            <td>Ticketera Hp</td>
                             <td>7</td>
-                            <td>Hora</td>
-                            <td>$5.00</td>
-                            <td>$35.00</td>
+                            <td>S/. 5.00</td>
+                            <td>S/. 35.00</td>
                             <td>
                                 <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
                                     title="Nombre del item" data-content="Detalle completo del item">
@@ -82,11 +91,10 @@
                             </td>
                         </tr>
                         <tr class="text-center">
-                            <td>Silla metalica</td>
+                            <td>Ticketera Hp</td>
                             <td>9</td>
-                            <td>Día</td>
-                            <td>$5.00</td>
-                            <td>$45.00</td>
+                            <td>S/. 5.00</td>
+                            <td>S/. 45.00</td>
                             <td>
                                 <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
                                     title="Nombre del item" data-content="Detalle completo del item">
@@ -102,11 +110,10 @@
                             </td>
                         </tr>
                         <tr class="text-center">
-                            <td>Mesa plastica</td>
+                            <td>Ticketera Hp</td>
                             <td>5</td>
-                            <td>Evento</td>
-                            <td>$10.00</td>
-                            <td>$50.00</td>
+                            <td>S/. 10.00</td>
+                            <td>S/. 50.00</td>
                             <td>
                                 <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
                                     title="Nombre del item" data-content="Detalle completo del item">
@@ -124,7 +131,7 @@
                         <tr class="text-center bg-light">
                             <td><strong>TOTAL</strong></td>
                             <td><strong>21 items</strong></td>
-                            <td colspan="2"></td>
+                            <td colspan="1"></td>
                             <td><strong>$130.00</strong></td>
                             <td colspan="2"></td>
                         </tr>
@@ -134,7 +141,7 @@
         </div>
         <form action="" autocomplete="off">
             <fieldset>
-                <legend><i class="far fa-clock"></i> &nbsp; Fecha y hora de préstamo</legend>
+                <legend><i class="far fa-clock"></i> &nbsp; Fecha y hora de venta</legend>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12 col-md-6">
