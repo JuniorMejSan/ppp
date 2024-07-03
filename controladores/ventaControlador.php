@@ -232,7 +232,6 @@ class ventaControlador extends ventaModelo{
         
         //recuperamos lo detalles de la venta ingresados
         $cantidad = mainModel::limpiar_cadena($_POST['detalle_cantidad']);
-        $mensaje = mainModel::limpiar_cadena($_POST['detalle_mensaje']);
 
         //comprobamos que los campos no vengan vacios
         if($cantidad == ""){
@@ -273,7 +272,6 @@ class ventaControlador extends ventaModelo{
                 "Precio"=> $campos['item_precio'],
                 'Detalle'=> $campos['item_detalle'],
                 'Cantidad'=> $cantidad,
-                'Mensaje' => $mensaje
             ];
 
             //mensaje de item agregado

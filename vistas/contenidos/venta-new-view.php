@@ -62,79 +62,86 @@
                 <table class="table table-dark table-sm">
                     <thead>
                         <tr class="text-center roboto-medium">
+                            <th>#</th>
+                            <th>CODIGO</th>
                             <th>ITEM</th>
-                            <th>STOCK</th>
-                            <th>COSTO S/.</th>
-                            <th>SUBTOTAL S/.</th>
+                            <th>CANTIDAD</th>
+                            <th>PRECIO <?php echo moneda ?></th>
+                            <th>SUBTOTAL <?php echo moneda ?></th>
                             <th>DETALLE</th>
                             <th>ELIMINAR</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php 
+                            if(isset($_SESSION['datos_item']) && count($_SESSION['datos_item']) >= 1){
+
+                                //creamos variables de sesion que llevaran el importe total y la cantidad de items
+                                $_SESSION['venta_total'] = 0;
+                                $_SESSION['venta_item'] = 0;
+                                //contador de items
+                                $contador = 1;
+
+                                //recorremos el array
+                                foreach ($_SESSION['datos_item'] as $items) {//recorre todos los valores que trae el array
+
+                                    //para calcular el subtotal
+                                    $subtotal = $items['Cantidad'] * $items['Precio'];
+                                    //damos formato a subtotal
+                                    $subtotal = number_format($subtotal,2,'.','');
+                                    
+                        ?>
                         <tr class="text-center">
-                            <td>Ticketera Hp</td>
-                            <td>7</td>
-                            <td>S/. 5.00</td>
-                            <td>S/. 35.00</td>
+                            <td><?php echo $contador ?></td>
+                            <td><?php echo $items['Codigo'] ?></td>
+                            <td><?php echo $items['Nombre'] ?></td>
+                            <td><?php echo $items['Cantidad'] ?></td>
+                            <td><?php echo moneda.number_format($items['Precio'],2,'.','') ?></td>
+                            <td><?php echo moneda.$subtotal ?></td>
                             <td>
                                 <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
-                                    title="Nombre del item" data-content="Detalle completo del item">
+                                    title="<?php echo $items['Nombre'] ?>" data-content="<?php echo $items['Detalle'] ?>">
                                     <i class="fas fa-info-circle"></i>
                                 </button>
                             </td>
                             <td>
-                                <form action="">
+                                <form class="FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="venta" autocomplete="off">
+                                    <input type="hidden" name="id_eliminar_item" value="<?php echo  $items['ID']?>">
                                     <button type="button" class="btn btn-warning">
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
-                        <tr class="text-center">
-                            <td>Ticketera Hp</td>
-                            <td>9</td>
-                            <td>S/. 5.00</td>
-                            <td>S/. 45.00</td>
-                            <td>
-                                <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
-                                    title="Nombre del item" data-content="Detalle completo del item">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <form action="">
-                                    <button type="button" class="btn btn-warning">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td>Ticketera Hp</td>
-                            <td>5</td>
-                            <td>S/. 10.00</td>
-                            <td>S/. 50.00</td>
-                            <td>
-                                <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
-                                    title="Nombre del item" data-content="Detalle completo del item">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <form action="">
-                                    <button type="button" class="btn btn-warning">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        <?php
+                                $contador++;
+                                //vamos sumando todos los subtotales
+                                $_SESSION['venta_total'] += $subtotal;
+                                //sumamos todos los items de la venta
+                                $_SESSION['venta_item'] += $items['Cantidad'];
+
+                                }
+                        ?>
+                        
                         <tr class="text-center bg-light">
                             <td><strong>TOTAL</strong></td>
-                            <td><strong>21 items</strong></td>
+                            <td colspan="2"></td>
+                            <td><strong><?php echo  $_SESSION['venta_item']?> items</strong></td>
                             <td colspan="1"></td>
-                            <td><strong>$130.00</strong></td>
+                            <td><strong><?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?></strong></td>
                             <td colspan="2"></td>
                         </tr>
+                        <?php 
+                            }else {
+                                $_SESSION['venta_total'] = 0;
+                                $_SESSION['venta_item'] = 0;
+                        ?>
+                        <tr class="text-center">
+                            <td colspan = "7" >Esperando Items...</td>
+                        </tr>
+                        <?php 
+                            }
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -311,7 +318,7 @@
     <div class="modal-dialog" role="document">
         <form class="modal-content FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="default" autocomplete="off">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalAgregarItem">Detalles de Item</h5>
+                <h5 class="modal-title" id="ModalAgregarItem">Ingrese la cantidad a vender</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -320,18 +327,11 @@
                 <input type="hidden" name="id_agregar_item" id="id_agregar_item">
                 <div cs="container-fluid">
                     <div class="row">
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-md-12">
                             <div class="form-group">
                                 <label for="detalle_cantidad" class="bmd-label-floating">Cantidad</label>
                                 <input type="number" pattern="[0-9]{1,7}" class="form-control" name="detalle_cantidad"
                                     id="detalle_cantidad" maxlength="7" required="">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-9">
-                            <div class="form-group">
-                                <label for="detalle_mensaje" class="bmd-label-floating">Mensaje</label>
-                                <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,150}" class="form-control"
-                                    name="detalle_mensaje" id="detalle_mensaje" maxlength="150" required="">
                             </div>
                         </div>
                     </div>
