@@ -115,4 +115,27 @@
             });
         }
     }//fin de funcion
+
+    //funcion para modela del item a la venta
+    function modal_agregar_item(id){
+
+        //ocultamos del modal de busqueda
+        $('#ModalItem').modal('hide');
+        //mostramos el modal de agregar item
+        $('#ModalAgregarItem').modal('show');
+
+        //quiero darle el valor del id del item a un input html lo hacemos mediante el id de dicho input
+        document.querySelector('#id_agregar_item').setAttribute("value", id); //value es un atributo para colocarle un valor a un input
+
+    }//fin de funcion
+
+    //funcion para cerrar el modal de agregar y abrir el de buscar el item
+    function modal_buscar_item(id){
+
+        //ocultamos del modal de busqueda
+        $('#ModalAgregarItem').modal('hide');
+        //mostramos el modal de agregar item
+        $('#ModalItem').modal('show');
+
+    }//fin de funcion
 </script>

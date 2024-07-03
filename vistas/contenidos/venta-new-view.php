@@ -309,10 +309,9 @@
 <div class="modal fade" id="ModalAgregarItem" tabindex="-1" role="dialog" aria-labelledby="ModalAgregarItem"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <form class="modal-content FormularioAjax">
+        <form class="modal-content FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="default" autocomplete="off">
             <div class="modal-header">
-                <h5 class="modal-title" id="ModalAgregarItem">Selecciona el formato, cantidad de items, tiempo y costo
-                    del préstamo del item</h5>
+                <h5 class="modal-title" id="ModalAgregarItem">Detalles de Item</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -321,37 +320,18 @@
                 <input type="hidden" name="id_agregar_item" id="id_agregar_item">
                 <div cs="container-fluid">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12 col-md-3">
                             <div class="form-group">
-                                <label for="detalle_formato" class="bmd-label-floating">Formato de préstamo</label>
-                                <select class="form-control" name="detalle_formato" id="detalle_formato">
-                                    <option value="Horas" selected="">Horas</option>
-                                    <option value="Dias">Días</option>
-                                    <option value="Evento">Evento</option>
-                                    <option value="Mes">Mes</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="detalle_cantidad" class="bmd-label-floating">Cantidad de items</label>
-                                <input type="num" pattern="[0-9]{1,7}" class="form-control" name="detalle_cantidad"
+                                <label for="detalle_cantidad" class="bmd-label-floating">Cantidad</label>
+                                <input type="number" pattern="[0-9]{1,7}" class="form-control" name="detalle_cantidad"
                                     id="detalle_cantidad" maxlength="7" required="">
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-9">
                             <div class="form-group">
-                                <label for="detalle_tiempo" class="bmd-label-floating">Tiempo (según formato)</label>
-                                <input type="num" pattern="[0-9]{1,7}" class="form-control" name="detalle_tiempo"
-                                    id="detalle_tiempo" maxlength="7" required="">
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-4">
-                            <div class="form-group">
-                                <label for="detalle_costo_tiempo" class="bmd-label-floating">Costo por unidad de
-                                    tiempo</label>
-                                <input type="text" pattern="[0-9.]{1,15}" class="form-control"
-                                    name="detalle_costo_tiempo" id="detalle_costo_tiempo" maxlength="15" required="">
+                                <label for="detalle_mensaje" class="bmd-label-floating">Mensaje</label>
+                                <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,150}" class="form-control"
+                                    name="detalle_mensaje" id="detalle_mensaje" maxlength="150" required="">
                             </div>
                         </div>
                     </div>
@@ -360,7 +340,7 @@
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Agregar</button>
                 &nbsp; &nbsp;
-                <button type="button" class="btn btn-secondary">Cancelar</button>
+                <button type="button" class="btn btn-secondary" onclick = "modal_buscar_item()">Cancelar</button>
             </div>
         </form>
     </div>

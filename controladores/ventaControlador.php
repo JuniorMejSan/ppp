@@ -148,7 +148,7 @@ class ventaControlador extends ventaModelo{
         echo json_encode($alerta);
     }
 
-    //funcion para agregar items a la venta
+    //funcion para buscar items para la venta
     public function buscar_item_venta_controlador(){
     
         //recivimos el termino de busqueda
@@ -203,5 +203,100 @@ class ventaControlador extends ventaModelo{
                     </p>
                 </div>';
         }
+    }
+
+    //funcion para agregar items a la venta
+    public function agregar_item_venta_controlador(){
+
+        //recuperamos el id del item
+        $id = mainModel::limpiar_cadena($_POST['id_agregar_item']);
+
+        //comprobando que el item exista y este habilitado en la bd
+        $query_check_item = "SELECT * FROM item WHERE item_id = '$id' AND item_estado = 'Habilitado'";
+        $check_item = mainModel::ejecutar_consulta_simple($query_check_item);
+
+        //verificamos que si se traigan datos
+        if ($check_item ->rowCount() <= 0) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos podido encontrar el item en el sistema, intentelo nuevamente",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        } else {
+            $campos = $check_item -> fetch();
+        }
+        
+        //recuperamos lo detalles de la venta ingresados
+        $cantidad = mainModel::limpiar_cadena($_POST['detalle_cantidad']);
+        $mensaje = mainModel::limpiar_cadena($_POST['detalle_mensaje']);
+
+        //comprobamos que los campos no vengan vacios
+        if($cantidad == ""){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Debe colocar la cantidad a vender",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos el formato de los datos 
+        if(mainModel::verificar_datos("[0-9]{1,7}",$cantidad)){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La cantidad no tiene el formato reuerido",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //iniciamos la sesion 
+        session_start(['name' => 'ppp']);
+        
+        //condicional para verificar si la sesion esta vacia
+        if (empty($_SESSION['datos_item'][$id])) {//creamos una sesion con el nombre datos_item y verificamos si esta vacia
+            //llenamos un array con los datos
+            $_SESSION['datos_item'][$id] = [
+                "ID" => $campos['item_id'],
+                "Codigo" => $campos['item_codigo'],
+                "Nombre"=> $campos['item_nombre'],
+                "Precio"=> $campos['item_precio'],
+                'Detalle'=> $campos['item_detalle'],
+                'Cantidad'=> $cantidad,
+                'Mensaje' => $mensaje
+            ];
+
+            //mensaje de item agregado
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Item agregado",
+                "Texto"=> "El item se agrego correctamente",
+                "Tipo" => "success"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        } else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El item que intenta agregar ya se encuentra seleccionado",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }
+        
     }
 }
