@@ -2,6 +2,9 @@
 require_once "./controladores/ventaControlador.php";
 $ins_venta = new ventaControlador();
 $metodos_pago = $ins_venta->obtener_metodos_pago();
+
+$fechaActual = date('Y-m-d');
+$horaActual = date('H:i:s');
 ?>
 <!-- Page header -->
 <div class="full-box page-header">
@@ -155,39 +158,41 @@ $metodos_pago = $ins_venta->obtener_metodos_pago();
         </div>
         <form class="FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="save" autocomplete="off">
 
-        <fieldset>
-            <legend><i class="fas fa-cubes"></i> &nbsp; Otros datos</legend>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="venta_metodo" class="bmd-label-floating">Método de pago</label>
-                            <select class="form-control" name="venta_metodo_reg" id="venta_metodo">
-                                <?php foreach($metodos_pago as $metodo): ?>
-                                    <option value="<?php echo $metodo['idMetodPago']; ?>">
-                                        <?php echo $metodo['nombre']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+            <fieldset>
+                <legend><i class="fas fa-cubes"></i> &nbsp; Otros datos</legend>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="venta_metodo" class="bmd-label-floating">Método de pago</label>
+                                <select class="form-control" name="venta_metodo_reg" id="venta_metodo">
+                                    <?php foreach($metodos_pago as $metodo): ?>
+                                        <option value="<?php echo $metodo['idMetodPago']; ?>">
+                                            <?php echo $metodo['nombre']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label for="prestamo_total" class="bmd-label-floating">Total a pagar</label>
-                            <input type="text" pattern="[0-9.]{1,10}" class="form-control" readonly=""
-                                value="<?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?>" id="prestamo_total" maxlength="10">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label for="prestamo_total" class="bmd-label-floating">Total a pagar</label>
+                                <input type="text" pattern="[0-9.]{1,10}" class="form-control" readonly=""
+                                    value="<?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?>" id="prestamo_total" maxlength="10">
+                                <input type="hidden" name="fecha_venta_reg" id = "fecha_venta" value="<?php echo $fechaActual; ?>">
+                                <input type="hidden" name="hora_venta_reg" id = "hora_venta" value="<?php echo $horaActual; ?>">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="prestamo_observacion" class="bmd-label-floating">Observación</label>
-                            <input type="text" pattern="[a-zA-z0-9áéíóúÁÉÍÓÚñÑ#() ]{1,400}" class="form-control"
-                                name="prestamo_observacion_reg" id="prestamo_observacion" maxlength="400">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="venta_observacion" class="bmd-label-floating">Observación</label>
+                                <input type="text" pattern="[a-zA-z0-9áéíóúÁÉÍÓÚñÑ#() ]{1,400}" class="form-control"
+                                    name="venta_observacion_reg" id="venta_observacion" maxlength="400">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
 
             <p class="text-center" style="margin-top: 40px;">
                 <button type="submit" class="btn btn-raised btn-info btn-sm"><i class="far fa-save"></i> &nbsp;
