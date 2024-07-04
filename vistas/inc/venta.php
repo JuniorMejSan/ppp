@@ -28,6 +28,9 @@
         //si el input viene vacio
         if(input_cliente != ""){
 
+            let tabla_clientes = document.querySelector('#tabla_clientes');
+            tabla_clientes.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x"></i></div>';
+
             let datos = new FormData(); //array de datos del cliente a buscar
             datos.append("buscar_cliente", input_cliente);//le asignamos los valores
 
@@ -41,13 +44,6 @@
                     tabla_clientes.innerHTML = respuesta;
                 })
 
-        }else{ //mostramos alerta para que ingrese termino de busqueda
-            Swal.fire({
-            title: 'Ocurrio un error',
-            text: 'Debes introducir un DNI',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-        });
         }
     }//fin de funcion
 
@@ -86,35 +82,46 @@
 
     //funcion para buscar item por su codigo o nombre
     function buscar_item(){
+    let input_item = document.querySelector('#input_item').value.trim();
+    
+    if(input_item != ""){
+        let tabla_items = document.querySelector('#tabla_items');
+        tabla_items.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin fa-3x"></i></div>';
+        
+        let datos = new FormData();
+        datos.append("buscar_item", input_item);
 
-        let input_item = document.querySelector('#input_item').value; //seleccionamos un elemento del dom mediante un selector
-        input_item = input_item.trim(); //quita espacios en los extremos
+        fetch("<?php echo server_url ?>ajax/ventaAjax.php", {
+            method: 'POST',
+            body: datos
+        })
+        .then(respuesta => respuesta.text())
+        .then(respuesta => {
+            tabla_items.innerHTML = respuesta;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tabla_items.innerHTML = '<div class="alert alert-danger">Error al buscar. Intente nuevamente.</div>';
+        });
+    }
+}
 
-        //si el input viene vacio
-        if(input_item != ""){
 
-            let datos = new FormData(); //array de datos del cliente a buscar
-            datos.append("buscar_item", input_item);//le asignamos los valores
+    document.querySelector('#input_item').addEventListener('input', debounce(buscar_item, 300));
 
-            fetch("<?php echo server_url ?>ajax/ventaAjax.php", {
-                method: 'POST',
-                body:datos
-            }) //se envia la url y las configuraciones
-                .then(respuesta => respuesta.text())//llega el dato desde el html
-                .then(respuesta => {
-                    let tabla_items = document.querySelector('#tabla_items'); //capturamos la tabla donde se mostraran los datos
-                    tabla_items.innerHTML = respuesta;
-                })
+    document.querySelector('#input_cliente').addEventListener('input', debounce(buscar_cliente, 300));
 
-        }else{ //mostramos alerta para que ingrese termino de busqueda
-            Swal.fire({
-                title: 'Ocurrio un error',
-                text: 'Debes introducir el codigo o nombre del Item',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-            });
-        }
-    }//fin de funcion
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 
     //funcion para modela del item a la venta
     function modal_agregar_item(id){

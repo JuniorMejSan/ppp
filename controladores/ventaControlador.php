@@ -297,4 +297,49 @@ class ventaControlador extends ventaModelo{
         }
         
     }
+
+    //funcion pata eliminar item de la venta
+    public function eliminar_item_venta_controlador(){
+
+        //recuperamos el id del item a eliminar
+        $id = mainModel::limpiar_cadena($_POST['id_eliminar_item']);
+
+        //iniciamos la sesion
+        session_start(['name' => 'ppp']);
+
+        //limpiamos la sesion, pero con el item especifico que se quiere eliminar
+        unset($_SESSION['datos_item'][$id]);
+
+        //comprobramos que la variable de sesion ya no existe o no tiene datos
+        if (empty($_SESSION['datos_item'][$id])) {
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Item removido",
+                "Texto"=> "Los datos del item han sido removimos exitosamente",
+                "Tipo" => "success"
+            ];
+        }else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se han podido remover los datos del item",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+    }
+
+    //funcion para mostrar los medios de pago
+    public function obtener_metodos_pago() {
+        $query_metodo_pago = "SELECT * FROM metodopago";
+        $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
+        
+        $metodos = [];
+        if($metodo_pago->rowCount() >= 1){
+            $metodos = $metodo_pago->fetchAll();
+        }
+        return $metodos;
+    }
+    
+    
 }
