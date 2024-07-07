@@ -24,28 +24,42 @@
         </div>
     </a>
 
+    <?php
+        require_once "./controladores/itemControlador.php";
+        $ins_item = new itemControlador();
+
+        $total_item = $ins_item -> datos_item_controlador("Conteo", 0);
+    ?>
+
     <a href="<?php echo server_url; ?>item-list/" class="tile">
         <div class="tile-tittle">Inventario</div>
         <div class="tile-icon">
             <i class="fas fa-pallet fa-fw"></i>
-            <p>9 Registrados</p>
+            <p><?php echo $total_item -> rowCount(); ?> Registrados</p>
         </div>
     </a>
 
 
-    <a href="<?php echo server_url; ?>venta-pending/" class="tile">
+    <a href="<?php echo server_url; ?>venta-new/" class="tile">
         <div class="tile-tittle">Ventas</div>
         <div class="tile-icon">
             <i class="fas fa-hand-holding-usd fa-fw"></i>
-            <p>200 Registrados</p>
+            <p>NUEVA VENTA</p>
         </div>
     </a>
 
+    <?php
+        require_once "./controladores/ventaControlador.php";
+        $ins_venta = new ventaControlador();
+
+        $total_venta = $ins_venta -> datos_venta_controlador("Conteo", 0);
+    ?>
+
     <a href="<?php echo server_url; ?>venta-list/" class="tile">
-        <div class="tile-tittle">Finalizados</div>
+        <div class="tile-tittle">Ventas Finalizadas</div>
         <div class="tile-icon">
             <i class="fas fa-clipboard-list fa-fw"></i>
-            <p>700 Registrados</p>
+            <p><?php echo $total_venta -> rowCount(); ?> Registrados</p>
         </div>
     </a>
     <?php 

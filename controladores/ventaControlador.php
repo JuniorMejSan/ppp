@@ -60,6 +60,13 @@ class ventaControlador extends ventaModelo{
                         <i class="fas fa-exclamation-triangle fa-2x"></i><br>
                         No hemos encontrado ningún cliente en el sistema que coincida con <strong>“'.$cliente.'”</strong>
                     </p>
+                    <p class="text-center mb-0">
+                        <strong>¿Desea agregar un nuevo cliente?</strong>
+                    </p>
+                    <p class="text-center mb-0">
+                        <button type="button" class="btn btn-primary" onclick = "clienteNuevo()"><i
+                                                class="fas fa-user-plus"></i>  Agregar nuevo cliente</button>
+                    </p>
                 </div>';
         }
     }
@@ -182,7 +189,7 @@ class ventaControlador extends ventaModelo{
             //recorremos los registros que trajo la consulta para poder mostrarlos
             foreach($datos_item as $rows){
                 $tabla.= '<tr class="text-center">
-                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].'</td>
+                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.moneda.''.$rows['item_precio'].'</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" onclick = "modal_agregar_item('.$rows['item_id'].')"><i
                                                 class="fas fa-box-open"></i></button>
@@ -341,5 +348,217 @@ class ventaControlador extends ventaModelo{
         return $metodos;
     }
     
+    //controlador para los datos de la venta
+    public function datos_venta_controlador($tipo, $id){
+
+        $tipo = mainModel::limpiar_cadena($tipo);
+
+        $id = mainModel::decryption($id);
+        $id = mainModel::limpiar_cadena($id);
+
+        return ventaModelo::datos_venta_modelo($tipo, $id);
+
+    }
+
+    //funcion para agregar venta
+    public function agregar_venta_controlador(){
+
+        //iniciamos sesion
+        session_start(['name' => 'ppp']);
+
+        //comprobmos si la venta lleva items
+        if ($_SESSION['venta_item'] == 0) {//vriable de sesion que se creo en la vista de venta nueva 
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Necesita agregar items a la ventas",
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //no es necesario agregar el cliente a la venta, en caso el cliente no quiera dar sus datos, se coloca el 2 nueve veces
+
+        //recivimos todos los datos de a venta, incluyendo la fecha y hora que estan ocultas
+        $fecha_venta = mainModel::limpiar_cadena($_POST['fecha_venta_reg']);
+        $hora_venta = mainModel::limpiar_cadena($_POST['hora_venta_reg']);
+        $metodo_pago_venta = mainModel::limpiar_cadena($_POST['venta_metodo_reg']);
+        //el total de la venta que esta en el input readonly no se recive porque ya es una variable de sesion
+        $obervacion_venta = mainModel::limpiar_cadena($_POST['venta_observacion_reg']);
+
+        //comprobamos integridad de los datos
+        //condicional para verificar formato de fecha
+        if (mainModel::verificar_fecha($fecha_venta)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La FECHA no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("\d{2}:\d{2}:\d{2}", $hora_venta)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La HORA no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        $query_metodo_pago = "SELECT * FROM metodopago";
+        $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
+
+        $metodos = [];
+        if($metodo_pago->rowCount() >= 1){
+            $metodos = $metodo_pago->fetchAll();
+        }
+
+        $metodo_valido = false;
+        foreach($metodos as $metodo){
+            if (strtoupper($metodo_pago_venta) === $metodo['idMetodoPago']) {
+                $metodo_valido = true;
+                break;
+            }
+        }
+
+        if (!$metodo_valido) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrió un error",
+                "Texto"=> "El MÉTODO DE PAGO no coincide con ninguno de los métodos permitidos",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+        
+        //verificamos que la fecha de venta no sea mayor a la fecha actual
+        //creamos variable para almacenar la fecha actual
+        $fechaActual = date('Y-m-d');
+        if($fecha_venta != $fechaActual){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La FECHA de la venta no coincide con la FECHA actual",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //formatear fecha, hora y montos
+        $total_venta = number_format($_SESSION['venta_total'],2,".","");
+        $fecha_venta = date("Y-m-d", strtotime($fecha_venta));
+        $hora_venta = date("H:i:s", strtotime($hora_venta));
+        //generamos correlativo para la venta
+        //primero contamos las ventas registradas para poder llevar un orden
+        $sql_check_ventas = "SELECT venta_id FROM venta";
+        $correlativo = mainModel::ejecutar_consulta_simple($sql_check_ventas);
+
+        $correlativo = ($correlativo -> rowCount()) + 1;
+        //lo almacenamos en una variable
+        $codigo = mainModel::generar_codigo_aleatorio("CV", 7, $correlativo);//CV(Codigo de Venta), longitud de 7, se concatena con guion y luego el numeroque seria el correlativo
+
+        $datos_venta_reg = [
+            "Codigo" => $codigo,
+            "Fecha" => $fecha_venta,
+            "Hora" => $hora_venta,
+            "Cantidad" => $_SESSION['venta_item'],
+            "Total" => $total_venta,
+            "Metodo" => $metodo_pago_venta,
+            "Observacion" => $obervacion_venta,
+            "Usuario" => $_SESSION['usuario_ppp'],
+            "Cliente" =>  isset($_SESSION['datos_cliente']['ID']) ? $_SESSION['datos_cliente']['ID'] : '999'
+
+        ];
+
+        //registrar la venta
+        $agregar_venta = ventaModelo::agregar_venta_modelo($datos_venta_reg);
+
+        //comprobamos insercion
+        if($agregar_venta -> rowCount() != 1){//hubo error
+
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Error al registrar la venta, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+
+        }
+
+        //codigo registrar detalle de venta
+        //variabe para verificar errores
+        $errores_detalle = 0;
+
+        //recorremos todos los items de la venta
+        foreach ($_SESSION['datos_item'] as $items) {
+            //damos formato al precio de los productos
+            $precio = number_format($items['Precio'],2,'.','');
+
+            //array de datos para guardar en el detalle
+            $datos_detalle_reg = [
+                'Venta'=> $codigo,
+                'Item_id'=> $items['ID'],
+                'Item_cantidad'=> $items['Cantidad'],
+                'Item_precio'=> $precio,
+                'Detalle_total'=> $items['Cantidad'] * $precio
+            ];
+
+            //registrar detalle de venta
+            $agregar_detalle = ventaModelo::agregar_detalle_venta_modelo($datos_detalle_reg);
+
+            //verificamos insercion
+            if($agregar_detalle -> rowCount() != 1){//hubo error
     
+                //definimos error en 1
+                $errores_detalle = 1;
+                break;//terminamos foreach
+            }
+        }
+
+        //comprobacion de errores
+        if ($errores_detalle == 0) {//no hay errores en la insercion de detalle
+
+            //vaciamos las variables de sesion para limpiar la venta
+            unset($_SESSION['datos_cliente']);
+            unset($_SESSION['datos_item']);
+
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Venta registrada",
+                "Texto"=> "La VENTA fue registrada satisfactoriamente",
+                "Tipo" => "success"
+            ];
+
+        } else {//eliminamos los datos de la insercion erronea
+
+            ventaModelo::eliminar_venta_modelo($codigo, 'Detalle_venta'); 
+            ventaModelo::eliminar_venta_modelo($codigo, 'Venta');
+
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Error al registrar la venta y sus detalles, por favor intente nuevamente",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
+        
+
+    }
 }

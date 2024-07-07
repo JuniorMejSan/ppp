@@ -47,6 +47,11 @@
         }
     }//fin de funcion
 
+    //funcion para ir a agregar nuevo cliente
+    function clienteNuevo(){
+        window.location.href = '<?php echo server_url; ?>client-new/';
+    }
+
     //funcion para agregar cliente a la venta
     function agregar_cliente(id){
 

@@ -22,12 +22,6 @@ $horaActual = date('H:i:s');
             <a class="active" href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVA VENTA</a>
         </li>
         <li>
-            <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt"></i> &nbsp; RESERVACIONES</a>
-        </li>
-        <li>
-            <a href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp; VENTAS</a>
-        </li>
-        <li>
             <a href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADAS</a>
         </li>
         <li>
@@ -139,7 +133,7 @@ $horaActual = date('H:i:s');
                             <td><strong><?php echo  $_SESSION['venta_item']?> items</strong></td>
                             <td colspan="1"></td>
                             <td><strong><?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?></strong></td>
-                            <td colspan="2"></td>
+                            <td colspan="3 "></td>
                         </tr>
                         <?php 
                             }else {
@@ -147,7 +141,7 @@ $horaActual = date('H:i:s');
                                 $_SESSION['venta_item'] = 0;
                         ?>
                         <tr class="text-center">
-                            <td colspan = "7" >Esperando Items...</td>
+                            <td colspan = "9" >Esperando Items...</td>
                         </tr>
                         <?php 
                             }
@@ -167,7 +161,7 @@ $horaActual = date('H:i:s');
                                 <label for="venta_metodo" class="bmd-label-floating">Método de pago</label>
                                 <select class="form-control" name="venta_metodo_reg" id="venta_metodo">
                                     <?php foreach($metodos_pago as $metodo): ?>
-                                        <option value="<?php echo $metodo['idMetodPago']; ?>">
+                                        <option value="<?php echo $metodo['idMetodoPago']; ?>">
                                             <?php echo $metodo['nombre']; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -176,11 +170,11 @@ $horaActual = date('H:i:s');
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
-                                <label for="prestamo_total" class="bmd-label-floating">Total a pagar</label>
+                                <label for="venta_total" class="bmd-label-floating">Total a pagar</label>
                                 <input type="text" pattern="[0-9.]{1,10}" class="form-control" readonly=""
-                                    value="<?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?>" id="prestamo_total" maxlength="10">
-                                <input type="hidden" name="fecha_venta_reg" id = "fecha_venta" value="<?php echo $fechaActual; ?>">
-                                <input type="hidden" name="hora_venta_reg" id = "hora_venta" value="<?php echo $horaActual; ?>">
+                                    value="<?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?>" id="venta_total" maxlength="10">
+                                <input type="hidden" name="fecha_venta_reg" id = "fecha_venta" value="<?php echo $fechaActual; ?>" pattern="\d{4}-\d{2}-\d{2}">
+                                <input type="hidden" name="hora_venta_reg" id = "hora_venta" value="<?php echo $horaActual; ?>" pattern="\d{2}:\d{2}:\d{2}">
                             </div>
                         </div>
                         <div class="col-12">

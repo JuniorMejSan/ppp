@@ -55,16 +55,8 @@
                             <a href="<?php echo server_url; ?>venta-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Nueva venta</a>
                         </li>
                         <li>
-                            <a href="<?php echo server_url; ?>venta-venta/"><i class="far fa-calendar-alt fa-fw"></i> &nbsp;
-                                Reservaciones</a>
-                        </li>
-                        <li>
-                            <a href="<?php echo server_url; ?>venta-pending/"><i class="fas fa-hand-holding-usd fa-fw"></i> &nbsp;
-                                Ventas</a>
-                        </li>
-                        <li>
                             <a href="<?php echo server_url; ?>venta-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp;
-                                Finalizados</a>
+                                Finalizadas</a>
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>venta-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; Buscar

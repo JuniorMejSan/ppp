@@ -171,7 +171,7 @@ class itemControlador extends itemModelo{
                 "Tipo" => "error"
             ];
         }
-        echo json_encode($alerta);
+        echo json_encode($agregar_item);
     }
 
     //controlador para listar items y para realizar busqueda
