@@ -82,7 +82,7 @@ class ventaModelo extends mainModel{
     protected static function datos_venta_modelo($tipo, $id){
 
         //controlamos segun el tipo de accion
-        if($tipo = "Unico"){
+        if($tipo == "Unico"){
             $query_seleccionar_venta = "SELECT * FROM venta WHERE venta_id = :ID";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
             $sql -> bindParam(":ID", $id);
@@ -90,7 +90,7 @@ class ventaModelo extends mainModel{
             $query_seleccionar_venta = "SELECT venta_id FROM venta";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
         }elseif($tipo == "Detalle"){
-            $query_seleccionar_detalle = "SELECT * FROM detalle_venta WHERE venta_codigo = :Codigo";
+            $query_seleccionar_detalle = "SELECT * FROM detalle_venta dv INNER JOIN venta v ON dv.venta_codigo = v.venta_codigo INNER JOIN item i ON dv.item_id = i.item_id WHERE dv.venta_codigo = :Codigo";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_detalle);
             $sql -> bindParam(":Codigo", $id);
         }

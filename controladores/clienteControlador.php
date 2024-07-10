@@ -361,6 +361,18 @@ class clienteControlador extends clienteModelo{
         $id = mainModel::decryption($id);
         $id = mainModel::limpiar_cadena($id);
 
+        if($id == '999'){
+            // Retorna un array con datos predefinidos para el cliente genérico
+            return [
+                'cliente_id' => '999',
+                'cliente_nombre' => 'Cliente Genérico',
+                'cliente_apellido' => '',
+                'cliente_dni' => '-',
+                'cliente_telefono' => '-',
+                'cliente_direccion' => '-'
+            ];
+        }
+
         return clienteModelo::datos_cliente_modelo($tipo, $id);
     }
 

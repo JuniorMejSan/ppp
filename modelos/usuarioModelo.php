@@ -45,6 +45,10 @@ class usuarioModelo extends mainModel{
         }else if($tipo == "Conteo"){//para conteo de datos
             $query_conteo_datos = "SELECT idUsuario FROM usuario WHERE idUsuario != '1'";
             $sql = mainModel::conectar() -> prepare($query_conteo_datos);
+        }elseif ($tipo == "Comprobante") {
+            $query_datos_comprobante = "SELECT * FROM usuario WHERE user = :Nombre";
+            $sql = mainModel::conectar() -> prepare($query_datos_comprobante);
+            $sql -> bindParam(":Nombre", $id);
         }
         $sql -> execute();
 
