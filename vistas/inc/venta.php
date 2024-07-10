@@ -150,4 +150,23 @@
         $('#ModalItem').modal('show');
 
     }//fin de funcion
+
+    function verDetallesVenta(ventaId) {
+    // Hacer una petición AJAX para obtener los detalles de la venta
+    $.ajax({
+        url: '../ajax/VentaAjax.php',
+        method: 'POST',
+        data: { accion: 'obtenerDetallesVenta', venta_id: ventaId },
+        success: function(response) {
+            // Cargar los detalles en el modal
+            $('#detallesVentaContent').html(response);
+            // Mostrar el modal
+            $('#modalDetallesVenta').modal('show');
+        },
+        error: function() {
+            alert('Error al cargar los detalles de la venta');
+        }
+    });
+}
+    
 </script>

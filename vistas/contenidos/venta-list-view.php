@@ -33,3 +33,28 @@
     echo $ins_venta->paginador_venta_controlador($pagina[1],15, $_SESSION['privilegio_ppp'], $pagina[0], "", "", "");
 ?>
 </div>
+
+<!-- Modal para detalles de venta -->
+<div class="modal fade" id="modalDetallesVenta" tabindex="-1" role="dialog" aria-labelledby="modalDetallesVentaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalDetallesVentaLabel"><strong>Detalles de la Venta</strong></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detallesVentaContent">
+                <!-- Aquí se cargarán los detalles de la venta -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<?php
+    include_once "./vistas/inc/venta.php";
+?>

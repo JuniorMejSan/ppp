@@ -115,4 +115,25 @@ class ventaModelo extends mainModel{
         $sql -> execute();
         return $sql;
     }
+
+    //modelo para ver los detalles de la venta
+    protected static function obtener_detalles_venta_modelo($venta_id) {
+        $sql = "SELECT v.*, c.cliente_nombre, c.cliente_apellido, mp.nombre, i.item_codigo, i.item_nombre, i.item_precio, dv.detalleVenta_total, dv.detalleVenta_item_cantidad  
+                FROM venta v 
+                LEFT JOIN cliente c 
+                ON v.cliente_id = c.cliente_id 
+                LEFT JOIN metodopago mp
+                ON v.metodo_id = mp.idMetodoPago 
+                LEFT JOIN detalle_venta dv 
+                ON v.venta_codigo = dv.venta_codigo 
+                LEFT JOIN item i
+                ON dv.item_id = i.item_id
+                WHERE v.venta_id = :venta_id";
+        
+        $stmt = mainModel::conectar()->prepare($sql);
+        $stmt->bindParam(":venta_id", $venta_id);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

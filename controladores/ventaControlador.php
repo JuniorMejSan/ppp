@@ -616,7 +616,7 @@ class ventaControlador extends ventaModelo{
             LEFT JOIN usuario
             ON venta.usuario_nombre = usuario.user
             WHERE (venta.venta_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
-            ORDER BY venta.venta_fecha DESC LIMIT $inicio, $registros";
+            ORDER BY venta.venta_fecha DESC";
         }else{
             $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
             FROM venta 
@@ -695,9 +695,9 @@ class ventaControlador extends ventaModelo{
                                 }
 
                                 $tabla .= '<td>
-                                    <a href="#" class="btn btn-info" onclick="verDetalles('.$rows['venta_codigo'].')">
+                                    <button class="btn btn-info" onclick="verDetallesVenta('.$rows['venta_id'].')">
                                         <i class="fas fa-info-circle"></i>
-                                    </a>
+                                    </button>
                                 </td>
                                 <td>
                                     <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info" target = "_blank">
@@ -809,4 +809,69 @@ class ventaControlador extends ventaModelo{
         }
         echo json_encode($alerta);
     }
+
+    //funcion para ver detalles en modal
+    public function obtener_detalles_venta_controlador() {
+        $venta_id = mainModel::limpiar_cadena($_POST['venta_id']);
+        
+        // Obtener los detalles de la venta desde el modelo
+        $detalles = ventaModelo::obtener_detalles_venta_modelo($venta_id);
+        
+        if ($detalles && !empty($detalles)) {
+            $primerDetalle = $detalles[0]; // Usamos el primer elemento para los detalles generales
+            
+            // Construir el HTML con los detalles de la venta
+            $output = "<p><strong>Codigo de Venta: </strong>" . $primerDetalle['venta_codigo'] . "</p>";
+            $output .= "<p><strong>Cliente: </strong> ". ($primerDetalle['cliente_nombre'] == "" ? "Cliente Generico" : $primerDetalle['cliente_nombre']) . " " . $primerDetalle['cliente_apellido'] . "</p>";
+            $output .= "<p><strong>Vendedor: </strong>" . $primerDetalle['usuario_nombre'] . "</p>";
+            $output .= "<p><strong>Fecha: </strong> " . $primerDetalle['venta_fecha'] . "</p>";
+            $output .= "<p><strong>Hora: </strong> " . $primerDetalle['venta_hora'] . "</p>";
+            $output .= "<p><strong>Total: </strong>".moneda." " . $primerDetalle['venta_total'] . "</p>";
+            $output .= "<p><strong>Medio de Pago: </strong>" . $primerDetalle['nombre'] . "</p>";
+    
+            $output .= '<div class="table-responsive">
+                        <table class="table table-dark table-sm">
+                        <thead>
+                            <tr class="text-center roboto-medium">
+                                <th>#</th>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
+            $total = 0;
+            $contador = 1;
+            foreach ($detalles as $item) {
+                $output .= '<tr class="text-center">
+                                <td>' . $contador . '</td>
+                                <td>' . $item['item_codigo'] . '</td>
+                                <td>' . $item['item_nombre'] . '</td>
+                                <td>'.moneda.' ' . number_format($item['item_precio'], 2, '.', '') . '</td>
+                                <td>' . $item['detalleVenta_item_cantidad'] . '</td>
+                                <td>'.moneda.' ' . number_format($item['detalleVenta_total'], 2, '.', '') . '</td>
+                            </tr>'
+                            ;
+                $total += $item['detalleVenta_total'];
+                $contador++;
+            }
+            
+            $output .= '
+                            <tr class="text-center">
+                                <th><strong>TOTAL</strong></th>
+                                <td colspan="3"></td>
+                                <th>' . $item['venta_cantidad'] . ' item(s)</th>
+                                <th>'.moneda.' ' . number_format($total, 2, '.', '') . '</th>
+                            </tr>
+                        </table>
+                        </div>';
+            
+            return $output;
+        } else {
+            return "<p>No se encontraron detalles para esta venta.</p>";
+        }
+    }
+    
 }
