@@ -30,6 +30,9 @@ function enviar_formulario_ajax(e) {//"e" contienen el evento por defecto de los
         texto_alerta = "Se eliminarán los terminos de busqueda, deberá escribir uno nuevo";
     }else if (tipo === "venta") {//cuando se limpian datos de venta
         texto_alerta = "Remover los datos seleccionados de la venta";
+        texto_alerta = "Se eliminarán los terminos de busqueda, deberá escribir uno nuevo";
+    }else if (tipo === "venta_devuelta") {//cuando se limpian datos de venta
+        texto_alerta = "¿Quiere devolver la venta seleccionada?";
     }else{//si no coincide con ningun tipo de formulario
         texto_alerta = "¿Quieres realizar la operacion solicitada?";
     }

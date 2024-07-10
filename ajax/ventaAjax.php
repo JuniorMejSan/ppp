@@ -3,7 +3,7 @@ $peticionAjax = true;
 require_once "../config/app.php";
 
 //detectar si los datos se envian esde un formulario para ejecutar los controladores o funciones
-if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || isset($_POST['id_eliminar_cliente']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_venta_reg'])) {
+if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || isset($_POST['id_eliminar_cliente']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_venta_reg']) || isset($_POST['venta_id_devuelta'])) {
 
     //instanciamos al controlador
     require_once "../controladores/ventaControlador.php";
@@ -42,6 +42,10 @@ if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || is
     //activar controlador para guardar venta
     if (isset($_POST['fecha_venta_reg'])) {
         echo $ins_venta -> agregar_venta_controlador();
+    }
+
+    if(isset($_POST['venta_id_devuelta'])){
+        echo $ins_venta -> devolver_venta_controlador();
     }
 
 }else { //si no significa que se esta intentando acceder desde el navegador

@@ -386,7 +386,9 @@ class ventaControlador extends ventaModelo{
         $hora_venta = mainModel::limpiar_cadena($_POST['hora_venta_reg']);
         $metodo_pago_venta = mainModel::limpiar_cadena($_POST['venta_metodo_reg']);
         //el total de la venta que esta en el input readonly no se recive porque ya es una variable de sesion
-        $obervacion_venta = mainModel::limpiar_cadena($_POST['venta_observacion_reg']);
+        $observacion_venta = mainModel::limpiar_cadena($_POST['venta_observacion_reg']);
+        //verificamos la observacion cuando viene vacio
+        $observacion_venta = $observacion_venta == "" ? NULL : $observacion_venta;
 
         //comprobamos integridad de los datos
         //condicional para verificar formato de fecha
@@ -477,7 +479,7 @@ class ventaControlador extends ventaModelo{
             "Cantidad" => $_SESSION['venta_item'],
             "Total" => $total_venta,
             "Metodo" => $metodo_pago_venta,
-            "Observacion" => $obervacion_venta,
+            "Observacion" => $observacion_venta,
             "Usuario" => $_SESSION['usuario_ppp'],
             "Cliente" =>  isset($_SESSION['datos_cliente']['ID']) ? $_SESSION['datos_cliente']['ID'] : '999'
 
@@ -560,5 +562,251 @@ class ventaControlador extends ventaModelo{
         echo json_encode($alerta);
         
 
+    }
+
+    //funcion para paginar ventas
+    public function paginador_venta_controlador($pagina, $registros, $privilegio, $url, $tipo, $fecha_inicio, $fecha_final){//recibe la pagina actual, cuantos registros quiero que se muestren por pagina ,el privilegio para ocultar algunas opciones como actualizar o eliminar, la url para los enlaces de cada boton de la paginacion, tipo para cuando el listado se muestra en la busqueda o en el listado simple, las fechas para la busqueda
+
+        //para evitar inyeccion sql
+        $pagina = mainModel::limpiar_cadena($pagina);
+        $registros = mainModel::limpiar_cadena($registros);
+        $privilegio = mainModel::limpiar_cadena($privilegio);
+
+        $url = mainModel::limpiar_cadena($url);
+        $url = server_url.$url."/";
+
+        $tipo = mainModel::limpiar_cadena($tipo);
+        $fecha_inicio = mainModel::limpiar_cadena($fecha_inicio);
+        $fecha_final = mainModel::limpiar_cadena($fecha_final);
+        $tabla = "";//tabla creada con las ventas
+
+        //validaciones segun la pagina de la tabla, para que no se pueda modificar la url de cada pagina de la tabla
+        $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;//es decir si la pagina viene definida se parsea a entero y si no se le asigna el valor o no es un numero se redirecciona a la pag 1
+
+        //variable para ver desde que registro empezamos acontar
+        $inicio = ($pagina > 0) ? (($pagina * $registros)-$registros) : 0;
+
+        //validacion de fechas
+        if ($tipo == "Busqueda") {
+            if(mainModel::verificar_fecha($fecha_inicio) || mainModel::verificar_fecha($fecha_final)){
+                return '
+                    <div class="alert alert-danger text-center" role="alert">
+                        <p><i class="fas fa-exclamation-triangle fa-5x"></i></p>
+                        <h4 class="alert-heading">¡Ocurrió un error inesperado!</h4>
+                        <p class="mb-0">No se puede realizar la busqueda, ha ingresado una fecha incorrecta</p>
+                    </div>
+                ';
+                exit();
+            }
+        }
+
+        //variable para traer los datos especificos de la venta y cliente
+        $campos = "venta.venta_id, venta.venta_codigo, venta.venta_fecha, venta.venta_hora, venta.venta_cantidad, venta.venta_total, venta.metodo_id, venta.venta_observacion, venta.usuario_nombre, venta.cliente_id, venta.venta_estado, cliente.cliente_nombre, cliente.cliente_apellido, metodopago.nombre, usuario.user";
+
+        //condicion para la consulta a la base de datos, si es listado normal o de busqueda
+        if($tipo == "Busqueda" && $fecha_inicio != "" && $fecha_final != ""){ //si el tipo es de busqueda, y las fechas no vienen vacias
+
+            //consulta para que el resultado coindica con la busqueda realizada
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
+            FROM venta 
+            LEFT JOIN cliente
+            ON venta.cliente_id = cliente.cliente_id 
+            LEFT JOIN metodopago 
+            ON venta.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN usuario
+            ON venta.usuario_nombre = usuario.user
+            WHERE (venta.venta_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
+            ORDER BY venta.venta_fecha DESC LIMIT $inicio, $registros";
+        }else{
+            $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
+            FROM venta 
+            LEFT JOIN cliente
+            ON venta.cliente_id = cliente.cliente_id 
+            LEFT JOIN metodopago 
+            ON venta.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN usuario
+            ON venta.usuario_nombre = usuario.user
+            ORDER BY venta.venta_fecha DESC";
+        }
+
+        //variable de conexion
+        $conexion = mainModel::conectar();
+
+        //almacena todos los datos seleccionados desde la bd
+        $datos = $conexion->query($consulta);
+        if(!$datos){
+            // Manejo del error de consulta
+            $errorInfo = $conexion->errorInfo();
+            die("Error en la consulta SQL: " . $errorInfo[2]);
+        }
+        //array de datos
+        $datos = $datos -> fetchAll();
+
+        //conteo del total de registros
+        $query_conteo = "SELECT FOUND_ROWS()";
+        $total = $conexion -> query($query_conteo);
+        if(!$total){
+            // Manejo del error de consulta
+            $errorInfo = $conexion->errorInfo();
+            die("Error en la consulta SQL para el conteo: " . $errorInfo[2]);
+        }
+        $total = (int)$total->fetchColumn(); //parse a entero y lo almacena en la variable
+        
+        //numero de paginas totales
+        $Npaginas = ceil($total / $registros);//ceil duncion de php para redondear el numero de paginas
+
+        //variable para tabla
+        $tabla.= '<div class="table-responsive">
+            <table class="table table-dark table-sm">
+                <thead>
+                    <tr class="text-center roboto-medium">
+                        <th>#</th>
+                        <th>CODIGO DE VENTA</th>
+                        <th>CLIENTE</th>
+                        <th>VENDEDOR</th>
+                        <th>FECHA Y HORA DE VENTA</th>
+                        <th>ESTADO ACTUAL</th>
+                        <th>DETALLES</th>
+                        <th>COMPROBANTE</th>';
+                        if($privilegio == 1){
+                            $tabla.= '<th>DEVOLVER</th>';
+                        }
+                        
+                        $tabla.= '</tr>
+                </thead>
+                <tbody>';
+        
+        if($total >= 1 && $pagina <= $Npaginas){//hay registros en la bd
+            
+            $contador = $inicio + 1;
+            $reg_inicio = $inicio + 1; //variable para mostrar cuantos registros se estan mostrando en la tabla
+            foreach ($datos as $rows) {
+                $tabla .= '<tr class="text-center">
+                                <td>'.$contador.'</td>
+                                <td>'.$rows['venta_codigo'].'</td>
+                                <td>'.(empty($rows['cliente_nombre']) ? '-' : $rows['cliente_nombre']).' '.$rows['cliente_apellido'].'</td>
+                                <td>'.$rows['usuario_nombre'].'</td>
+                                <td>'.date("d-m-Y", strtotime($rows['venta_fecha'])).' '.$rows['venta_hora'].'</td>';
+
+                                if ($rows['venta_estado'] == 'Pagado') {
+                                    $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
+                                }else{
+                                    $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
+                                }
+
+                                $tabla .= '<td>
+                                    <a href="#" class="btn btn-info" onclick="verDetalles('.$rows['venta_codigo'].')">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info" target = "_blank">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                </td>';
+                            if($privilegio == 1){
+
+                                if ($rows['venta_estado'] == "Devuelto") {
+                                    $tabla .= '<td>
+                                            <button class="btn btn-warning" disabled>
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                    </td>';
+                                } else {
+                                    $tabla .= '<td>
+                                        <form class = "FormularioAjax" action="'.server_url.'ajax/VentaAjax.php" method="POST" data-form="venta_devuelta" autocomplete="off">
+                                        <input type = "hidden" name = "venta_id_devuelta" value = "'.mainModel::encryption($rows['venta_codigo']).'">
+                                            <button type="submit" class="btn btn-warning">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>';
+                                }
+                            }
+                                
+                            $tabla .= '</tr>';
+                $contador++;
+            }
+
+            //fin de la cantidad de registros que se mustran en la pagina de la tabla
+            $reg_final = $contador - 1;
+
+        }else{//no hay registros en la bd
+            if($total >= 1){//si hy mas de un registro 
+                $tabla .= '<tr class="text-center" ><td colspan = "9">
+                <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
+                </tr>';
+
+            }else{
+                $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
+            }
+        }
+
+        //cierre de las etiquetas
+        $tabla .= '</tbody></table></div>';
+
+        //colocamos los botones para la paginacion de la tabla que muestra los usuarios
+        if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
+            $tabla .= '<p class = "text-right">Mostrando ventas '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
+            $tabla .= mainModel::paginador_tablas( $pagina, $Npaginas, $url, 7);
+        }
+
+        return $tabla;
+
+    }
+
+    //funcion para la devolucion de venta
+    public function devolver_venta_controlador(){
+        //recivimos el id
+        $codigo = mainModel::decryption($_POST['venta_id_devuelta']);//lo recive desde la tabla, en esta caso que esta en el controlador paginador
+        $codigo = mainModel::limpiar_cadena($codigo);//evitamos inyeccion sql
+
+        //comprobamos que este registrado en la bd
+        $query_check_venta = "SELECT venta_codigo FROM venta WHERE venta_codigo = '$codigo'";
+        $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
+        if($check_venta -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No hemos encontrado la venta que desea devolver",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //verificamos privilegios del usario que está eliminando
+        session_start(['name' => 'ppp']);//iniciamos sesion
+        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //eliminar venta
+        $eliminar_venta = ventaModelo::devolver_venta_modelo($codigo, "Pagado");
+        if($eliminar_venta -> rowCount() == 1){//si se eliminó
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Venta Devuelta",
+                "Texto"=> "La VENTA ha sido devuelta satisfactoriamente",
+                "Tipo" => "success"
+            ];
+        }else{
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "No se puede devolver esta venta",
+                "Tipo" => "error"
+            ];
+        }
+        echo json_encode($alerta);
     }
 }

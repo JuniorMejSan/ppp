@@ -41,8 +41,8 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
 
     //condicional para crear y elimiar las variables de sesion, en este caso como se esta haciendo la busque da del usuario el valor de $modulo debe ser 'usuario'
     if($modulo == "venta"){//para las ventas el form de busqueda es diferente tiene 2 datos fecha inicion y fin
-        $fecha_inicio = "fecha_inicio_".$modulo."";
-        $fecha_final = "fecha_final_".$modulo."";
+        $fecha_inicio = "fecha_inicio_".$modulo;
+        $fecha_final = "fecha_final_".$modulo;
 
         //compraobacion para iniciar busqueda
         if(isset($_POST['fecha_inicio']) || isset($_POST['fecha_final'])){
@@ -62,12 +62,11 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
             //si traen el valor definido y correcto
             $_SESSION[$fecha_inicio] = $_POST['fecha_inicio'];//le asignamos a las variables d esesion los valores que se envian
             $_SESSION[$fecha_final] = $_POST['fecha_final'];
-
+        }
             //eliminar la busqueda
-            if(isset($_POST['eliminar_busqueda'])){
-                unset($_SESSION[$fecha_inicio]);
-                unset($_SESSION[$fecha_final]);
-            }
+        if(isset($_POST['eliminar_busqueda'])){
+            unset($_SESSION[$fecha_inicio]);
+            unset($_SESSION[$fecha_final]);
         }
     }else{//para la busqueda en los demas form, clientes y usuarios (no ventas)
         $name_var = "busqueda_".$modulo;
