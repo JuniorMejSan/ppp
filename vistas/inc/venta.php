@@ -168,5 +168,15 @@
         }
     });
 }
+
+
+function modal_editar_cantidad(id, cantidad_actual) {
+    // Llenar los campos del modal con los datos actuales
+    document.querySelector('#id_editar_item').setAttribute("value", id);
+    document.querySelector('#detalle_cantidad_editar').value = cantidad_actual;
+
+    // Mostrar el modal
+    $('#ModalEditarCantidad').modal('show');
+}
     
 </script>

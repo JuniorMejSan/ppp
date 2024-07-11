@@ -72,6 +72,7 @@ $horaActual = date('H:i:s');
                             <th>SUBTOTAL <?php echo moneda ?></th>
                             <th>VENDEDOR</th>
                             <th>DETALLE</th>
+                            <th>EDITAR</th>
                             <th>ELIMINAR</th>
                         </tr>
                     </thead>
@@ -109,6 +110,12 @@ $horaActual = date('H:i:s');
                                 </button>
                             </td>
                             <td>
+                                <button type="button" class="btn btn-warning" onclick="modal_editar_cantidad(<?php echo $items['ID'] ?>, <?php echo $items['Cantidad'] ?>)">
+                                    <i class="far fa-edit"></i>
+                                </button>
+                            </td>
+
+                            <td>
                                 <form class="FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="venta" autocomplete="off">
                                     <input type="hidden" name="id_eliminar_item" value="<?php echo  $items['ID']?>">
                                     <button type="submit" class="btn btn-warning">
@@ -133,7 +140,7 @@ $horaActual = date('H:i:s');
                             <td><strong><?php echo  $_SESSION['venta_item']?> items</strong></td>
                             <td colspan="1"></td>
                             <td><strong><?php echo  moneda.number_format($_SESSION['venta_total'],2,'.','')?></strong></td>
-                            <td colspan="3 "></td>
+                            <td colspan="4"></td>
                         </tr>
                         <?php 
                             }else {
@@ -141,7 +148,7 @@ $horaActual = date('H:i:s');
                                 $_SESSION['venta_item'] = 0;
                         ?>
                         <tr class="text-center">
-                            <td colspan = "9" >Esperando Items...</td>
+                            <td colspan = "10" >Esperando Items...</td>
                         </tr>
                         <?php 
                             }
@@ -297,6 +304,42 @@ $horaActual = date('H:i:s');
         </form>
     </div>
 </div>
+
+
+<!-- Modal de Edición de Cantidad -->
+<div class="modal fade" id="ModalEditarCantidad" tabindex="-1" role="dialog" aria-labelledby="ModalEditarCantidad"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form class="modal-content FormularioAjax" action="<?php echo server_url; ?>/ajax/ventaAjax.php" method="POST" data-form="default" autocomplete="off">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalEditarCantidad">Editar Cantidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" name="id_editar_item" id="id_editar_item">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label for="detalle_cantidad_editar" class="bmd-label-floating">Nueva Cantidad</label>
+                                <input type="number" pattern="[0-9]{1,7}" class="form-control" name="detalle_cantidad_editar"
+                                    id="detalle_cantidad_editar" maxlength="7" required="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                &nbsp; &nbsp;
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <?php
     include_once "./vistas/inc/venta.php";

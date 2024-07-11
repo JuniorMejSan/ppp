@@ -873,5 +873,36 @@ class ventaControlador extends ventaModelo{
             return "<p>No se encontraron detalles para esta venta.</p>";
         }
     }
+
+    public function editar_cantidad_item_venta_controlador() {
+        // Recuperar datos del formulario
+        $id = mainModel::limpiar_cadena($_POST['id_editar_item']);
+        $nueva_cantidad = mainModel::limpiar_cadena($_POST['detalle_cantidad_editar']);
+        
+        session_start(['name' => 'ppp']);
+        // Validar y actualizar la cantidad en la variable de sesión
+        if (!empty($_SESSION['datos_item'][$id])) {
+            $_SESSION['datos_item'][$id]['Cantidad'] = $nueva_cantidad;
+    
+            $alerta = [
+                "Alerta" => "recargar",
+                "Titulo" => "Cantidad actualizada",
+                "Texto" => "La cantidad del item ha sido actualizada correctamente",
+                "Tipo" => "success"
+            ];
+        } else {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Error al editar",
+                "Texto" => "El item que intenta editar no se encuentra en la lista actual de items",
+                "Tipo" => "error"
+            ];
+        }
+    
+        // Devolver respuesta en formato JSON
+        echo json_encode($alerta);
+        exit();
+    }
+    
     
 }
