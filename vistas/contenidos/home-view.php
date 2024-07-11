@@ -16,7 +16,7 @@
 
         $total_clientes = $ins_cliente -> datos_cliente_controlador("Conteo", 0);
     ?>
-    <a href="<?php echo server_url; ?>client-new/" class="tile">
+    <a href="<?php echo server_url; ?>client-list/" class="tile">
         <div class="tile-tittle">Clientes</div>
         <div class="tile-icon">
             <i class="fas fa-users fa-fw"></i>
@@ -39,15 +39,6 @@
         </div>
     </a>
 
-
-    <a href="<?php echo server_url; ?>venta-new/" class="tile">
-        <div class="tile-tittle">Ventas</div>
-        <div class="tile-icon">
-            <i class="fas fa-hand-holding-usd fa-fw"></i>
-            <p>NUEVA VENTA</p>
-        </div>
-    </a>
-
     <?php
         require_once "./controladores/ventaControlador.php";
         $ins_venta = new ventaControlador();
@@ -55,13 +46,15 @@
         $total_venta = $ins_venta -> datos_venta_controlador("Conteo", 0);
     ?>
 
-    <a href="<?php echo server_url; ?>venta-list/" class="tile">
-        <div class="tile-tittle">Ventas Finalizadas</div>
+    <a href="<?php echo server_url; ?>venta-new/" class="tile">
+        <div class="tile-tittle">Ventas</div>
         <div class="tile-icon">
-            <i class="fas fa-clipboard-list fa-fw"></i>
-            <p><?php echo $total_venta -> rowCount(); ?> Registrados</p>
+            <i class="fas fa-hand-holding-usd fa-fw"></i>
+            <p><?php echo $total_venta -> rowCount(); ?> Registradas</p>
         </div>
     </a>
+
+
     <?php 
         if($_SESSION['privilegio_ppp'] == 1){//control de modulos a los que tienen acceso los direntes tipos de usuarios 
 
@@ -92,12 +85,18 @@
             <p><?php echo $total_proveedores -> rowCount(); ?> Registrados</p>
         </div>
     </a>
+    
+    <?php
+        require_once "./controladores/compraControlador.php";
+        $ins_compra = new compraControlador();
 
-    <a href="<?php echo server_url; ?>empresa/" class="tile">
-        <div class="tile-tittle">Empresa</div>
+        $total_compras = $ins_compra -> datos_compra_controlador("Conteo", 0);
+    ?>
+    <a href="<?php echo server_url; ?>compra-new/" class="tile">
+        <div class="tile-tittle">COMPRAS</div>
         <div class="tile-icon">
             <i class="fas fa-store-alt fa-fw"></i>
-            <p>1 Registrada</p>
+            <p><?php echo $total_compras -> rowCount(); ?> Registrados</p>
         </div>
     </a>
 

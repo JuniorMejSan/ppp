@@ -619,7 +619,7 @@ class compraControlador extends compraModelo{
         }
 
         //variable para traer los datos especificos de la compra y cliente
-        $campos = "compra.compra_id, compra.compra_codigo, compra.compra_fecha, compra.compra_hora, compra.compra_cantidad, compra.compra_total, compra.metodo_id, compra.compra_observacion, compra.usuario_nombre, compra.cliente_id, compra.compra_estado, cliente.cliente_nombre, cliente.cliente_apellido, metodopago.nombre, usuario.user";
+        $campos = "compra.compra_id, compra.compra_codigo, compra.compra_fecha, compra.compra_hora, compra.compra_cantidad, compra.compra_total, compra.metodo_id, compra.compra_observacion, compra.usuario_nombre, compra.proveedor_id, compra.compra_estado, proveedor.proveedor_nombre, metodopago.nombre, usuario.user";
 
         //condicion para la consulta a la base de datos, si es listado normal o de busqueda
         if($tipo == "Busqueda" && $fecha_inicio != "" && $fecha_final != ""){ //si el tipo es de busqueda, y las fechas no vienen vacias
@@ -627,8 +627,8 @@ class compraControlador extends compraModelo{
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
             FROM compra 
-            LEFT JOIN cliente
-            ON compra.cliente_id = cliente.cliente_id 
+            LEFT JOIN proveedor
+            ON compra.proveedor_id = proveedor.proveedor_id 
             LEFT JOIN metodopago 
             ON compra.metodo_id = metodopago.idMetodoPago 
             LEFT JOIN usuario
@@ -638,8 +638,8 @@ class compraControlador extends compraModelo{
         }else{
             $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
             FROM compra 
-            LEFT JOIN cliente
-            ON compra.cliente_id = cliente.cliente_id 
+            LEFT JOIN proveedor
+            ON compra.proveedor_id = proveedor.proveedor_id 
             LEFT JOIN metodopago 
             ON compra.metodo_id = metodopago.idMetodoPago 
             LEFT JOIN usuario
@@ -679,13 +679,12 @@ class compraControlador extends compraModelo{
                 <thead>
                     <tr class="text-center roboto-medium">
                         <th>#</th>
-                        <th>CODIGO DE compra</th>
-                        <th>CLIENTE</th>
-                        <th>VENDEDOR</th>
-                        <th>FECHA Y HORA DE compra</th>
+                        <th>CODIGO DE COMPRA</th>
+                        <th>PROVEEDOR</th>
+                        <th>USUARIO</th>
+                        <th>FECHA Y HORA DE COMPRA</th>
                         <th>ESTADO ACTUAL</th>
-                        <th>DETALLES</th>
-                        <th>COMPROBANTE</th>';
+                        <th>DETALLES</th>';
                         if($privilegio == 1){
                             $tabla.= '<th>DEVOLVER</th>';
                         }
@@ -702,7 +701,7 @@ class compraControlador extends compraModelo{
                 $tabla .= '<tr class="text-center">
                                 <td>'.$contador.'</td>
                                 <td>'.$rows['compra_codigo'].'</td>
-                                <td>'.(empty($rows['cliente_nombre']) ? '-' : $rows['cliente_nombre']).' '.$rows['cliente_apellido'].'</td>
+                                <td>'.(empty($rows['proveedor_nombre']) ? '-' : $rows['proveedor_nombre']).'</td>
                                 <td>'.$rows['usuario_nombre'].'</td>
                                 <td>'.date("d-m-Y", strtotime($rows['compra_fecha'])).' '.$rows['compra_hora'].'</td>';
 
@@ -713,14 +712,9 @@ class compraControlador extends compraModelo{
                                 }
 
                                 $tabla .= '<td>
-                                    <button class="btn btn-info" onclick="verDetallescompra('.$rows['compra_id'].')">
+                                    <button class="btn btn-info" onclick="verDetallesCompra('.$rows['compra_id'].')">
                                         <i class="fas fa-info-circle"></i>
                                     </button>
-                                </td>
-                                <td>
-                                    <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['compra_id']).'" class="btn btn-info" target = "_blank">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </a>
                                 </td>';
                             if($privilegio == 1){
 
@@ -830,7 +824,7 @@ class compraControlador extends compraModelo{
     if($devolver_compra->rowCount() == 1){
         $errores = 0;
         foreach($items as $item){
-            $actualizar_stock = compraModelo::actualizar_stock_item($item['item_id'], $item['detallecompra_item_cantidad'], 'sumar');
+            $actualizar_stock = compraModelo::actualizar_stock_item($item['item_id'], $item['detalleCompra_item_cantidad'], 'restar');
             if($actualizar_stock->rowCount() != 1){
                 $errores++;
             }
@@ -860,8 +854,7 @@ class compraControlador extends compraModelo{
         ];
     }
     echo json_encode($alerta);
-}
-
+    }
 
     //funcion para ver detalles en modal
     public function obtener_detalles_compra_controlador() {
@@ -875,7 +868,8 @@ class compraControlador extends compraModelo{
             
             // Construir el HTML con los detalles de la compra
             $output = "<p><strong>Codigo de compra: </strong>" . $primerDetalle['compra_codigo'] . "</p>";
-            $output .= "<p><strong>Cliente: </strong> ". ($primerDetalle['cliente_nombre'] == "" ? "Cliente Generico" : $primerDetalle['cliente_nombre']) . " " . $primerDetalle['cliente_apellido'] . "</p>";
+            $output .= "<p><strong>Proveedor: </strong> ". ($primerDetalle['proveedor_nombre'] == "" ? "Proveedor Generico" : $primerDetalle['proveedor_nombre']) . "</p>";
+            $output .= "<p><strong>RUC: </strong>" . ($primerDetalle['proveedor_ruc'] == "" ? "-" : $primerDetalle['proveedor_ruc']) . "</p>";
             $output .= "<p><strong>Vendedor: </strong>" . $primerDetalle['usuario_nombre'] . "</p>";
             $output .= "<p><strong>Fecha: </strong> " . $primerDetalle['compra_fecha'] . "</p>";
             $output .= "<p><strong>Hora: </strong> " . $primerDetalle['compra_hora'] . "</p>";
@@ -903,11 +897,11 @@ class compraControlador extends compraModelo{
                                 <td>' . $item['item_codigo'] . '</td>
                                 <td>' . $item['item_nombre'] . '</td>
                                 <td>'.moneda.' ' . number_format($item['item_precio'], 2, '.', '') . '</td>
-                                <td>' . $item['detallecompra_item_cantidad'] . '</td>
-                                <td>'.moneda.' ' . number_format($item['detallecompra_total'], 2, '.', '') . '</td>
+                                <td>' . $item['detalleCompra_item_cantidad'] . '</td>
+                                <td>'.moneda.' ' . number_format($item['detalleCompra_total'], 2, '.', '') . '</td>
                             </tr>'
                             ;
-                $total += $item['detallecompra_total'];
+                $total += $item['detalleCompra_total'];
                 $contador++;
             }
             
@@ -915,7 +909,7 @@ class compraControlador extends compraModelo{
                             <tr class="text-center">
                                 <th><strong>TOTAL</strong></th>
                                 <td colspan="3"></td>
-                                <th>' . $item['compra_cantidad'] . ' item(s)</th>
+                                <th>' . $item['detalleCompra_item_cantidad'] . ' item(s)</th>
                                 <th>'.moneda.' ' . number_format($total, 2, '.', '') . '</th>
                             </tr>
                         </table>
@@ -927,6 +921,7 @@ class compraControlador extends compraModelo{
         }
     }
 
+    //funcion para editar la cantidad a comprar
     public function editar_cantidad_item_compra_controlador() {
         // Recuperar datos del formulario
         $id = mainModel::limpiar_cadena($_POST['id_editar_item']);

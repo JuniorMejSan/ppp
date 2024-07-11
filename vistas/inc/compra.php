@@ -156,20 +156,20 @@
 
     }//fin de funcion
 
-    function verDetallesVenta(ventaId) {
-    // Hacer una petición AJAX para obtener los detalles de la venta
+    function verDetallesCompra(compraId) {
+    // Hacer una petición AJAX para obtener los detalles de la compra
     $.ajax({
-        url: '../ajax/VentaAjax.php',
+        url: '../ajax/compraAjax.php',
         method: 'POST',
-        data: { accion: 'obtenerDetallesVenta', venta_id: ventaId },
+        data: { accion: 'obtenerDetallesCompra', compra_id: compraId },
         success: function(response) {
             // Cargar los detalles en el modal
-            $('#detallesVentaContent').html(response);
+            $('#detallesCompraContent').html(response);
             // Mostrar el modal
-            $('#modalDetallesVenta').modal('show');
+            $('#modalDetallesCompra').modal('show');
         },
         error: function() {
-            alert('Error al cargar los detalles de la venta');
+            alert('Error al cargar los detalles de la compra');
         }
     });
 }

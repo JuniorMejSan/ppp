@@ -3,7 +3,7 @@ require_once "mainModel.php";
 
 class compraModelo extends mainModel{
     
-    //modelo para registrar venta
+    //modelo para registrar compra
     protected static function agregar_compra_modelo($datos){
 
         $query_agregar_compra = "INSERT INTO compra (`compra_codigo`, `compra_fecha`, `compra_hora`, `compra_cantidad`, `compra_total`,  `metodo_id`, `compra_observacion`, `usuario_nombre`, `proveedor_id`, `compra_estado`) VALUES (:Codigo, :Fecha, :Hora, :Cantidad, :Total, :Metodo, :Observacion, :Usuario, :Proveedor, 'Pagado')";
@@ -23,7 +23,7 @@ class compraModelo extends mainModel{
         return $sql;
     }
 
-    //modelo para registrar detalle de venta
+    //modelo para registrar detalle de compra
     protected static function agregar_detalle_compra_modelo($datos){
 
         $query_agregar_detalle_compra = "INSERT INTO detalle_compra(`compra_codigo`, `item_id`, `detalleCompra_item_cantidad`, `detalleCompra_item_precio`,  `detalleCompra_total`) VALUES (:Venta, :Item_id, :Item_cantidad, :Item_precio, :Detalle_total)";
@@ -39,11 +39,11 @@ class compraModelo extends mainModel{
         return $sql;
     }
 
-    //los siugientes modelos para elimianr ventas se usan solo en caso de haber algun error con la insercion de datos
-    //modelo para eliminar ventas
-    protected static function eliminar_compra_modelo($codigo, $tipo){//el codigo de la venta a eliminar, el tipo hace referencia si quiere eliminar de la tabla detalles o de la table venta
+    //los siugientes modelos para elimianr compras se usan solo en caso de haber algun error con la insercion de datos
+    //modelo para eliminar compras
+    protected static function eliminar_compra_modelo($codigo, $tipo){//el codigo de la compra a eliminar, el tipo hace referencia si quiere eliminar de la tabla detalles o de la table compra
 
-        //condicional para verificar de donde se quiere eliminar
+        //condicional para verificar de donde se quiere eliminarfe
         if($tipo == "Compra"){
 
             $query_eliminar_compra = "DELETE * FROM compra WHERE compra_codigo = :Codigo";
@@ -61,11 +61,11 @@ class compraModelo extends mainModel{
         return $sql;
     }
 
-    //modelo para la devolucion de venta
+    //modelo para la devolucion de compra
     protected static function devolver_compra_modelo($codigo, $estado){
         if($estado == "Pagado"){
-            $query_devolver_venta = "UPDATE venta SET venta_estado = 'Devuelto' WHERE venta_codigo = :Codigo";
-            $sql = mainModel::conectar()->prepare($query_devolver_venta);
+            $query_devolver_compra = "UPDATE compra SET compra_estado = 'Devuelto' WHERE compra_codigo = :Codigo";
+            $sql = mainModel::conectar()->prepare($query_devolver_compra);
         }
         $sql->bindParam(":Codigo", $codigo);
         $sql->execute();
@@ -86,7 +86,7 @@ class compraModelo extends mainModel{
     }
     
 
-    //modelo para seleccionar datos de las ventas
+    //modelo para seleccionar datos de las compras
     protected static function datos_compra_modelo($tipo, $id){
 
         //controlamos segun el tipo de accion
@@ -106,40 +106,22 @@ class compraModelo extends mainModel{
         return $sql;
     }
 
-    //modelo para actualizar estado de venta en caso de que el cliente quiera cancelar (devolucion) la venta
-    protected static function actualizar_venta_controler($datos){
-
-        //condicional para verificar que es lo que se cambiara
-        if ($datos['Tipo'] == 'Estado_cancelado') {
-            $query_actualizar_estado_venta = "UPDATE venta SET venta_estado = 'Devuelto' WHERE venta_codigo = :Codigo";
-            $sql = mainModel::conectar() -> prepare($query_actualizar_estado_venta);
-        }elseif ($datos['Tipo'] == 'Observacion') {
-            $query_actualizar_observacion_venta = "UPDATE venta SET venta_observacion = :Observacion WHERE venta_codigo = :Codigo";
-            $sql = mainModel::conectar() -> prepare($query_actualizar_observacion_venta);
-            $sql -> bindParam(":Observacion", $datos['Observacion']);
-        }
-        
-        $sql -> bindParam(":Codigo", $datos['Codigo']);
-        $sql -> execute();
-        return $sql;
-    }
-
-    //modelo para ver los detalles de la venta
-    protected static function obtener_detalles_venta_modelo($venta_id) {
-        $sql = "SELECT v.*, c.cliente_nombre, c.cliente_apellido, mp.nombre, i.item_codigo, i.item_nombre, i.item_precio, dv.detalleVenta_total, dv.detalleVenta_item_cantidad  
-                FROM venta v 
-                LEFT JOIN cliente c 
-                ON v.cliente_id = c.cliente_id 
+    //modelo para ver los detalles de la compra
+    protected static function obtener_detalles_compra_modelo($compra_id) {
+        $sql = "SELECT c.*, p.proveedor_nombre, p.proveedor_ruc, mp.nombre, i.item_codigo, i.item_nombre, i.item_precio, dc.detalleCompra_total, dc.detalleCompra_item_cantidad  
+                FROM compra c 
+                LEFT JOIN proveedor p 
+                ON c.proveedor_id = p.proveedor_id 
                 LEFT JOIN metodopago mp
-                ON v.metodo_id = mp.idMetodoPago 
-                LEFT JOIN detalle_venta dv 
-                ON v.venta_codigo = dv.venta_codigo 
+                ON c.metodo_id = mp.idMetodoPago 
+                LEFT JOIN detalle_compra dc 
+                ON c.compra_codigo = dc.compra_codigo 
                 LEFT JOIN item i
-                ON dv.item_id = i.item_id
-                WHERE v.venta_id = :venta_id";
+                ON dc.item_id = i.item_id
+                WHERE c.compra_id = :compra_id";
         
         $stmt = mainModel::conectar()->prepare($sql);
-        $stmt->bindParam(":venta_id", $venta_id);
+        $stmt->bindParam(":compra_id", $compra_id);
         $stmt->execute();
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

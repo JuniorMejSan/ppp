@@ -214,7 +214,6 @@ class ventaControlador extends ventaModelo{
 
     //funcion para agregar items a la venta
     public function agregar_item_venta_controlador(){
-
         //recuperamos el id del item
         $id = mainModel::limpiar_cadena($_POST['id_agregar_item']);
 
