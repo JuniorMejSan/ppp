@@ -51,19 +51,27 @@
                         </div>
                     </div>
                     <!-- Stock de item-->
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-4" style="display: none;">
                         <div class="form-group">
                             <label for="item_stock" class="bmd-label-floating">Stock</label>
                             <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_stock_reg"
-                                id="item_stock" maxlength="9" required>
+                                id="item_stock" maxlength="9" value = "0" required>
                         </div>
                     </div>
-                    <!-- Precio de item-->
+                    <!-- Precio de venta-->
                     <div class="col-12 col-md-2">
                         <div class="form-group">
-                            <label for="item_precio" class="bmd-label-floating">Precio</label>
+                            <label for="item_precio" class="bmd-label-floating">Precio de venta</label>
                             <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_reg"
                                 id="item_precio" maxlength="9" required>
+                        </div>
+                    </div>
+                    <!-- Precio de compra-->
+                    <div class="col-12 col-md-2">
+                        <div class="form-group">
+                            <label for="item_precio_compra" class="bmd-label-floating">Precio de compra</label>
+                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_compra_reg"
+                                id="item_precio_compra" maxlength="9" required>
                         </div>
                     </div>
                     <!-- Estado de item-->
@@ -77,7 +85,7 @@
                         </div>
                     </div>
                     <!-- Detalle de item-->
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-7">
                         <div class="form-group">
                             <label for="item_detalle" class="bmd-label-floating">Detalle</label>
                             <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}" class="form-control"

@@ -15,11 +15,12 @@ class itemControlador extends itemModelo{
         $nombre = mainModel::limpiar_cadena($_POST['item_nombre_reg']);
         $stock = mainModel::limpiar_cadena($_POST['item_stock_reg']);
         $precio = mainModel::limpiar_cadena($_POST['item_precio_reg']);
+        $precio_compra = mainModel::limpiar_cadena($_POST['item_precio_compra_reg']);
         $estado = mainModel::limpiar_cadena($_POST['item_estado_reg']);
         $detalle = mainModel::limpiar_cadena($_POST['item_detalle_reg']);
 
         //comprobar que los campos obligatorios no esten vacios
-        if ($codigo == "" || $nombre == "" || $stock == "" ||  $precio == "" || $estado == "") {
+        if ($codigo == "" || $nombre == "" || $stock == "" ||  $precio == "" || $precio_compra == "" || $estado == "") {
             //aqui se definen los tipos de alerta que se esperan en alerta_ajax de alerta.js
             $alerta = [
                 "Alerta" => "simple",
@@ -75,7 +76,19 @@ class itemControlador extends itemModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "La PRECIO no coincide con el formato solicitado",
+                "Texto"=> "La PRECIO de venta no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9]{1,9}", $precio_compra)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La PRECIO de compra no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -148,6 +161,7 @@ class itemControlador extends itemModelo{
             "Nombre" => $nombre,
             "Stock" => $stock,
             "Precio" => $precio,
+            "Precio_compra" => $precio_compra,
             "Estado" => $estado,
             "Detalle" => $detalle
         ];
@@ -171,7 +185,7 @@ class itemControlador extends itemModelo{
                 "Tipo" => "error"
             ];
         }
-        echo json_encode($agregar_item);
+        echo json_encode($alerta);
     }
 
     //controlador para listar items y para realizar busqueda
@@ -247,7 +261,8 @@ class itemControlador extends itemModelo{
                         <th>CÓDIGO</th>
                         <th>NOMBRE</th>
                         <th>STOCK</th>
-                        <th>PRECIO</th>
+                        <th>PRECIO DE VENTA</th>
+                        <th>PRECIO DE COMPRA</th>
                         <th>ESTADO</th>
                         <th>DETALLE</th>';
                         if($privilegio == 1 || $privilegio == 2){
@@ -273,7 +288,8 @@ class itemControlador extends itemModelo{
                                 <td>'.$rows['item_codigo'].'</td>
                                 <td>'.$rows['item_nombre'].'</td>
                                 <td>'.$rows['item_stock'].'</td>
-                                <td>'.$rows['item_precio'].'</td>
+                                <td>'.moneda.' '.$rows['item_precio'].'</td>
+                                <td>'.moneda.' '.$rows['item_precio_compra'].'</td>
                                 <td>'.$rows['item_estado'].'</td>
                                 <td>
                                     <button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover" title="'.$rows['item_nombre'].'" data-content="'.($rows['item_detalle'] ? $rows['item_detalle'] : '-').'">
@@ -316,12 +332,12 @@ class itemControlador extends itemModelo{
 
         }else{//no hay registros en la bd
             if($total >= 1){//si hy mas de un registro 
-                $tabla .= '<tr class="text-center" ><td colspan = "9">
+                $tabla .= '<tr class="text-center" ><td colspan = "10">
                 <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
                 </tr>';
 
             }else{
-                $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
+                $tabla .= '<tr class="text-center" ><td colspan = "10">Ningun registro coincide con el termino de busqueda</td></tr>';
             }
         }
 
@@ -487,11 +503,12 @@ class itemControlador extends itemModelo{
         $nombre = mainModel::limpiar_cadena($_POST['item_nombre_up']);
         $stock = mainModel::limpiar_cadena($_POST['item_stock_up']);
         $precio = mainModel::limpiar_cadena($_POST['item_precio_up']);
+        $precio_compra = mainModel::limpiar_cadena($_POST['item_precio_compra_up']);
         $estado = mainModel::limpiar_cadena($_POST['item_estado_up']);
         $detalle = mainModel::limpiar_cadena($_POST['item_detalle_up']);
 
         //verificamos que los campos no vengan vacios
-        if ($codigo == "" || $nombre == "" || $stock == "" || $precio == "" || $estado == "") {
+        if ($codigo == "" || $nombre == "" || $stock == "" || $precio == "" || $precio_compra == "" || $estado == "") {
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
@@ -538,11 +555,23 @@ class itemControlador extends itemModelo{
             echo json_encode($alerta);
             exit();
         }
-        if (mainModel::verificar_datos("[0-9]{1,9}", $precio)) {
+        if (mainModel::verificar_datos("[0-9]{1,9}(\.[0-9]{1,2})?", $precio)) {
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "El PRECIO no coincide con el formato solicitado",
+                "Texto"=> "El PRECIO de venta no coincide con el formato solicitado",
+                "Tipo" => "error"
+            ];
+
+            echo json_encode($alerta);
+            exit();
+        }
+
+        if (mainModel::verificar_datos("[0-9]{1,9}(\.[0-9]{1,2})?", $precio_compra)) {
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "El PRECIO de compra no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -590,6 +619,7 @@ class itemControlador extends itemModelo{
             "Nombre" => $nombre,
             "Stock" => $stock,
             "Precio" => $precio,
+            "Precio_compra" => $precio_compra,
             "Estado" => $estado,
             "Detalle" => $detalle,
             "ID" => $id

@@ -6,13 +6,14 @@ class itemModelo extends mainModel{
     //modelo para agregar item
     protected static function agregar_item_modelo($datos){
 
-        $query_agregar_item = "INSERT INTO item(`item_codigo`, `item_nombre`, `item_stock`, `item_precio`, `item_estado`, `item_detalle`) VALUES (:Codigo, :Nombre, :Stock, :Precio, :Estado, :Detalle)";
+        $query_agregar_item = "INSERT INTO item(`item_codigo`, `item_nombre`, `item_stock`, `item_precio`,  `item_precio_compra`, `item_estado`, `item_detalle`) VALUES (:Codigo, :Nombre, :Stock, :Precio, :Precio_compra, :Estado, :Detalle)";
         $sql = mainModel::conectar() -> prepare($query_agregar_item);
 
         $sql -> bindParam(":Codigo", $datos['Codigo']);
         $sql -> bindParam(":Nombre", $datos['Nombre']);
         $sql -> bindParam(":Stock", $datos['Stock']);
         $sql -> bindParam(":Precio", $datos['Precio']);
+        $sql -> bindParam(":Precio_compra", $datos['Precio_compra']);
         $sql -> bindParam(":Estado", $datos['Estado']);
         $sql -> bindParam(":Detalle", $datos['Detalle']);
         $sql -> execute();
@@ -61,13 +62,14 @@ class itemModelo extends mainModel{
 
     //modelo para actualizar item
     protected static function actualizar_item_modelo($datos){
-        $query_actualizar_item = "UPDATE item SET item_codigo = :Codigo, item_nombre = :Nombre, item_stock = :Stock, item_precio = :Precio, item_estado = :Estado, item_detalle = :Detalle  WHERE item_id = :ID";
+        $query_actualizar_item = "UPDATE item SET item_codigo = :Codigo, item_nombre = :Nombre, item_stock = :Stock, item_precio = :Precio, item_precio_compra = :Precio_compra, item_estado = :Estado, item_detalle = :Detalle  WHERE item_id = :ID";
         $sql = mainModel::conectar() -> prepare($query_actualizar_item);
 
         $sql -> bindParam(":Codigo", $datos['Codigo']);
         $sql -> bindParam(":Nombre", $datos['Nombre']);
         $sql -> bindParam(":Stock", $datos['Stock']);
         $sql -> bindParam(":Precio", $datos['Precio']);
+        $sql -> bindParam(":Precio_compra", $datos['Precio_compra']);
         $sql -> bindParam(":Estado", $datos['Estado']);
         $sql -> bindParam(":Detalle", $datos['Detalle']);
         $sql -> bindParam(":ID", $datos['ID']);

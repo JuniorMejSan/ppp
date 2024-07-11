@@ -10,7 +10,8 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
         "cliente" => "client-search",
         "proveedor" => "proveedor-search",
         "item" => "item-search",
-        "venta" => "venta-search"
+        "venta" => "venta-search",
+        "compra" => "compra-search"
     ];
 
     //verifica que el valor enviado sea de un form especifico, es decir segun lo que definimos
@@ -40,7 +41,7 @@ if(isset($_POST['busqueda_inicial']) || isset($_POST['eliminar_busqueda']) || is
     }
 
     //condicional para crear y elimiar las variables de sesion, en este caso como se esta haciendo la busque da del usuario el valor de $modulo debe ser 'usuario'
-    if($modulo == "venta"){//para las ventas el form de busqueda es diferente tiene 2 datos fecha inicion y fin
+    if($modulo == "venta" || $modulo == "compra"){//para las ventas el form de busqueda es diferente tiene 2 datos fecha inicion y fin
         $fecha_inicio = "fecha_inicio_".$modulo;
         $fecha_final = "fecha_final_".$modulo;
 

@@ -49,7 +49,7 @@
             $campos = $datos_item -> fetch();
     ?>
     <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/itemAjax.php" method="POST" data-form="update" autocomplete="off">
-    <input type="" name="item_id_up" value="<?php echo $pagina[1]; ?>">  
+    <input type="hidden" name="item_id_up" value="<?php echo $pagina[1]; ?>">  
         <fieldset>
             <legend><i class="far fa-plus-square"></i> &nbsp; Información del item</legend>
             <div class="container-fluid">
@@ -75,19 +75,27 @@
                         <div class="form-group">
                             <label for="item_stock" class="bmd-label-floating">Stock</label>
                             <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_stock_up"
-                                id="item_stock" maxlength="9" value="<?php echo $campos['item_stock']; ?>">
+                                id="item_stock" maxlength="9" value="<?php echo $campos['item_stock']; ?>" readonly>
                         </div>
                     </div>
-                    <!-- Precio-->
+                    <!-- Precio de venta-->
                     <div class="col-12 col-md-2">
                         <div class="form-group">
-                            <label for="item_precio" class="bmd-label-floating">Precio</label>
+                            <label for="item_precio" class="bmd-label-floating">Precio de venta</label>
                             <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_up"
-                                id="item_stock" maxlength="9" value="<?php echo $campos['item_precio']; ?>">
+                                id="item_precio" maxlength="9" value="<?php echo $campos['item_precio']; ?>">
+                        </div>
+                    </div>
+                    <!-- Precio de compra-->
+                    <div class="col-12 col-md-2">
+                        <div class="form-group">
+                            <label for="item_precio_compra" class="bmd-label-floating">Precio de compra</label>
+                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_compra_up"
+                                id="item_precio_compra" maxlength="9" value="<?php echo $campos['item_precio_compra']; ?>">
                         </div>
                     </div>
                     <!-- Estado-->
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label for="item_estado" class="bmd-label-floating">Estado</label>
                             <select class="form-control" name="item_estado_up" id="item_estado">
