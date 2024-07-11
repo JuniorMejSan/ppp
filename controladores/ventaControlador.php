@@ -544,6 +544,16 @@ class ventaControlador extends ventaModelo{
                 $errores_detalle = 1;
                 break;//terminamos foreach
             }
+
+            // Actualizar el stock del item
+            $nuevo_stock = $items['Cantidad'];
+            $actualizar_stock = "UPDATE item SET item_stock = item_stock - $nuevo_stock WHERE item_id = '{$items['ID']}'";
+            $resultado_stock = mainModel::ejecutar_consulta_simple($actualizar_stock);
+
+            if($resultado_stock->rowCount() != 1){
+                $errores_detalle = 1;
+                break;
+            }
         }
 
         //comprobacion de errores
@@ -770,58 +780,93 @@ class ventaControlador extends ventaModelo{
 
     //funcion para la devolucion de venta
     public function devolver_venta_controlador(){
-        //recivimos el id
-        $codigo = mainModel::decryption($_POST['venta_id_devuelta']);//lo recive desde la tabla, en esta caso que esta en el controlador paginador
-        $codigo = mainModel::limpiar_cadena($codigo);//evitamos inyeccion sql
+    //recibimos el id
+    $codigo = mainModel::decryption($_POST['venta_id_devuelta']);
+    $codigo = mainModel::limpiar_cadena($codigo);
 
-        //comprobamos que este registrado en la bd
-        $query_check_venta = "SELECT venta_codigo FROM venta WHERE venta_codigo = '$codigo'";
-        $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
-        if($check_venta -> rowCount() <= 0){//si es menor igual a 0 el id que se quiere eliminar no existe en la bd(error)
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "No hemos encontrado la venta que desea devolver",
-                "Tipo" => "error"
-            ];
+    //comprobamos que este registrado en la bd
+    $query_check_venta = "SELECT venta_codigo FROM venta WHERE venta_codigo = '$codigo'";
+    $check_venta = mainModel::ejecutar_consulta_simple($query_check_venta);
+    if($check_venta -> rowCount() <= 0){
+        $alerta = [
+            "Alerta" => "simple",
+            "Titulo" => "Ocurrió un error",
+            "Texto"=> "No hemos encontrado la venta que desea devolver",
+            "Tipo" => "error"
+        ];
 
-            echo json_encode($alerta);
-            exit();
+        echo json_encode($alerta);
+        exit();
+    }
+
+    //verificamos privilegios del usuario que está eliminando
+    session_start(['name' => 'ppp']);
+    if($_SESSION['privilegio_ppp'] != 1){
+        $alerta = [
+            "Alerta" => "simple",
+            "Titulo" => "Ocurrió un error",
+            "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
+            "Tipo" => "error"
+        ];
+
+        echo json_encode($alerta);
+        exit();
+    }
+
+    // recuperar detalles de la venta
+    $query_detalle_venta = "SELECT * FROM detalle_venta WHERE venta_codigo = '$codigo'";
+    $detalle_venta = mainModel::ejecutar_consulta_simple($query_detalle_venta);
+    if($detalle_venta->rowCount() <= 0){
+        $alerta = [
+            "Alerta" => "simple",
+            "Titulo" => "Ocurrió un error",
+            "Texto"=> "No se encontraron detalles para esta venta",
+            "Tipo" => "error"
+        ];
+
+        echo json_encode($alerta);
+        exit();
+    }
+
+    $items = $detalle_venta->fetchAll();
+
+    // devolver venta y actualizar stock
+    $devolver_venta = ventaModelo::devolver_venta_modelo($codigo, "Pagado");
+    if($devolver_venta->rowCount() == 1){
+        $errores = 0;
+        foreach($items as $item){
+            $actualizar_stock = ventaModelo::actualizar_stock_item($item['item_id'], $item['detalleVenta_item_cantidad'], 'sumar');
+            if($actualizar_stock->rowCount() != 1){
+                $errores++;
+            }
         }
 
-        //verificamos privilegios del usario que está eliminando
-        session_start(['name' => 'ppp']);//iniciamos sesion
-        if($_SESSION['privilegio_ppp'] != 1){//no tiene los permisos necesaris
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "Usted no cuenta con los permisos necesarios para realizar esta acción",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        //eliminar venta
-        $eliminar_venta = ventaModelo::devolver_venta_modelo($codigo, "Pagado");
-        if($eliminar_venta -> rowCount() == 1){//si se eliminó
+        if($errores == 0){
             $alerta = [
                 "Alerta" => "recargar",
                 "Titulo" => "Venta Devuelta",
-                "Texto"=> "La VENTA ha sido devuelta satisfactoriamente",
+                "Texto"=> "La VENTA ha sido devuelta satisfactoriamente y el stock actualizado",
                 "Tipo" => "success"
             ];
         }else{
             $alerta = [
                 "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "No se puede devolver esta venta",
+                "Titulo" => "Ocurrió un error",
+                "Texto"=> "La venta fue devuelta pero hubo un problema al actualizar el stock",
                 "Tipo" => "error"
             ];
         }
-        echo json_encode($alerta);
+    }else{
+        $alerta = [
+            "Alerta" => "simple",
+            "Titulo" => "Ocurrió un error",
+            "Texto"=> "No se puede devolver esta venta",
+            "Tipo" => "error"
+        ];
     }
+    echo json_encode($alerta);
+}
+
 
     //funcion para ver detalles en modal
     public function obtener_detalles_venta_controlador() {

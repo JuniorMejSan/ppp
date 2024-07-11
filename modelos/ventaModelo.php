@@ -62,21 +62,29 @@ class ventaModelo extends mainModel{
     }
 
     //modelo para la devolucion de venta
-    protected static function devolver_venta_modelo($codigo, $estado){//el codigo de la venta a eliminar, el estado para verificar que la venta esta pagada, esto para que no se ejecute doble vez cuando la venta ya ha sido devuelta
-
-        //condicional para verificar de donde se quiere eliminar
+    protected static function devolver_venta_modelo($codigo, $estado){
         if($estado == "Pagado"){
-
             $query_devolver_venta = "UPDATE venta SET venta_estado = 'Devuelto' WHERE venta_codigo = :Codigo";
-            $sql = mainModel::conectar() -> prepare($query_devolver_venta);
-
+            $sql = mainModel::conectar()->prepare($query_devolver_venta);
         }
-
-        $sql -> bindParam(":Codigo", $codigo);
-        $sql -> execute();
-
+        $sql->bindParam(":Codigo", $codigo);
+        $sql->execute();
         return $sql;
     }
+    
+    protected static function actualizar_stock_item($item_id, $cantidad, $accion){
+        if($accion == 'sumar'){
+            $query_actualizar_stock = "UPDATE item SET item_stock = item_stock + :Cantidad WHERE item_id = :ItemID";
+        }else if($accion == 'restar'){
+            $query_actualizar_stock = "UPDATE item SET item_stock = item_stock - :Cantidad WHERE item_id = :ItemID";
+        }
+        $sql = mainModel::conectar()->prepare($query_actualizar_stock);
+        $sql->bindParam(":Cantidad", $cantidad);
+        $sql->bindParam(":ItemID", $item_id);
+        $sql->execute();
+        return $sql;
+    }
+    
 
     //modelo para seleccionar datos de las ventas
     protected static function datos_venta_modelo($tipo, $id){
