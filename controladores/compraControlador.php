@@ -246,19 +246,6 @@ class compraControlador extends compraModelo{
         //recuperamos lo detalles de la compra ingresados
         $cantidad = mainModel::limpiar_cadena($_POST['detalle_cantidad']);
 
-        //comprovamos que no supere el stock
-        if($campos['item_stock'] < $cantidad){
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "La cantidad ingresada supera el stock del producto, el stock actual es " . $campos['item_stock'],
-                "Tipo" => "error"
-            ];
-            //se envian los datos a JS
-            echo json_encode($alerta);
-            exit();
-        }
-
         //comprobamos que los campos no vengan vacios
         if($cantidad == ""){
             $alerta = [
@@ -948,17 +935,6 @@ class compraControlador extends compraModelo{
         session_start(['name' => 'ppp']);
         // Validar y actualizar la cantidad en la variable de sesión
         if (!empty($_SESSION['datos_item'][$id])) {
-
-            if($nueva_cantidad > $_SESSION['datos_item'][$id]['Stock']){
-                $alerta = [
-                    "Alerta" => "simple",
-                    "Titulo" => "Error al editar",
-                    "Texto" => "La cantidad ingresada supera el stock del producto, el stock actual es " . $_SESSION['datos_item'][$id]['Stock'],
-                    "Tipo" => "error"
-                ];
-                echo json_encode($alerta);
-                exit();
-            }
 
             $_SESSION['datos_item'][$id]['Cantidad'] = $nueva_cantidad;
     
