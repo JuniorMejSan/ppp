@@ -98,7 +98,20 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="<?php echo server_url; ?>empresa/"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Empresa</a>
+                    <a href="#" class="nav-btn-submenu"><i class="fas fa-store-alt fa-fw"></i> &nbsp; Compras <i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li>
+                            <a href="<?php echo server_url; ?>compra-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Nueva compra</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>compra-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp;
+                                Finalizadas</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>compra-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; Buscar
+                                por fecha</a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </nav>

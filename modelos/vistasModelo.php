@@ -5,7 +5,7 @@ class vistasModelo{
     //modelo para obtener las vistas, con protected indicamos que es protegido
     protected static function obtener_vistas_modelo($vista){
         //lista blanca de palabras que si se pueden escribir en la url, si no muestra error 404
-        $listaBlanca = ["home", "client-list", "client-new", "client-search", "client-update", "empresa", "item-list", "item-list-disable", "item-new", "item-search", "item-update", "venta-list", "venta-new", "venta-pending", "venta-venta", "venta-search", "venta-update", "user-list", "user-new", "user-search", "user-update", "proveedor-new", "proveedor-list", "proveedor-search", "proveedor-update"];
+        $listaBlanca = ["home", "client-list", "client-new", "client-search", "client-update", "item-list", "item-list-disable", "item-new", "item-search", "item-update", "venta-list", "venta-new", "venta-search", "user-list", "user-new", "user-search", "user-update", "proveedor-new", "proveedor-list", "proveedor-search", "proveedor-update", "compra-list", "compra-new", "compra-search"];
         
         if (in_array($vista, $listaBlanca)) { //si el valor que viene mediante la url esta en la lista blanca
             if (is_file("./vistas/contenidos/".$vista."-view.php")) { //is_file sirve para comprobra un archivo enviado mediante url dentro del directorio
