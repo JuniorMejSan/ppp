@@ -87,18 +87,18 @@ class compraModelo extends mainModel{
     
 
     //modelo para seleccionar datos de las ventas
-    protected static function datos_venta_modelo($tipo, $id){
+    protected static function datos_compra_modelo($tipo, $id){
 
         //controlamos segun el tipo de accion
         if($tipo == "Unico"){
-            $query_seleccionar_venta = "SELECT * FROM venta WHERE venta_id = :ID";
-            $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
+            $query_seleccionar_compra = "SELECT * FROM compra WHERE compra_id = :ID";
+            $sql = mainModel::conectar() -> prepare($query_seleccionar_compra);
             $sql -> bindParam(":ID", $id);
         }elseif($tipo == "Conteo"){
-            $query_seleccionar_venta = "SELECT venta_id FROM venta";
-            $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
+            $query_seleccionar_compra = "SELECT compra_id FROM compra";
+            $sql = mainModel::conectar() -> prepare($query_seleccionar_compra);
         }elseif($tipo == "Detalle"){
-            $query_seleccionar_detalle = "SELECT * FROM detalle_venta dv INNER JOIN venta v ON dv.venta_codigo = v.venta_codigo INNER JOIN item i ON dv.item_id = i.item_id WHERE dv.venta_codigo = :Codigo";
+            $query_seleccionar_detalle = "SELECT * FROM detalle_compra dc INNER JOIN compra c ON dc.compra_codigo = c.compra_codigo INNER JOIN item i ON dc.item_id = i.item_id WHERE dc.compra_codigo = :Codigo";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_detalle);
             $sql -> bindParam(":Codigo", $id);
         }

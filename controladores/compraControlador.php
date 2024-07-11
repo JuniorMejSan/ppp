@@ -554,14 +554,14 @@ class compraControlador extends compraModelo{
             }
 
             // Actualizar el stock del item
-            /*$nuevo_stock = $items['Cantidad'];
-            $actualizar_stock = "UPDATE item SET item_stock = item_stock - $nuevo_stock WHERE item_id = '{$items['ID']}'";
+            $nuevo_stock = $items['Cantidad'];
+            $actualizar_stock = "UPDATE item SET item_stock = item_stock + $nuevo_stock WHERE item_id = '{$items['ID']}'";
             $resultado_stock = mainModel::ejecutar_consulta_simple($actualizar_stock);
 
             if($resultado_stock->rowCount() != 1){
                 $errores_detalle = 1;
                 break;
-            }*/
+            }
         }
 
         //comprobacion de errores
