@@ -240,6 +240,19 @@ class ventaControlador extends ventaModelo{
         //recuperamos lo detalles de la venta ingresados
         $cantidad = mainModel::limpiar_cadena($_POST['detalle_cantidad']);
 
+        //comprovamos que no supere el stock
+        if($campos['item_stock'] < $cantidad){
+            $alerta = [
+                "Alerta" => "simple",
+                "Titulo" => "Ocurrio un error",
+                "Texto"=> "La cantidad ingresada supera el stock del producto, el stock actual es " . $campos['item_stock'],
+                "Tipo" => "error"
+            ];
+            //se envian los datos a JS
+            echo json_encode($alerta);
+            exit();
+        }
+
         //comprobamos que los campos no vengan vacios
         if($cantidad == ""){
             $alerta = [
