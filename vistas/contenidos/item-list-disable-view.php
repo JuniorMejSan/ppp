@@ -24,6 +24,9 @@
         <li>
             <a href="<?php echo server_url; ?>item-search/"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR ITEM</a>
         </li>
+        <li>
+            <a href="<?php echo server_url; ?>item-reporte/"><i class="fas fa-chart-pie"></i> &nbsp; GRAFICOS - REPORTES</a>
+        </li>
     </ul>
 </div>
 

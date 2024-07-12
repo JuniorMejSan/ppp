@@ -644,4 +644,19 @@ class itemControlador extends itemModelo{
         echo json_encode($alerta);
         
     }
+
+    public function obtener_datos_grafico_controlador() {
+        $datos = itemModelo::obtener_datos_grafico_modelo();
+        echo json_encode($datos);
+    }
+
+    public function obtener_datos_vendidos_controlador() {
+        $datos = itemModelo::obtener_datos_vendidos_modelo();
+        echo json_encode($datos);
+    }
+
+    public function obtener_datos_stock_controlador() {
+        $datos_stock = itemModelo::obtener_datos_stock_modelo();
+        echo json_encode($datos_stock);
+    }
 }

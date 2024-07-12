@@ -78,4 +78,36 @@ class itemModelo extends mainModel{
 
         return $sql;
     }
+
+    //funcion para grafico top 5 productos mas vendidos
+    protected static function obtener_datos_grafico_modelo() {
+        $query = "SELECT i.item_nombre, SUM(dv.detalleVenta_item_cantidad) AS total_vendido, SUM(dv.detalleVenta_total) AS monto_total_generado 
+                  FROM detalle_venta dv 
+                  JOIN item i ON dv.item_id = i.item_id 
+                  GROUP BY i.item_id, i.item_nombre 
+                  ORDER BY monto_total_generado DESC 
+                  LIMIT 5";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_datos_vendidos_modelo() {
+        $query = "SELECT i.item_nombre, SUM(dv.detalleVenta_item_cantidad) AS total_vendido 
+                  FROM detalle_venta dv 
+                  JOIN item i ON dv.item_id = i.item_id 
+                  GROUP BY i.item_id, i.item_nombre 
+                  ORDER BY total_vendido DESC 
+                  LIMIT 5";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_datos_stock_modelo() {
+        $query = "SELECT item_nombre, `item_stock` FROM `item` ORDER BY item_stock DESC;";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
