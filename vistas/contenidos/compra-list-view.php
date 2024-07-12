@@ -20,6 +20,9 @@
         <li>
             <a href="<?php echo server_url; ?>compra-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
         </li>
+        <li>
+            <a href="<?php echo server_url; ?>compra-reporte/"><i class="fas fa-chart-pie"></i> &nbsp; GRAFICOS - REPORTES</a>
+        </li>
     </ul>
 </div>
 

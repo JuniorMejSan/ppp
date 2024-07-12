@@ -167,8 +167,8 @@ class ventaModelo extends mainModel{
         $query = "SELECT mp.nombre AS metodo_pago, 
                          COUNT(v.venta_id) AS cantidad_ventas, 
                          SUM(v.venta_total) AS total_ventas
-                  FROM venta v
-                  INNER JOIN metodopago mp ON v.metodo_id = mp.idMetodoPago
+                  FROM venta v  
+                  INNER JOIN metodopago mp ON v.metodo_id = mp.idMetodoPago   WHERE v.venta_estado = 'Pagado' 
                   GROUP BY mp.nombre
                   ORDER BY total_ventas DESC";
     

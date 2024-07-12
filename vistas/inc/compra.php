@@ -185,3 +185,159 @@ function modal_editar_cantidad(id, cantidad_actual) {
 }
     
 </script>
+
+<script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart']});
+  
+  google.charts.setOnLoadCallback(drawColumnChart_comprasxmes);
+  google.charts.setOnLoadCallback(drawComprasEstadoChart);
+  google.charts.setOnLoadCallback(drawComprasMetodosPagoChart);
+
+  function drawColumnChart_comprasxmes() {
+    $.ajax({
+        url: '../ajax/compraAjax.php',
+        method: 'POST',
+        data: { accion: 'obtener_datos_compras_mes' },
+        success: function(response) {
+            const data = JSON.parse(response);
+            const dataArray = [["Mes", "Total Comprado S/ ", { role: "style" }]];
+            
+            // Array de nombres de meses
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                           "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            
+            data.forEach(item => {
+                const nombreMes = meses[item.mes - 1]; // Obtener nombre del mes
+                dataArray.push([nombreMes, parseFloat(item.total_compras), "color: #FF9933"]);
+            });
+
+            const dataTable = google.visualization.arrayToDataTable(dataArray);
+            const view = new google.visualization.DataView(dataTable);
+            view.setColumns([0, 1,
+                             { calc: "stringify",
+                               sourceColumn: 1,
+                               type: "string",
+                               role: "annotation" },
+                             2]);
+
+            const options = {
+                title: "Salidas por Mes",
+                titleTextStyle: {
+                    fontSize: 16,
+                    alignment: 'center'
+                },
+                width: 600,
+                height: 400,
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+                hAxis: {
+                    title: 'Mes',
+                    titleTextStyle: {
+                        fontSize: 16,
+                        italic: false
+                    }
+                },
+                vAxis: {
+                    title: 'Total Comprado - S/.',
+                    titleTextStyle: {
+                        fontSize: 16,
+                        italic: false
+                    }
+                }
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById("total_compraxmes"));
+            chart.draw(view, options);
+        },
+        error: function() {
+            alert('Error al cargar los datos del gráfico de columnas');
+        }
+    });
+}
+
+function drawComprasEstadoChart() {
+            $.ajax({
+                url: '../ajax/compraAjax.php',
+                method: 'POST',
+                data: { accion: 'obtener_datos_compras_estado' },
+                success: function(response) {
+                    const data = JSON.parse(response);
+
+                    // Preparar los datos para el gráfico
+                    const dataArray = [
+                        ['Estado', 'Cantidad'],
+                        ['Compras Finalizadas', parseFloat(data.cantidad_pagado)],
+                        ['Compras Devueltas', parseFloat(data.cantidad_devuelto)]
+                    ];
+
+                    // Crear la tabla de datos de Google Charts
+                    const dataTable = google.visualization.arrayToDataTable(dataArray);
+
+                    // Opciones del gráfico de pastel
+                    const options = {
+                        title: 'Compras Finalizadas vs Devueltas',
+                        titleTextStyle: {
+                            fontSize: 16,
+                            alignment: 'center'
+                        },
+                        width: 600,
+                        height: 400,
+                        pieSliceText: 'percentage',
+                        slices: {
+                            0: { color: '#FF9933' }, // Color para Compras Finalizadas
+                            1: { color: '#FFCC99' }  // Color para Compras Devueltas (más claro)
+                        }
+                    };
+
+                    // Crear el gráfico de pastel
+                    const chart = new google.visualization.PieChart(document.getElementById('compra_estado'));
+                    chart.draw(dataTable, options);
+                },
+                error: function() {
+                    alert('Error al cargar los datos del gráfico de compras finalizadas vs devueltas');
+                }
+            });
+        }
+
+        function drawComprasMetodosPagoChart() {
+            $.ajax({
+                url: '../ajax/compraAjax.php',
+                method: 'POST',
+                data: { accion: 'obtener_datos_compras_metodo_pago' },
+                success: function(response) {
+                    const data = JSON.parse(response);
+
+                    // Preparar los datos para el gráfico
+                    const dataArray = [['Método de Pago', 'Cantidad de Compras', 'Total de Compras']];
+                    data.forEach(item => {
+                        dataArray.push([item.metodo_pago, parseInt(item.cantidad_compras), parseFloat(item.total_compras)]);
+                    });
+
+                    // Crear la tabla de datos de Google Charts
+                    const dataTable = google.visualization.arrayToDataTable(dataArray);
+
+                    // Opciones del gráfico de pastel
+                    const options = {
+                        title: 'Ventas por Método de Pago',
+                        titleTextStyle: {
+                            fontSize: 16,
+                            alignment: 'center'
+                        },
+                        width: 600,
+                        height: 400,
+                        pieHole: 0.4
+                    };
+
+                    // Crear el gráfico de pastel
+                    const chart = new google.visualization.PieChart(document.getElementById('compra_mediopago'));
+                    chart.draw(dataTable, options);
+                },
+                error: function() {
+                    alert('Error al cargar los datos del gráfico de ventas por método de pago');
+                }
+            });
+        }
+
+
+
+</script>

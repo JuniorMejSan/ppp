@@ -2,7 +2,7 @@
 <!-- Page header -->
 <div class="full-box page-header">
     <h3 class="text-left">
-        <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; GRAFICOS - ITEMS
+        <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; GRAFICOS - VENTAS
     </h3>
 </div>
 

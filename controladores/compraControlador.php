@@ -954,5 +954,20 @@ class compraControlador extends compraModelo{
         exit();
     }
     
+    public function obtener_datos_compras_mes_controlador() {
+        $datos_compras_mes = compraModelo::obtener_datos_compras_mes_modelo();
+        echo json_encode($datos_compras_mes);
+    }
+    
+
+    public function obtener_datos_compras_estado_controlador() {
+        $datos_compras_estado = compraModelo::obtener_datos_compras_estado_modelo();
+        echo json_encode($datos_compras_estado);
+    }
+
+    public function obtener_datos_compras_metodo_pago_controlador() {
+        $datos_compras_metodo_pago = compraModelo::obtener_datos_compras_metodo_pago_modelo();
+        echo json_encode($datos_compras_metodo_pago);
+    }
     
 }

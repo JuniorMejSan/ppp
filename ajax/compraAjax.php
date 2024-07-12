@@ -3,7 +3,7 @@ $peticionAjax = true;
 require_once "../config/app.php";
 
 //detectar si los datos se envian esde un formulario para ejecutar los controladores o funciones
-if (isset($_POST['buscar_proveedor']) || isset($_POST['id_agregar_proveedor']) || isset($_POST['id_eliminar_proveedor']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_compra_reg']) || isset($_POST['compra_id_devuelta']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtenerDetallesCompra') || isset($_POST['detalle_cantidad_editar'])) {
+if (isset($_POST['buscar_proveedor']) || isset($_POST['id_agregar_proveedor']) || isset($_POST['id_eliminar_proveedor']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_compra_reg']) || isset($_POST['compra_id_devuelta']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtenerDetallesCompra') || isset($_POST['detalle_cantidad_editar']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_mes') || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_estado') || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_metodo_pago')) {
 
     //instanciamos al controlador
     require_once "../controladores/compraControlador.php";
@@ -54,6 +54,18 @@ if (isset($_POST['buscar_proveedor']) || isset($_POST['id_agregar_proveedor']) |
 
     if (isset($_POST['detalle_cantidad_editar'])) {
         echo $ins_compra -> editar_cantidad_item_compra_controlador();
+    }
+    
+    if (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_mes') {
+        echo $ins_compra->obtener_datos_compras_mes_controlador();
+    }
+
+    if (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_estado') {
+        echo $ins_compra->obtener_datos_compras_estado_controlador();
+    }
+
+    if (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_compras_metodo_pago') {
+        echo $ins_compra->obtener_datos_compras_metodo_pago_controlador();
     }
 
 }else { //si no significa que se esta intentando acceder desde el navegador

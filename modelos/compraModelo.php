@@ -126,4 +126,39 @@ class compraModelo extends mainModel{
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    protected static function obtener_datos_compras_mes_modelo() {
+        $query = "SELECT YEAR(compra_fecha) AS año,
+                         MONTH(compra_fecha) AS mes,
+                         SUM(compra_total) AS total_compras
+                  FROM compra
+                  WHERE compra_estado = 'Pagado'
+                  GROUP BY YEAR(compra_fecha), MONTH(compra_fecha)
+                  ORDER BY año DESC, mes DESC";
+    
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_datos_compras_estado_modelo() {
+        $query = "SELECT 
+                    SUM(CASE WHEN compra_estado = 'Pagado' THEN 1 ELSE 0 END) AS cantidad_pagado,
+                    SUM(CASE WHEN compra_estado = 'Devuelto' THEN 1 ELSE 0 END) AS cantidad_devuelto
+                  FROM compra";
+    
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_datos_compras_metodo_pago_modelo() {
+        $query = "SELECT mp.nombre AS metodo_pago, COUNT(c.compra_id) AS cantidad_compras, SUM(c.compra_total) AS total_compras FROM compra c INNER JOIN metodopago mp ON c.metodo_id = mp.idMetodoPago WHERE c.compra_estado = 'Pagado' GROUP BY mp.nombre ORDER BY total_compras DESC;";
+    
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
 }

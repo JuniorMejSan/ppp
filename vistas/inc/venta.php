@@ -272,7 +272,11 @@ function drawVentasPastelChart() {
                         },
                         width: 600,
                         height: 400,
-                        pieHole: 0.4
+                        pieSliceText: 'percentage',
+                        slices: {
+                            0: { color: '#FF9933' }, // Color para Compras Finalizadas
+                            1: { color: '#FFCC99' }  // Color para Compras Devueltas (más claro)
+                        }
                     };
 
                     const chart = new google.visualization.PieChart(document.getElementById('ventas_estado'));
@@ -322,4 +326,6 @@ function drawVentasPastelChart() {
                 }
             });
         }
+
+
 </script>
