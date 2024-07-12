@@ -25,7 +25,7 @@ class compraControlador extends compraModelo{
         }
 
         //comprobar texto en la bd
-        $query_datos_proveedor = "SELECT * FROM proveedor WHERE proveedor_ruc LIKE '%$proveedor%' ORDER BY proveedor_nombre ASC";
+        $query_datos_proveedor = "SELECT * FROM proveedor WHERE proveedor_ruc LIKE '%$proveedor%' AND proveedor_estado = 'Habilitado' ORDER BY proveedor_nombre ASC";
         $datos_proveedor = mainModel::ejecutar_consulta_simple($query_datos_proveedor);
 
         //verificamos si hay datos

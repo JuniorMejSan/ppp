@@ -148,8 +148,8 @@
                             fontSize: 16,
                             alignment: 'center'
                         },
-                        width: 600,
-                        height: 400,
+                        width: 800,
+                        height: 500,
                         bar: {groupWidth: "95%"},
                         legend: { position: "none" },
                         hAxis: {
