@@ -144,4 +144,37 @@ class ventaModelo extends mainModel{
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    protected static function obtener_datos_ventaxmes_modelo() {
+        $query = "SELECT YEAR(venta_fecha) AS año, MONTH(venta_fecha) AS mes, SUM(venta_total) AS total_ventas FROM venta WHERE venta_estado = 'Pagado' GROUP BY YEAR(venta_fecha), MONTH(venta_fecha) ORDER BY año DESC, mes DESC";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_ventas_finalizadas_devueltas_modelo() {
+        $query = "SELECT 
+                    SUM(CASE WHEN venta_estado = 'Pagado' THEN 1 ELSE 0 END) AS cantidad_pagado, 
+                    SUM(CASE WHEN venta_estado = 'Devuelto' THEN 1 ELSE 0 END) AS cantidad_devuelto 
+                  FROM venta";
+    
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    protected static function obtener_datos_metodos_pago_modelo() {
+        $query = "SELECT mp.nombre AS metodo_pago, 
+                         COUNT(v.venta_id) AS cantidad_ventas, 
+                         SUM(v.venta_total) AS total_ventas
+                  FROM venta v
+                  INNER JOIN metodopago mp ON v.metodo_id = mp.idMetodoPago
+                  GROUP BY mp.nombre
+                  ORDER BY total_ventas DESC";
+    
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

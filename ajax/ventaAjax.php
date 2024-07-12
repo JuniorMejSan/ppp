@@ -3,7 +3,7 @@ $peticionAjax = true;
 require_once "../config/app.php";
 
 //detectar si los datos se envian esde un formulario para ejecutar los controladores o funciones
-if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || isset($_POST['id_eliminar_cliente']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_venta_reg']) || isset($_POST['venta_id_devuelta']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtenerDetallesVenta') || isset($_POST['detalle_cantidad_editar'])) {
+if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || isset($_POST['id_eliminar_cliente']) || isset($_POST['buscar_item']) || isset($_POST['id_agregar_item']) || isset($_POST['id_eliminar_item']) ||isset($_POST['fecha_venta_reg']) || isset($_POST['venta_id_devuelta']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtenerDetallesVenta') || isset($_POST['detalle_cantidad_editar']) || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_ventasxmes_grafico') || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_ventas_finalizadas_devueltas') || (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_metodos_pago')) {
 
     //instanciamos al controlador
     require_once "../controladores/ventaControlador.php";
@@ -54,6 +54,18 @@ if (isset($_POST['buscar_cliente']) || isset($_POST['id_agregar_cliente']) || is
 
     if (isset($_POST['detalle_cantidad_editar'])) {
         echo $ins_venta->editar_cantidad_item_venta_controlador();
+    }
+
+    if (isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_ventasxmes_grafico') {
+        echo $ins_venta->obtener_datos_ventaxmes_controlador();
+    }
+
+    if(isset($_POST['accion']) && $_POST['accion'] == 'obtener_ventas_finalizadas_devueltas'){
+        echo $ins_venta->obtener_ventas_finalizadas_devueltas_controlador();
+    }
+
+    if(isset($_POST['accion']) && $_POST['accion'] == 'obtener_datos_metodos_pago'){
+        echo $ins_venta->obtener_datos_metodos_pago_controlador();
     }
 
 }else { //si no significa que se esta intentando acceder desde el navegador

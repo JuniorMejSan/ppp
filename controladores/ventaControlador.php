@@ -961,5 +961,18 @@ class ventaControlador extends ventaModelo{
         exit();
     }
     
-    
+    public function obtener_datos_ventaxmes_controlador() {
+        $datos_ventaxmes = ventaModelo::obtener_datos_ventaxmes_modelo();
+        echo json_encode($datos_ventaxmes);
+    }
+
+    public function obtener_ventas_finalizadas_devueltas_controlador() {
+        $datos_ventaestado = ventaModelo::obtener_ventas_finalizadas_devueltas_modelo();
+        echo json_encode($datos_ventaestado);
+    }
+
+    public function obtener_datos_metodos_pago_controlador() {
+        $datos_metodos_pago = ventaModelo::obtener_datos_metodos_pago_modelo();
+        echo json_encode($datos_metodos_pago);
+    }
 }

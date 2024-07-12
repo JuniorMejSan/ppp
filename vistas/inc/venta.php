@@ -180,3 +180,146 @@ function modal_editar_cantidad(id, cantidad_actual) {
 }
     
 </script>
+
+<script type="text/javascript">
+  google.charts.load('current', {packages: ['corechart']});
+  
+  google.charts.setOnLoadCallback(drawColumnChart_ventasxmes);
+  google.charts.setOnLoadCallback(drawVentasPastelChart);
+  google.charts.setOnLoadCallback(drawVentasMetodosPagoChart);
+
+  function drawColumnChart_ventasxmes() {
+    $.ajax({
+        url: '../ajax/ventaAjax.php',
+        method: 'POST',
+        data: { accion: 'obtener_datos_ventasxmes_grafico' },
+        success: function(response) {
+            const data = JSON.parse(response);
+            const dataArray = [["Mes", "Total Vendido S/ ", { role: "style" }]];
+            
+            // Array de nombres de meses
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                           "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            
+            data.forEach(item => {
+                const nombreMes = meses[item.mes - 1]; // Obtener nombre del mes
+                dataArray.push([nombreMes, parseFloat(item.total_ventas), "color: #FF9933"]);
+            });
+
+            const dataTable = google.visualization.arrayToDataTable(dataArray);
+            const view = new google.visualization.DataView(dataTable);
+            view.setColumns([0, 1,
+                             { calc: "stringify",
+                               sourceColumn: 1,
+                               type: "string",
+                               role: "annotation" },
+                             2]);
+
+            const options = {
+                title: "Ingresos por Mes",
+                titleTextStyle: {
+                    fontSize: 16,
+                    alignment: 'center'
+                },
+                width: 600,
+                height: 400,
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+                hAxis: {
+                    title: 'Mes',
+                    titleTextStyle: {
+                        fontSize: 16,
+                        italic: false
+                    }
+                },
+                vAxis: {
+                    title: 'Total Vendido - S/.',
+                    titleTextStyle: {
+                        fontSize: 16,
+                        italic: false
+                    }
+                }
+            };
+
+            const chart = new google.visualization.ColumnChart(document.getElementById("total_ventasxmes"));
+            chart.draw(view, options);
+        },
+        error: function() {
+            alert('Error al cargar los datos del gráfico de columnas');
+        }
+    });
+}
+
+function drawVentasPastelChart() {
+            $.ajax({
+                url: '../ajax/ventaAjax.php',
+                method: 'POST',
+                data: { accion: 'obtener_ventas_finalizadas_devueltas' },
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    const dataArray = [
+                        ['Estado', 'Cantidad'],
+                        ['Finalizadas', parseInt(data.cantidad_pagado)],
+                        ['Devueltas', parseInt(data.cantidad_devuelto)]
+                    ];
+
+                    const dataTable = google.visualization.arrayToDataTable(dataArray);
+                    const options = {
+                        title: 'Ventas Finalizadas y Devueltas',
+                        titleTextStyle: {
+                            fontSize: 16,
+                            alignment: 'center'
+                        },
+                        width: 600,
+                        height: 400,
+                        pieHole: 0.4
+                    };
+
+                    const chart = new google.visualization.PieChart(document.getElementById('ventas_estado'));
+                    chart.draw(dataTable, options);
+                },
+                error: function() {
+                    alert('Error al cargar los datos del gráfico de ventas finalizadas y devueltas');
+                }
+            });
+        }
+
+        function drawVentasMetodosPagoChart() {
+            $.ajax({
+                url: '../ajax/ventaAjax.php',
+                method: 'POST',
+                data: { accion: 'obtener_datos_metodos_pago' },
+                success: function(response) {
+                    const data = JSON.parse(response);
+
+                    // Preparar los datos para el gráfico
+                    const dataArray = [['Método de Pago', 'Cantidad de Ventas', 'Total de Ventas']];
+                    data.forEach(item => {
+                        dataArray.push([item.metodo_pago, parseInt(item.cantidad_ventas), parseFloat(item.total_ventas)]);
+                    });
+
+                    // Crear la tabla de datos de Google Charts
+                    const dataTable = google.visualization.arrayToDataTable(dataArray);
+
+                    // Opciones del gráfico de pastel
+                    const options = {
+                        title: 'Ventas por Método de Pago',
+                        titleTextStyle: {
+                            fontSize: 16,
+                            alignment: 'center'
+                        },
+                        width: 600,
+                        height: 400,
+                        pieHole: 0.4
+                    };
+
+                    // Crear el gráfico de pastel
+                    const chart = new google.visualization.PieChart(document.getElementById('venta_mediopago'));
+                    chart.draw(dataTable, options);
+                },
+                error: function() {
+                    alert('Error al cargar los datos del gráfico de ventas por método de pago');
+                }
+            });
+        }
+</script>
