@@ -154,7 +154,7 @@
     function verDetallesVenta(ventaId) {
     // Hacer una petición AJAX para obtener los detalles de la venta
     $.ajax({
-        url: '../ajax/VentaAjax.php',
+        url: '../ajax/ventaAjax.php',
         method: 'POST',
         data: { accion: 'obtenerDetallesVenta', venta_id: ventaId },
         success: function(response) {
