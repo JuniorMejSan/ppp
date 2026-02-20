@@ -1,3 +1,11 @@
+<?php
+if (isset($_POST['usuario_log']) && isset($_POST['clave_log'])) {
+    require_once "./controladores/loginControlador.php";
+    $ins_login = new loginControlador;
+    echo $ins_login->iniciar_sesion_controlador();
+}
+?>
+
 <div class="login-container">
     <div class="login-content">
         <div class="login-header">
@@ -39,11 +47,3 @@
         </form>
     </div>
 </div>
-
-<?php
-if (isset($_POST['usuario_log']) && isset($_POST['clave_log'])) {
-    require_once "./controladores/loginControlador.php";
-    $ins_login = new loginControlador;
-    echo $ins_login->iniciar_sesion_controlador();
-}
-?>

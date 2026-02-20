@@ -11,7 +11,8 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a class="active" href="<?php echo server_url; ?>item-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR ITEM</a>
+            <a class="active" href="<?php echo server_url; ?>item-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR
+                ITEM</a>
         </li>
         <li>
             <a href="<?php echo server_url; ?>item-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE
@@ -24,61 +25,77 @@
         <li>
             <a href="<?php echo server_url; ?>item-search/"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR ITEM</a>
         </li>
-        <li>
-            <a href="<?php echo server_url; ?>item-reporte/"><i class="fas fa-chart-pie"></i> &nbsp; GRAFICOS - REPORTES</a>
-        </li>
     </ul>
 </div>
 
 <!--CONTENT-->
 <div class="container-fluid">
-    <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/itemAjax.php" method="POST" data-form="save" autocomplete="off">
+    <form class="form-neon FormularioAjax" action="<?php echo server_url; ?>/ajax/itemAjax.php" method="POST"
+        data-form="save" autocomplete="off">
         <fieldset>
             <legend><i class="far fa-plus-square"></i> &nbsp; Información del item</legend>
             <div class="container-fluid">
                 <div class="row">
-                    <!-- Codigo de item-->
+
+                    <!-- FILA 1 -->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label for="item_codigo" class="bmd-label-floating">Códido</label>
-                            <input type="text" pattern="[a-zA-Z0-9-]{1,45}" class="form-control" name="item_codigo_reg"
-                                id="item_codigo" maxlength="45" required>
+                            <label for="item_codigo" class="bmd-label-floating">Código</label>
+                            <input type="text" class="form-control" name="item_codigo_reg" id="item_codigo"
+                                maxlength="45" required>
                         </div>
                     </div>
-                    <!-- Nombre de item-->
+
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="item_nombre" class="bmd-label-floating">Nombre</label>
-                            <input type="text" pattern="[a-zA-záéíóúÁÉÍÓÚñÑ0-9 ]{1,140}" class="form-control"
-                                name="item_nombre_reg" id="item_nombre" maxlength="140" required>
+                            <input type="text" class="form-control" name="item_nombre_reg" id="item_nombre"
+                                maxlength="140" required>
                         </div>
                     </div>
-                    <!-- Stock de item-->
-                    <div class="col-12 col-md-4" style="display: none;">
+
+                    <div class="col-12 col-md-4">
                         <div class="form-group">
-                            <label for="item_stock" class="bmd-label-floating">Stock</label>
-                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_stock_reg"
-                                id="item_stock" maxlength="9" value = "0" required>
+                            <label for="item_presentacion" class="bmd-label-floating">Presentación</label>
+                            <select class="form-control" name="item_presentacion_reg" id="item_presentacion" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <?php
+                                require_once "./controladores/itemControlador.php";
+                                $presentaciones = itemControlador::listar_presentaciones_habilitadas();
+                                foreach ($presentaciones as $p) {
+                                    echo '<option value="' . $p["id_presentacion"] . '">' . $p["descripcion"] . '</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
                     </div>
-                    <!-- Precio de venta-->
-                    <div class="col-12 col-md-2">
+
+                    <!-- FILA 2 -->
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label for="item_precio" class="bmd-label-floating">Precio de venta</label>
-                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_reg"
-                                id="item_precio" maxlength="9" required>
+                            <label for="item_precio" class="bmd-label-floating">Precio venta</label>
+                            <input type="number" step="0.01" class="form-control" name="item_precio_reg"
+                                id="item_precio" required>
                         </div>
                     </div>
-                    <!-- Precio de compra-->
-                    <div class="col-12 col-md-2">
+
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
-                            <label for="item_precio_compra" class="bmd-label-floating">Precio de compra</label>
-                            <input type="number" pattern="[0-9]{1,9}" class="form-control" name="item_precio_compra_reg"
-                                id="item_precio_compra" maxlength="9" required>
+                            <label for="item_precio_compra" class="bmd-label-floating">Precio compra</label>
+                            <input type="number" step="0.01" class="form-control" name="item_precio_compra_reg"
+                                id="item_precio_compra" required>
                         </div>
                     </div>
-                    <!-- Estado de item-->
-                    <div class="col-12 col-md-5">
+
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="item_fecha_vencimiento" class="bmd-label-floating">Fecha vencimiento</label>
+                            <input type="date" class="form-control" name="item_fecha_vencimiento_reg"
+                                id="item_fecha_vencimiento">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label for="item_estado" class="bmd-label-floating">Estado</label>
                             <select class="form-control" name="item_estado_reg" id="item_estado" required>
@@ -87,14 +104,21 @@
                             </select>
                         </div>
                     </div>
-                    <!-- Detalle de item-->
-                    <div class="col-12 col-md-7">
+
+                    <!-- FILA 3 -->
+                    <div class="col-12">
                         <div class="form-group">
                             <label for="item_detalle" class="bmd-label-floating">Detalle</label>
-                            <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}" class="form-control"
-                                name="item_detalle_reg" id="item_detalle" maxlength="190">
+                            <input type="text" class="form-control" name="item_detalle_reg" id="item_detalle"
+                                maxlength="190">
                         </div>
                     </div>
+
+                    <!-- STOCK OCULTO -->
+                    <div style="display:none;">
+                        <input type="number" name="item_stock_reg" id="item_stock" value="0">
+                    </div>
+
                 </div>
             </div>
         </fieldset>
