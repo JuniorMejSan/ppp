@@ -17,99 +17,62 @@ class clienteControlador extends clienteModelo{
         $telefono = mainModel::limpiar_cadena($_POST['cliente_telefono_reg']);
         $direccion = mainModel::limpiar_cadena($_POST['cliente_direccion_reg']);
 
-        //comprobar que los campos obligatorios no esten vacios
-        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "") {
-            //aqui se definen los tipos de alerta que se esperan en alerta_ajax de alerta.js
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "No se han completado los campos",
-                "Tipo" => "error"
-            ];
-            //se envian los datos a JS
-            echo json_encode($alerta);
-            exit(); //deja de ejecutarse el codigo y muestra la alerta
-        }
+        // 1) Buscar cliente por DNI (exista o no, con cualquier estado)
+        $query_cliente = "SELECT cliente_id, cliente_estado FROM cliente WHERE cliente_dni = :dni LIMIT 1";
+        $conexion = mainModel::conectar();
+        $stmt = $conexion->prepare($query_cliente);
+        $stmt->bindParam(":dni", $dni);
+        $stmt->execute();
 
-        //verificamos integridad de los datos
-        if(mainModel::verificar_datos("[0-9-]{1,27}", $dni)){
-            //si entra es porque si se tienen errores en ese dato
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DNI no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
+        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            echo json_encode($alerta);
-            exit();
-        }
+        if ($cliente) {
+            // Existe en BD
+            if ((int)$cliente["cliente_estado"] === 1) {
+                // Ya está activo
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrió un error",
+                    "Texto"  => "El DNI ya se encuentra registrado",
+                    "Tipo"   => "error"
+                ];
+                echo json_encode($alerta);
+                exit();
+            }
 
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $nombre)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
+            // Existe pero está inactivo (estado 0) => reactivar
+            $idCliente = $cliente["cliente_id"];
 
-            echo json_encode($alerta);
-            exit();
-        }
+            // OJO: aquí decides si SOLO reactivas o también actualizas los datos
+            $reactivar = clienteModelo::reactivar_cliente_modelo([
+                "ID" => $idCliente,
+                "Nombre" => $nombre,
+                "Apellido" => $apellido,
+                "Telefono" => $telefono,
+                "Direccion" => $direccion
+            ]);
 
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $apellido)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El APELLIDO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-        if (mainModel::verificar_datos("[0-9()+]{8,20}", $telefono)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El TELÉFONO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
+            if ($reactivar->rowCount() >= 1) {
+                $alerta = [
+                    "Alerta" => "limpiar",
+                    "Titulo" => "Cliente reactivado",
+                    "Texto"  => "El cliente ya existía y fue reactivado correctamente",
+                    "Tipo"   => "success"
+                ];
+            } else {
+                $alerta = [
+                    "Alerta" => "simple",
+                    "Titulo" => "Ocurrió un error",
+                    "Texto"  => "No se pudo reactivar el cliente, intente nuevamente",
+                    "Tipo"   => "error"
+                ];
+            }
 
             echo json_encode($alerta);
             exit();
         }
 
-        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}", $direccion)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        //verificar DNI para que no se repita en la bd
-        $query_check_dni = "SELECT cliente_dni FROM cliente WHERE cliente_dni ='$dni'";
-        $check_dni = mainModel::ejecutar_consulta_simple($query_check_dni);
-
-        //comprobar que el dni no este registrando mediante el conteo de rows que trae
-        if($check_dni -> rowCount() > 0) {//ya existe dni en la bd
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DNI ya se encuentra registrado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        //rray de datos a enviar al modelo para el registro
+        // 2) Si NO existe, recién registras normal
         $datos_cliente_reg = [
             "DNI" => $dni,
             "Nombre" => $nombre,
@@ -118,26 +81,26 @@ class clienteControlador extends clienteModelo{
             "Direccion" => $direccion
         ];
 
-        //variable para agregar
         $agregar_cliente = clienteModelo::agregar_cliente_modelo($datos_cliente_reg);
 
-        //condicional para verificar el correcto registro
-        if( $agregar_cliente -> rowCount() == 1){
+        if ($agregar_cliente->rowCount() == 1) {
             $alerta = [
                 "Alerta" => "limpiar",
                 "Titulo" => "Registro exitoso",
-                "Texto"=> "Cliente registrado satisfactoriamente",
-                "Tipo" => "success"
+                "Texto"  => "Cliente registrado satisfactoriamente",
+                "Tipo"   => "success"
             ];
-        }else{
+        } else {
             $alerta = [
                 "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "Ocurrio un problema al registrar el cliente, porfavor intente nuevamente",
-                "Tipo" => "error"
+                "Titulo" => "Ocurrió un error",
+                "Texto"  => "Ocurrió un problema al registrar el cliente, intente nuevamente",
+                "Tipo"   => "error"
             ];
         }
+
         echo json_encode($alerta);
+        exit();
     }
 
     //controlador para listar los clientes
@@ -163,13 +126,13 @@ class clienteControlador extends clienteModelo{
 
             //consulta para que el resultado coindica con la busqueda realizada
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente 
-            WHERE cliente_estado = 'Habilitado' 
+            WHERE cliente_estado = 1  
             AND cliente_dni LIKE '%$busqueda%' 
             ORDER BY cliente_nombre ASC 
             LIMIT $inicio, $registros";
         }else{
             $consulta = "SELECT SQL_CALC_FOUND_ROWS * FROM cliente 
-            WHERE cliente_estado = 'Habilitado' 
+            WHERE cliente_estado = 1  
             order by cliente_nombre asc 
             limit $inicio, $registros";
         }
@@ -226,13 +189,15 @@ class clienteControlador extends clienteModelo{
             $contador = $inicio + 1;
             $reg_inicio = $inicio + 1; //variable para mostrar cuantos registros se estan mostrando en la tabla
             foreach ($datos as $rows) {
+                $telefono = !empty($rows['cliente_telefono']) ? $rows['cliente_telefono'] : 'Sin teléfono registrado';
+                $direccion = !empty($rows['cliente_direccion']) ? $rows['cliente_direccion'] : 'Sin dirección registrada';
                 $tabla .= '<tr class="text-center">
                                 <td>'.$contador.'</td>
                                 <td>'.$rows['cliente_dni'].'</td>
                                 <td>'.$rows['cliente_nombre'].' '.$rows['cliente_apellido'].'</td>
-                                <td>'.$rows['cliente_telefono'].'</td>
+                                <td>'.$telefono.'</td>
                                 <td><button type="button" class="btn btn-info" data-toggle="popover" data-trigger="hover"
-                                title="'.$rows['cliente_nombre'].' '.$rows['cliente_apellido'].'" data-content="'.$rows['cliente_direccion'].'">
+                                title="'.$rows['cliente_nombre'].' '.$rows['cliente_apellido'].'" data-content="'.$direccion.'">
                                 <i class="fas fa-info-circle"></i>
                             </button></td>';
                             if($privilegio == 1 || $privilegio == 2){
@@ -408,73 +373,13 @@ class clienteControlador extends clienteModelo{
         $direccion = mainModel::limpiar_cadena($_POST['cliente_direccion_up']);
 
         //verificamos que los campos no vengan vacios
-        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "") {
+        if ($dni == "" || $nombre == "") {
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
                 "Texto"=> "No se han completado los campos",
                 "Tipo" => "error"
             ];
-            echo json_encode($alerta);
-            exit();
-        }
-        
-        if(mainModel::verificar_datos("[0-9-]{1,27}", $dni)){
-            //si entra es porque si se tienen errores en ese dato
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DNI no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $nombre)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El NOMBRE no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $apellido)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El APELLIDO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-        if (mainModel::verificar_datos("[0-9()+]{8,20}", $telefono)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El TELÉFONO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}", $direccion)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
             echo json_encode($alerta);
             exit();
         }

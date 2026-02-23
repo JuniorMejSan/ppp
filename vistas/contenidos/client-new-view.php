@@ -89,32 +89,32 @@
                     <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label for="cliente_nombre" class="bmd-label-floating">Nombre o Razón Social</label>
-                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" class="form-control"
-                                name="cliente_nombre_reg" id="cliente_nombre" maxlength="40" required>
+                            <input type="text" class="form-control"
+                                name="cliente_nombre_reg" id="cliente_nombre" maxlength="250" required>
                         </div>
                     </div>
                     <!-- Apellido-->
                     <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label for="cliente_apellido" class="bmd-label-floating">Apellido</label>
-                            <input type="text" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" class="form-control"
-                                name="cliente_apellido_reg" id="cliente_apellido" maxlength="40" required>
+                            <input type="text" class="form-control"
+                                name="cliente_apellido_reg" id="cliente_apellido" maxlength="250">
                         </div>
                     </div>
                     <!-- Telefono-->
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label for="cliente_telefono" class="bmd-label-floating">Teléfono</label>
-                            <input type="text" pattern="[0-9()+]{8,20}" class="form-control" name="cliente_telefono_reg"
-                                id="cliente_telefono" maxlength="20" required>
+                            <input type="number" pattern="[0-9()+]{8,20}" class="form-control" name="cliente_telefono_reg"
+                                id="cliente_telefono" maxlength="20">
                         </div>
                     </div>
                     <!-- Direccion-->
                     <div class="col-12 col-md-8">
                         <div class="form-group">
                             <label for="cliente_direccion" class="bmd-label-floating">Dirección</label>
-                            <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}" class="form-control"
-                                name="cliente_direccion_reg" id="cliente_direccion" maxlength="150" required>
+                            <input type="text" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,250}" class="form-control"
+                                name="cliente_direccion_reg" id="cliente_direccion" maxlength="250">
                         </div>
                     </div>
                 </div>

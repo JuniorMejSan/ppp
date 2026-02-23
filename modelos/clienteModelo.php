@@ -6,7 +6,7 @@ class clienteModelo extends mainModel{
     //modelo para registrar cliente
     protected static function agregar_cliente_modelo($datos){
 
-        $query_agregar_cliente = "INSERT INTO cliente(`cliente_dni`, `cliente_nombre`, `cliente_apellido`, `cliente_telefono`, `cliente_direccion`,  `cliente_estado`) VALUES (:DNI, :Nombre, :Apellido, :Telefono, :Direccion, 'Habilitado')";
+        $query_agregar_cliente = "INSERT INTO cliente(`cliente_dni`, `cliente_nombre`, `cliente_apellido`, `cliente_telefono`, `cliente_direccion`,  `cliente_estado`) VALUES (:DNI, :Nombre, :Apellido, :Telefono, :Direccion, 1)";
         $sql = mainModel::conectar() -> prepare($query_agregar_cliente);
 
         $sql -> bindParam(":DNI", $datos['DNI']);
@@ -21,7 +21,7 @@ class clienteModelo extends mainModel{
 
     //modelo para eliminar cliente
     protected static function eliminar_cliente_modelo($id){
-        $query_eliminar_cliente = "UPDATE cliente SET cliente_estado = 'Inhabilitado' WHERE cliente_id = :ID";
+        $query_eliminar_cliente = "UPDATE cliente SET cliente_estado = 0 WHERE cliente_id = :ID";
         $sql = mainModel::conectar() -> prepare($query_eliminar_cliente);
 
         $sql -> bindParam(":ID", $id);
@@ -61,5 +61,27 @@ class clienteModelo extends mainModel{
         $sql -> execute();
 
         return $sql;
+    }
+
+    protected static function reactivar_cliente_modelo($datos){
+        $sql = "UPDATE cliente
+            SET cliente_estado = 1,
+                cliente_nombre = :nombre,
+                cliente_apellido = :apellido,
+                cliente_telefono = :telefono,
+                cliente_direccion = :direccion
+            WHERE cliente_id = :id";
+
+        $conexion = mainModel::conectar();
+        $stmt = $conexion->prepare($sql);
+
+        $stmt->bindParam(":id", $datos["ID"]);
+        $stmt->bindParam(":nombre", $datos["Nombre"]);
+        $stmt->bindParam(":apellido", $datos["Apellido"]);
+        $stmt->bindParam(":telefono", $datos["Telefono"]);
+        $stmt->bindParam(":direccion", $datos["Direccion"]);
+
+        $stmt->execute();
+        return $stmt;
     }
 }

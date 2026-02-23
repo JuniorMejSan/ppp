@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <label for="cliente_dni" class="bmd-label-floating">DNI</label>
                             <input type="text" pattern="[0-9-]{1,27}" class="form-control" name="cliente_dni_up"
-                                id="cliente_dni" maxlength="8" value="<?php echo $campos['cliente_dni']; ?>">
+                                id="cliente_dni" maxlength="8" value="<?php echo $campos['cliente_dni']; ?>" readonly>
                         </div>
                     </div>
                     <!-- Nombre-->
