@@ -49,13 +49,33 @@
 
                 <li>
                     <a href="#" class="nav-btn-submenu"><i class="fas fa-layer-group"></i></i> &nbsp; Presentaciones <i
-                            class="fas fa-chevron-down"></i></a>
+                            class="fas fa-chevron-down"></i>
+                    </a>
                     <ul>
                         <li>
                             <a href="<?php echo server_url; ?>presentacion-new/"><i class="fas fa-plus fa-fw"></i> &nbsp; Agregar Presentacion</a>
                         </li>
                         <li>
                             <a href="<?php echo server_url; ?>presentacion-list/"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Listado de Presentaciones</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#" class="nav-btn-submenu">
+                        <i class="fas fa-money-bill-wave"></i> &nbsp; Medios de Pago 
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href="<?php echo server_url; ?>medio-new/">
+                                <i class="fas fa-plus fa-fw"></i> &nbsp; Agregar Medio de Pago
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>medio-list/">
+                                <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; Listado de Medios de Pago
+                            </a>
                         </li>
                     </ul>
                 </li>
