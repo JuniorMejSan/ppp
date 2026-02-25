@@ -346,7 +346,7 @@ class compraControlador extends compraModelo{
 
     //funcion para mostrar los medios de pago
     public function obtener_metodos_pago() {
-        $query_metodo_pago = "SELECT * FROM metodopago";
+        $query_metodo_pago = "SELECT * FROM medio_pago WHERE estado = 1";
         $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
         
         $metodos = [];

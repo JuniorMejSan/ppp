@@ -170,9 +170,10 @@ $horaActual = date('H:i:s');
                             <div class="form-group">
                                 <label for="compra_metodo" class="bmd-label-floating">Método de pago</label>
                                 <select class="form-control" name="compra_metodo_reg" id="compra_metodo">
+                                    <option value="" selected="">--Seleccione un método de pago--</option>
                                     <?php foreach($metodos_pago as $metodo): ?>
-                                        <option value="<?php echo $metodo['idMetodoPago']; ?>">
-                                            <?php echo $metodo['nombre']; ?>
+                                        <option value="<?php echo $metodo['id_medio_pago']; ?>">
+                                            <?php echo $metodo['descripcion']; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
