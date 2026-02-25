@@ -24,7 +24,7 @@ class usuarioControlador extends usuarioModelo{
         $privilegio = mainModel::limpiar_cadena($_POST['usuario_privilegio_reg']);
 
         //validamos que los datos no esten vacios
-        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "" || $usuario == "" || $email == "" || $clave1 == "" || $clave2 == "") {
+        if ($dni == "" || $nombre == "" || $usuario == "" || $clave1 == "" || $clave2 == "") {
             //aqui se definen los tipos de alerta que se esperan en alerta_ajax de alerta.js
             $alerta = [
                 "Alerta" => "simple",
@@ -56,41 +56,6 @@ class usuarioControlador extends usuarioModelo{
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
                 "Texto"=> "El NOMBRE no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{4,35}", $apellido)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El APELLIDO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-        if (mainModel::verificar_datos("[0-9()+]{9,20}", $telefono)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El TELÉFONO no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,190}", $direccion)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El DIRECCIÓN no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
@@ -144,33 +109,6 @@ class usuarioControlador extends usuarioModelo{
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
                 "Texto"=> "El NOMBRE DE USUARIO ya se encuentra registrado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        //comprobando existencia del CORREO y tenga el formato adecuado
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {//fucnion de php para verificar formato de correo
-            $query_check_email = "select email from usuario where email = '$email'";
-            $check_email = mainModel::ejecutar_consulta_simple($query_check_email);
-            if ($check_email -> rowCount() > 0) { //verificamos si la consulta trajo datos
-                $alerta = [
-                    "Alerta" => "simple",
-                    "Titulo" => "Ocurrio un error",
-                    "Texto"=> "El CORREO ingresado ya se encuentra registrado",
-                    "Tipo" => "error"
-                ];
-
-                echo json_encode($alerta);
-                exit();
-            }
-        }else {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El CORREO no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
