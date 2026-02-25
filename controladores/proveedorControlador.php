@@ -18,7 +18,7 @@ class proveedorControlador extends proveedorModelo{
         $email = mainModel::limpiar_cadena($_POST['proveedor_email_reg']);
 
         //comprobar que los campos obligatorios no esten vacios
-        if ($ruc == "" || $nombre == "" || $direccion == "" || $pais == "" || $telefono == "" || $email == "") {
+        if ($ruc == "" || $nombre == "") {
             //aqui se definen los tipos de alerta que se esperan en alerta_ajax de alerta.js
             $alerta = [
                 "Alerta" => "simple",
@@ -45,47 +45,12 @@ class proveedorControlador extends proveedorModelo{
             exit();
         }
 
-        if(mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $nombre)){
+        if(mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,250}", $nombre)){
             //si entra es porque si se tienen errores en ese dato
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
                 "Texto"=> "El NOMBRE no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ().,#\- ]{1,150}", $direccion)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "La DIRECCIÓN no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-        if (mainModel::verificar_datos("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}", $pais)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El PAÍS no coincide con el formato solicitado",
-                "Tipo" => "error"
-            ];
-
-            echo json_encode($alerta);
-            exit();
-        }
-
-        if (mainModel::verificar_datos("[0-9()+]{8,20}", $telefono)) {
-            $alerta = [
-                "Alerta" => "simple",
-                "Titulo" => "Ocurrio un error",
-                "Texto"=> "El TELEFONO no coincide con el formato solicitado",
                 "Tipo" => "error"
             ];
 
