@@ -108,17 +108,17 @@ class compraModelo extends mainModel{
 
     //modelo para ver los detalles de la compra
     protected static function obtener_detalles_compra_modelo($compra_id) {
-        $sql = "SELECT c.*, p.proveedor_nombre, p.proveedor_ruc, mp.nombre, i.item_codigo, i.item_nombre, i.item_precio, dc.detalleCompra_total, dc.detalleCompra_item_cantidad  
+        $sql = "SELECT c.*, p.proveedor_nombre, p.proveedor_ruc, mp.descripcion, i.item_codigo, i.item_nombre, i.item_precio, dc.detalleCompra_total, dc.detalleCompra_item_cantidad  
                 FROM compra c 
                 LEFT JOIN proveedor p 
                 ON c.proveedor_id = p.proveedor_id 
-                LEFT JOIN metodopago mp
-                ON c.metodo_id = mp.idMetodoPago 
+                LEFT JOIN medio_pago mp 
+                ON c.metodo_id = mp.id_medio_pago 
                 LEFT JOIN detalle_compra dc 
                 ON c.compra_codigo = dc.compra_codigo 
                 LEFT JOIN item i
                 ON dc.item_id = i.item_id
-                WHERE c.compra_id = :compra_id";
+                WHERE c.idCompra = :compra_id";
         
         $stmt = mainModel::conectar()->prepare($sql);
         $stmt->bindParam(":compra_id", $compra_id);

@@ -161,7 +161,10 @@
     $.ajax({
         url: '../ajax/compraAjax.php',
         method: 'POST',
-        data: { accion: 'obtenerDetallesCompra', compra_id: compraId },
+        data: { 
+            accion: 'obtenerDetallesCompra', 
+            compra_id: compraId 
+        },
         success: function(response) {
             // Cargar los detalles en el modal
             $('#detallesCompraContent').html(response);

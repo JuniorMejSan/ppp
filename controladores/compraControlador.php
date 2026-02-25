@@ -424,7 +424,7 @@ class compraControlador extends compraModelo{
             exit();
         }
 
-        $query_metodo_pago = "SELECT * FROM metodopago";
+        $query_metodo_pago = "SELECT * FROM medio_pago WHERE estado = 1";
         $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
 
         $metodos = [];
@@ -434,7 +434,7 @@ class compraControlador extends compraModelo{
 
         $metodo_valido = false;
         foreach($metodos as $metodo){
-            if (strtoupper($metodo_pago_compra) === $metodo['idMetodoPago']) {
+            if (strtoupper($metodo_pago_compra) === $metodo['id_medio_pago']) {
                 $metodo_valido = true;
                 break;
             }
@@ -619,7 +619,7 @@ class compraControlador extends compraModelo{
         }
 
         //variable para traer los datos especificos de la compra y cliente
-        $campos = "compra.compra_id, compra.compra_codigo, compra.compra_fecha, compra.compra_hora, compra.compra_cantidad, compra.compra_total, compra.metodo_id, compra.compra_observacion, compra.usuario_nombre, compra.proveedor_id, compra.compra_estado, proveedor.proveedor_nombre, metodopago.nombre, usuario.user";
+        $campos = "compra.idCompra, compra.compra_codigo, compra.compra_fecha, compra.compra_hora, compra.compra_cantidad, compra.compra_total, compra.metodo_id, compra.compra_observacion, compra.usuario_nombre, compra.proveedor_id, compra.compra_estado, proveedor.proveedor_nombre, medio_pago.descripcion, usuario.user";
 
         //condicion para la consulta a la base de datos, si es listado normal o de busqueda
         if($tipo == "Busqueda" && $fecha_inicio != "" && $fecha_final != ""){ //si el tipo es de busqueda, y las fechas no vienen vacias
@@ -629,8 +629,8 @@ class compraControlador extends compraModelo{
             FROM compra 
             LEFT JOIN proveedor
             ON compra.proveedor_id = proveedor.proveedor_id 
-            LEFT JOIN metodopago 
-            ON compra.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN medio_pago 
+            ON compra.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON compra.usuario_nombre = usuario.user
             WHERE (compra.compra_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
@@ -640,8 +640,8 @@ class compraControlador extends compraModelo{
             FROM compra 
             LEFT JOIN proveedor
             ON compra.proveedor_id = proveedor.proveedor_id 
-            LEFT JOIN metodopago 
-            ON compra.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN medio_pago 
+            ON compra.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON compra.usuario_nombre = usuario.user
             ORDER BY compra.compra_fecha DESC";
@@ -712,7 +712,7 @@ class compraControlador extends compraModelo{
                                 }
 
                                 $tabla .= '<td>
-                                    <button class="btn btn-info" onclick="verDetallesCompra('.$rows['compra_id'].')">
+                                    <button class="btn btn-info" onclick="verDetallesCompra('.$rows['idCompra'].')">
                                         <i class="fas fa-info-circle"></i>
                                     </button>
                                 </td>';
@@ -874,7 +874,7 @@ class compraControlador extends compraModelo{
             $output .= "<p><strong>Fecha: </strong> " . $primerDetalle['compra_fecha'] . "</p>";
             $output .= "<p><strong>Hora: </strong> " . $primerDetalle['compra_hora'] . "</p>";
             $output .= "<p><strong>Total: </strong>".moneda." " . $primerDetalle['compra_total'] . "</p>";
-            $output .= "<p><strong>Medio de Pago: </strong>" . $primerDetalle['nombre'] . "</p>";
+            $output .= "<p><strong>Medio de Pago: </strong>" . $primerDetalle['descripcion'] . "</p>";
     
             $output .= '<div class="table-responsive">
                         <table class="table table-dark table-sm">
