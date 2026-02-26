@@ -70,6 +70,7 @@ $horaActual = date('H:i:s');
                             <th>#</th>
                             <th>CODIGO</th>
                             <th>ITEM</th>
+                            <th>PRESENTACIÓN</th>
                             <th>CANTIDAD</th>
                             <th>PRECIO DE COMPRA <?php echo moneda ?></th>
                             <th>SUBTOTAL <?php echo moneda ?></th>
@@ -101,7 +102,8 @@ $horaActual = date('H:i:s');
                         <tr class="text-center">
                             <td><?php echo $contador ?></td>
                             <td><?php echo $items['Codigo'] ?></td>
-                            <td><?php echo $items['Nombre'] ?></td>
+                            <td><?php echo $items['Nombre'] ?></td>  
+                            <td><?php echo $items['Presentacion'] ?></td>  
                             <td><?php echo $items['Cantidad'] ?></td>
                             <td><?php echo moneda.number_format($items['Precio_compra'],2,'.','') ?></td>
                             <td><?php echo moneda.$subtotal ?></td>

@@ -172,7 +172,13 @@ class compraControlador extends compraModelo{
         }
 
         //comprobar texto en la bd
-        $query_datos_item = "SELECT * FROM item WHERE (item_codigo LIKE '%$item%' OR item_nombre LIKE '%$item%') AND (item_estado = 'Habilitado') ORDER BY item_codigo ASC";
+        $query_datos_item = "SELECT i.*, p.descripcion 
+                                FROM item i INNER JOIN presentacion p 
+                                ON p.id_presentacion = i.id_presentacion 
+                                WHERE (i.item_codigo LIKE '%$item%' OR i.item_nombre LIKE '%$item%')
+                                    AND (i.item_estado = 'Habilitado') 
+                                ORDER BY i.item_codigo ASC";
+
         $datos_item = mainModel::ejecutar_consulta_simple($query_datos_item);
 
         //verificamos si hay datos
@@ -188,7 +194,7 @@ class compraControlador extends compraModelo{
             //recorremos los registros que trajo la consulta para poder mostrarlos
             foreach($datos_item as $rows){
                 $tabla.= '<tr class="text-center">
-                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.moneda.''.$rows['item_precio_compra'].'</td>
+                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.$rows['descripcion'].' - '.moneda.''.$rows['item_precio_compra'].'</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" onclick = "modal_agregar_item('.$rows['item_id'].')"><i
                                                 class="fas fa-box-open"></i></button>
@@ -225,7 +231,11 @@ class compraControlador extends compraModelo{
         $id = mainModel::limpiar_cadena($_POST['id_agregar_item']);
 
         //comprobando que el item exista y este habilitado en la bd
-        $query_check_item = "SELECT * FROM item WHERE item_id = '$id' AND item_estado = 'Habilitado'";
+        $query_check_item = "SELECT i.*, p.descripcion 
+                                FROM item i INNER JOIN presentacion p 
+                                ON p.id_presentacion = i.id_presentacion 
+                                WHERE i.item_id = '$id' 
+                                AND i.item_estado = 'Habilitado' ";
         $check_item = mainModel::ejecutar_consulta_simple($query_check_item);
 
         //verificamos que si se traigan datos
@@ -283,6 +293,7 @@ class compraControlador extends compraModelo{
                 "Codigo" => $campos['item_codigo'],
                 "Stock" => $campos['item_stock'],
                 "Nombre"=> $campos['item_nombre'],
+                "Presentacion"=> $campos['descripcion'],
                 "Precio"=> $campos['item_precio'],
                 "Precio_compra"=> $campos['item_precio_compra'],
                 'Detalle'=> $campos['item_detalle'],
