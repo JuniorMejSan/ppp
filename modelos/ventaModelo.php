@@ -126,12 +126,12 @@ class ventaModelo extends mainModel{
 
     //modelo para ver los detalles de la venta
     protected static function obtener_detalles_venta_modelo($venta_id) {
-        $sql = "SELECT v.*, c.cliente_nombre, c.cliente_apellido, mp.nombre, i.item_codigo, i.item_nombre, i.item_precio, dv.detalleVenta_total, dv.detalleVenta_item_cantidad  
+        $sql = "SELECT v.*, c.cliente_nombre, c.cliente_apellido, mp.descripcion, i.item_codigo, i.item_nombre, i.item_precio, dv.detalleVenta_total, dv.detalleVenta_item_cantidad  
                 FROM venta v 
                 LEFT JOIN cliente c 
                 ON v.cliente_id = c.cliente_id 
-                LEFT JOIN metodopago mp
-                ON v.metodo_id = mp.idMetodoPago 
+                LEFT JOIN medio_pago mp
+                ON v.metodo_id = mp.id_medio_pago 
                 LEFT JOIN detalle_venta dv 
                 ON v.venta_codigo = dv.venta_codigo 
                 LEFT JOIN item i

@@ -350,7 +350,7 @@ class ventaControlador extends ventaModelo{
 
     //funcion para mostrar los medios de pago
     public function obtener_metodos_pago() {
-        $query_metodo_pago = "SELECT * FROM metodopago";
+        $query_metodo_pago = "SELECT * FROM medio_pago WHERE estado = 1";
         $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
         
         $metodos = [];
@@ -428,7 +428,7 @@ class ventaControlador extends ventaModelo{
             exit();
         }
 
-        $query_metodo_pago = "SELECT * FROM metodopago";
+        $query_metodo_pago = "SELECT * FROM medio_pago WHERE estado = 1";
         $metodo_pago = mainModel::ejecutar_consulta_simple($query_metodo_pago);
 
         $metodos = [];
@@ -438,7 +438,7 @@ class ventaControlador extends ventaModelo{
 
         $metodo_valido = false;
         foreach($metodos as $metodo){
-            if (strtoupper($metodo_pago_venta) === $metodo['idMetodoPago']) {
+            if (strtoupper($metodo_pago_venta) === $metodo['id_medio_pago']) {
                 $metodo_valido = true;
                 break;
             }
@@ -623,7 +623,7 @@ class ventaControlador extends ventaModelo{
         }
 
         //variable para traer los datos especificos de la venta y cliente
-        $campos = "venta.venta_id, venta.venta_codigo, venta.venta_fecha, venta.venta_hora, venta.venta_cantidad, venta.venta_total, venta.metodo_id, venta.venta_observacion, venta.usuario_nombre, venta.cliente_id, venta.venta_estado, cliente.cliente_nombre, cliente.cliente_apellido, metodopago.nombre, usuario.user";
+        $campos = "venta.venta_id, venta.venta_codigo, venta.venta_fecha, venta.venta_hora, venta.venta_cantidad, venta.venta_total, venta.metodo_id, venta.venta_observacion, venta.usuario_nombre, venta.cliente_id, venta.venta_estado, cliente.cliente_nombre, cliente.cliente_apellido, medio_pago.descripcion, usuario.user";
 
         //condicion para la consulta a la base de datos, si es listado normal o de busqueda
         if($tipo == "Busqueda" && $fecha_inicio != "" && $fecha_final != ""){ //si el tipo es de busqueda, y las fechas no vienen vacias
@@ -633,8 +633,8 @@ class ventaControlador extends ventaModelo{
             FROM venta 
             LEFT JOIN cliente
             ON venta.cliente_id = cliente.cliente_id 
-            LEFT JOIN metodopago 
-            ON venta.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN medio_pago 
+            ON venta.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON venta.usuario_nombre = usuario.user
             WHERE (venta.venta_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
@@ -644,8 +644,8 @@ class ventaControlador extends ventaModelo{
             FROM venta 
             LEFT JOIN cliente
             ON venta.cliente_id = cliente.cliente_id 
-            LEFT JOIN metodopago 
-            ON venta.metodo_id = metodopago.idMetodoPago 
+            LEFT JOIN medio_pago 
+            ON venta.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON venta.usuario_nombre = usuario.user
             ORDER BY venta.venta_fecha DESC";
@@ -884,7 +884,7 @@ class ventaControlador extends ventaModelo{
             $output .= "<p><strong>Fecha: </strong> " . $primerDetalle['venta_fecha'] . "</p>";
             $output .= "<p><strong>Hora: </strong> " . $primerDetalle['venta_hora'] . "</p>";
             $output .= "<p><strong>Total: </strong>".moneda." " . $primerDetalle['venta_total'] . "</p>";
-            $output .= "<p><strong>Medio de Pago: </strong>" . $primerDetalle['nombre'] . "</p>";
+            $output .= "<p><strong>Medio de Pago: </strong>" . $primerDetalle['descripcion'] . "</p>";
     
             $output .= '<div class="table-responsive">
                         <table class="table table-dark table-sm">
