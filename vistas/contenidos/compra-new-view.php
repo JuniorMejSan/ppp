@@ -27,9 +27,9 @@ $horaActual = date('H:i:s');
         <li>
             <a href="<?php echo server_url; ?>compra-search/"><i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR POR FECHA</a>
         </li>
-        <li>
+        <!-- <li>
             <a href="<?php echo server_url; ?>compra-reporte/"><i class="fas fa-chart-pie"></i> &nbsp; GRAFICOS - REPORTES</a>
-        </li>
+        </li> -->
     </ul>
 </div>
 
@@ -141,7 +141,7 @@ $horaActual = date('H:i:s');
                         
                         <tr class="text-center bg-light">
                             <td><strong>TOTAL</strong></td>
-                            <td colspan="2"></td>
+                            <td colspan="3"></td>
                             <td><strong><?php echo  $_SESSION['compra_item']?> items</strong></td>
                             <td colspan="1"></td>
                             <td><strong><?php echo  moneda.number_format($_SESSION['compra_total'],2,'.','')?></strong></td>

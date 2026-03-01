@@ -152,22 +152,22 @@
     }//fin de funcion
 
     function verDetallesVenta(ventaId) {
-    // Hacer una petición AJAX para obtener los detalles de la venta
-    $.ajax({
-        url: '../ajax/ventaAjax.php',
-        method: 'POST',
-        data: { accion: 'obtenerDetallesVenta', venta_id: ventaId },
-        success: function(response) {
-            // Cargar los detalles en el modal
-            $('#detallesVentaContent').html(response);
-            // Mostrar el modal
-            $('#modalDetallesVenta').modal('show');
-        },
-        error: function() {
-            alert('Error al cargar los detalles de la venta');
-        }
-    });
-}
+        // Hacer una petición AJAX para obtener los detalles de la venta
+        $.ajax({
+            url: '../ajax/ventaAjax.php',
+            method: 'POST',
+            data: { accion: 'obtenerDetallesVenta', venta_id: ventaId },
+            success: function(response) {
+                // Cargar los detalles en el modal
+                $('#detallesVentaContent').html(response);
+                // Mostrar el modal
+                $('#modalDetallesVenta').modal('show');
+            },
+            error: function() {
+                alert('Error al cargar los detalles de la venta');
+            }
+        });
+    }
 
 
 function modal_editar_cantidad(id, cantidad_actual) {

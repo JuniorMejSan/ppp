@@ -647,6 +647,7 @@ class compraControlador extends compraModelo{
             WHERE (compra.compra_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
             ORDER BY compra.compra_fecha DESC";
         }else{
+            $fechaActual = date('Y-m-d');
             $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
             FROM compra 
             LEFT JOIN proveedor
@@ -655,6 +656,7 @@ class compraControlador extends compraModelo{
             ON compra.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON compra.usuario_nombre = usuario.user
+            WHERE compra.compra_fecha = '$fechaActual'
             ORDER BY compra.compra_fecha DESC";
         }
 
@@ -687,68 +689,77 @@ class compraControlador extends compraModelo{
         //variable para tabla
         $tabla.= '<div class="table-responsive">
             <table class="table table-dark table-sm">
-                <thead>
-                    <tr class="text-center roboto-medium">
-                        <th>#</th>
-                        <th>CODIGO DE COMPRA</th>
-                        <th>PROVEEDOR</th>
-                        <th>USUARIO</th>
-                        <th>FECHA Y HORA DE COMPRA</th>
-                        <th>ESTADO ACTUAL</th>
-                        <th>DETALLES</th>';
-                        if($privilegio == 1){
-                            $tabla.= '<th>DEVOLVER</th>';
-                        }
-                        
-                        $tabla.= '</tr>
-                </thead>
-                <tbody>';
+            <thead>
+                <tr class="text-center roboto-medium">
+                <th>#</th>
+                <th>CODIGO DE COMPRA</th>
+                <th>PROVEEDOR</th>
+                <th>USUARIO</th>
+                <th>FECHA Y HORA DE COMPRA</th>
+                <th>ESTADO ACTUAL</th>
+                <th>TOTAL</th>
+                <th>DETALLES</th>';
+                if($privilegio == 1){
+                    $tabla.= '<th>DEVOLVER</th>';
+                }
+                
+                $tabla.= '</tr>
+            </thead>
+            <tbody>';
+
+        $suma_total_compras = 0;
+        $contador_compras_pagadas = 0;
+        $contador_compras_devueltas = 0;
         
         if($total >= 1 && $pagina <= $Npaginas){//hay registros en la bd
             
             $contador = $inicio + 1;
             $reg_inicio = $inicio + 1; //variable para mostrar cuantos registros se estan mostrando en la tabla
             foreach ($datos as $rows) {
-                $tabla .= '<tr class="text-center">
-                                <td>'.$contador.'</td>
-                                <td>'.$rows['compra_codigo'].'</td>
-                                <td>'.(empty($rows['proveedor_nombre']) ? '-' : $rows['proveedor_nombre']).'</td>
-                                <td>'.$rows['usuario_nombre'].'</td>
-                                <td>'.date("d-m-Y", strtotime($rows['compra_fecha'])).' '.$rows['compra_hora'].'</td>';
+            $tabla .= '<tr class="text-center">
+                    <td>'.$contador.'</td>
+                    <td>'.$rows['compra_codigo'].'</td>
+                    <td>'.(empty($rows['proveedor_nombre']) ? '-' : $rows['proveedor_nombre']).'</td>
+                    <td>'.$rows['usuario_nombre'].'</td>
+                    <td>'.date("d-m-Y", strtotime($rows['compra_fecha'])).' '.$rows['compra_hora'].'</td>';
 
-                                if ($rows['compra_estado'] == 'Pagado') {
-                                    $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
-                                }else{
-                                    $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
-                                }
+                    if ($rows['compra_estado'] == 'Pagado') {
+                        $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
+                        $contador_compras_pagadas++;
+                        $suma_total_compras += $rows['compra_total'];
+                    }else{
+                        $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
+                        $contador_compras_devueltas++;
+                    }
 
-                                $tabla .= '<td>
-                                    <button class="btn btn-info" onclick="verDetallesCompra('.$rows['idCompra'].')">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                </td>';
-                            if($privilegio == 1){
+                    $tabla .= '<td>'.moneda.' '.number_format($rows['compra_total'], 2, '.', '').'</td>';
+                    $tabla .= '<td>
+                        <button class="btn btn-info" onclick="verDetallesCompra('.$rows['idCompra'].')">
+                        <i class="fas fa-info-circle"></i>
+                        </button>
+                    </td>';
+                    if($privilegio == 1){
 
-                                if ($rows['compra_estado'] == "Devuelto") {
-                                    $tabla .= '<td>
-                                            <button class="btn btn-warning" disabled>
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                    </td>';
-                                } else {
-                                    $tabla .= '<td>
-                                        <form class = "FormularioAjax" action="'.server_url.'ajax/compraAjax.php" method="POST" data-form="compra_devuelta" autocomplete="off">
-                                        <input type = "hidden" name = "compra_id_devuelta" value = "'.mainModel::encryption($rows['compra_codigo']).'">
-                                            <button type="submit" class="btn btn-warning">
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>';
-                                }
-                            }
-                                
-                            $tabla .= '</tr>';
-                $contador++;
+                    if ($rows['compra_estado'] == "Devuelto") {
+                        $tabla .= '<td>
+                            <button class="btn btn-warning" disabled>
+                            <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>';
+                    } else {
+                        $tabla .= '<td>
+                        <form class = "FormularioAjax" action="'.server_url.'ajax/compraAjax.php" method="POST" data-form="compra_devuelta" autocomplete="off">
+                        <input type = "hidden" name = "compra_id_devuelta" value = "'.mainModel::encryption($rows['compra_codigo']).'">
+                            <button type="submit" class="btn btn-warning">
+                            <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                        </td>';
+                    }
+                    }
+                    
+                    $tabla .= '</tr>';
+            $contador++;
             }
 
             //fin de la cantidad de registros que se mustran en la pagina de la tabla
@@ -756,17 +767,29 @@ class compraControlador extends compraModelo{
 
         }else{//no hay registros en la bd
             if($total >= 1){//si hy mas de un registro 
-                $tabla .= '<tr class="text-center" ><td colspan = "9">
-                <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
-                </tr>';
+            $tabla .= '<tr class="text-center" ><td colspan = "'.($privilegio == 1 ? '9' : '8').'">
+            <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
+            </tr>';
 
             }else{
-                $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
+            $tabla .= '<tr class="text-center" ><td colspan = "'.($privilegio == 1 ? '9' : '8').'">Ningun registro coincide con el termino de busqueda</td></tr>';
             }
         }
 
-        //cierre de las etiquetas
-        $tabla .= '</tbody></table></div>';
+        //cierre del tbody y agregar tfoot con los totales
+        $tabla .= '</tbody>
+               <tfoot>
+                <tr class="bg-secondary text-white">
+                    <th colspan="5" class="text-right">TOTALES:</th>
+                    <th class="text-center">
+                    <span class="badge badge-success">'.$contador_compras_pagadas.'</span>
+                    <span class="badge badge-danger">'.$contador_compras_devueltas.'</span>
+                    </th>
+                    <th class="text-center">'.moneda.' '.number_format($suma_total_compras, 2, '.', '').'</th>
+                    <th colspan="'.($privilegio == 1 ? '2' : '1').'"></th>
+                </tr>
+               </tfoot>
+               </table></div>';
 
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
         if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
@@ -979,6 +1002,173 @@ class compraControlador extends compraModelo{
     public function obtener_datos_compras_metodo_pago_controlador() {
         $datos_compras_metodo_pago = compraModelo::obtener_datos_compras_metodo_pago_modelo();
         echo json_encode($datos_compras_metodo_pago);
+    }
+
+    //controlador para reporte de compras con filtros
+    public function reporte_compras_filtrado_controlador() {
+        //recibir parámetros
+        $pagina = isset($_POST['pagina']) ? mainModel::limpiar_cadena($_POST['pagina']) : 1;
+        $fecha_inicio = isset($_POST['fecha_inicio']) ? mainModel::limpiar_cadena($_POST['fecha_inicio']) : "";
+        $fecha_fin = isset($_POST['fecha_fin']) ? mainModel::limpiar_cadena($_POST['fecha_fin']) : "";
+        $medio_pago = isset($_POST['medio_pago']) ? mainModel::limpiar_cadena($_POST['medio_pago']) : "";
+        $estado = isset($_POST['estado']) ? mainModel::limpiar_cadena($_POST['estado']) : "";
+
+        //validar página
+        $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;
+        $registros = 15;
+        $inicio = ($pagina > 0) ? (($pagina * $registros) - $registros) : 0;
+
+        //validar fechas si es necesario
+        if($fecha_inicio != "" && mainModel::verificar_fecha($fecha_inicio)) {
+            echo '<div class="alert alert-danger text-center">Fecha de inicio inválida</div>';
+            return;
+        }
+        if($fecha_fin != "" && mainModel::verificar_fecha($fecha_fin)) {
+            echo '<div class="alert alert-danger text-center">Fecha de fin inválida</div>';
+            return;
+        }
+
+        //obtener datos filtrados
+        $datos = compraModelo::obtener_compras_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado, $inicio, $registros);
+        $total = compraModelo::obtener_cantidad_compras_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado);
+
+        //calcular total de páginas
+        $Npaginas = ceil($total / $registros);
+
+        //generar tabla
+        $tabla = '<div class="table-responsive">
+            <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                <th>#</th>
+                <th>CODIGO DE COMPRA</th>
+                <th>PROVEEDOR</th>
+                <th>USUARIO</th>
+                <th>FECHA Y HORA</th>
+                <th>TOTAL</th>
+                <th>MEDIO DE PAGO</th>
+                <th>ESTADO</th>
+                <th>DETALLES</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        $total_compras = 0;
+        $total_cantidad = 0;
+
+        if($total >= 1 && $pagina <= $Npaginas) {
+            $contador = $inicio + 1;
+            $reg_inicio = $inicio + 1;
+
+            foreach($datos as $rows) {
+                // Solo sumar totales si la compra no está devuelta
+                if($rows['compra_estado'] == 'Pagado') {
+                    $total_compras += $rows['compra_total'];
+                    $total_cantidad += $rows['compra_cantidad'];
+                }
+
+                $tabla .= '<tr class="text-center">
+                    <td>'.$contador.'</td>
+                    <td>'.$rows['compra_codigo'].'</td>
+                    <td>'.(empty($rows['proveedor_nombre']) ? 'Proveedor Genérico' : $rows['proveedor_nombre']).'</td>
+                    <td>'.$rows['usuario_nombre'].'</td>
+                    <td>'.date("d-m-Y", strtotime($rows['compra_fecha'])).' '.$rows['compra_hora'].'</td>
+                    <td>'.moneda.' '.number_format($rows['compra_total'], 2).'</td>
+                    <td>'.(empty($rows['descripcion']) ? '-' : $rows['descripcion']).'</td>';
+
+                if ($rows['compra_estado'] == 'Pagado') {
+                    $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
+                } else {
+                    $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
+                }
+
+                $tabla .= '<td>
+                    <button class="btn btn-info btn-sm" onclick="verDetallesCompra('.$rows['idCompra'].')">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    </td>';
+                    
+                $tabla .= '</tr>';
+                $contador++;
+            }
+
+            $reg_final = $contador - 1;
+        } else {
+            if($total >= 1) {
+                $tabla .= '<tr class="text-center"><td colspan="9">
+                    <a href="'.server_url.'compra-reporte/" class="btn btn-raised btn-primary btn-sm">Clic aqui para recargar el reporte</a>
+                </td></tr>';
+            } else {
+                $tabla .= '<tr class="text-center"><td colspan="9">No hay resultados que coincidan con los filtros seleccionados</td></tr>';
+            }
+        }
+
+        $tabla .= '</tbody>
+            <tfoot>
+            <tr class="text-center roboto-medium bg-secondary">
+                <th colspan="4">TOTALES</th>
+                <th>'.$total_cantidad.' Items</th>
+                <th>'.moneda.' '.number_format($total_compras,2,'.',',').'</th>
+                <th colspan="3"></th>
+            </tr>
+            </tfoot>
+            </table></div>';
+
+        //agregar paginación
+        if($total >= 1 && $pagina <= $Npaginas) {
+            $tabla .= '<p class="text-right">Mostrando compras '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
+            
+            //generar botones de paginación
+            $url_base = "javascript:filtrar_reporte_compras(";
+            
+            if($Npaginas > 1) {
+                $tabla .= '<nav aria-label="Page navigation"><ul class="pagination justify-content-center">';
+                
+                //botón anterior
+                if($pagina > 1) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.($pagina-1).')">Anterior</a></li>';
+                } else {
+                    $tabla .= '<li class="page-item disabled"><span class="page-link">Anterior</span></li>';
+                }
+
+                //números de página
+                $inicio_pag = max(1, $pagina - 2);
+                $fin_pag = min($Npaginas, $pagina + 2);
+
+                if($inicio_pag > 1) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.'1)">1</a></li>';
+                    if($inicio_pag > 2) {
+                        $tabla .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                }
+
+                for($i = $inicio_pag; $i <= $fin_pag; $i++) {
+                    if($i == $pagina) {
+                        $tabla .= '<li class="page-item active"><span class="page-link">'.$i.'</span></li>';
+                    } else {
+                        $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.$i.')">'.$i.'</a></li>';
+                    }
+                }
+
+                if($fin_pag < $Npaginas) {
+                    if($fin_pag < $Npaginas - 1) {
+                        $tabla .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.$Npaginas.')">'.$Npaginas.'</a></li>';
+                }
+
+                //botón siguiente
+                if($pagina < $Npaginas) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.($pagina+1).')">Siguiente</a></li>';
+                } else {
+                    $tabla .= '<li class="page-item disabled"><span class="page-link">Siguiente</span></li>';
+                }
+
+                $tabla .= '</ul></nav>';
+            }
+        }
+
+        echo $tabla;
     }
     
 }

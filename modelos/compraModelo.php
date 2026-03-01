@@ -159,6 +159,71 @@ class compraModelo extends mainModel{
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    //modelo para obtener compras filtradas por fecha, medio de pago y estado
+    protected static function obtener_compras_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado, $inicio, $registros) {
+        $campos = "compra.idCompra, compra.compra_codigo, compra.compra_fecha, compra.compra_hora, compra.compra_cantidad, compra.compra_total, compra.metodo_id, compra.compra_observacion, compra.usuario_nombre, compra.proveedor_id, compra.compra_estado, proveedor.proveedor_nombre, proveedor.proveedor_ruc, medio_pago.descripcion";
+
+        $query = "SELECT $campos FROM compra 
+                  LEFT JOIN proveedor ON compra.proveedor_id = proveedor.proveedor_id 
+                  LEFT JOIN medio_pago ON compra.metodo_id = medio_pago.id_medio_pago
+                  WHERE 1=1";
+
+        //agregar filtro de fecha inicio
+        if($fecha_inicio != "") {
+            $query .= " AND compra.compra_fecha >= '$fecha_inicio'";
+        }
+
+        //agregar filtro de fecha fin
+        if($fecha_fin != "") {
+            $query .= " AND compra.compra_fecha <= '$fecha_fin'";
+        }
+
+        //agregar filtro de medio de pago
+        if($medio_pago != "") {
+            $query .= " AND compra.metodo_id = '$medio_pago'";
+        }
+
+        //agregar filtro de estado
+        if($estado != "") {
+            $query .= " AND compra.compra_estado = '$estado'";
+        }
+
+        $query .= " ORDER BY compra.compra_fecha DESC LIMIT $inicio, $registros";
+
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    //modelo para contar compras filtradas
+    protected static function obtener_cantidad_compras_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado) {
+        $query = "SELECT COUNT(*) as total FROM compra WHERE 1=1";
+
+        //agregar filtro de fecha inicio
+        if($fecha_inicio != "") {
+            $query .= " AND compra_fecha >= '$fecha_inicio'";
+        }
+
+        //agregar filtro de fecha fin
+        if($fecha_fin != "") {
+            $query .= " AND compra_fecha <= '$fecha_fin'";
+        }
+
+        //agregar filtro de medio de pago
+        if($medio_pago != "") {
+            $query .= " AND metodo_id = '$medio_pago'";
+        }
+
+        //agregar filtro de estado
+        if($estado != "") {
+            $query .= " AND compra_estado = '$estado'";
+        }
+
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        $resultado = $sql->fetch(PDO::FETCH_ASSOC);
+        return $resultado['total'];
+    }
     
 }

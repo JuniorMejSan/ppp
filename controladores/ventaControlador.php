@@ -638,8 +638,10 @@ class ventaControlador extends ventaModelo{
             LEFT JOIN usuario
             ON venta.usuario_nombre = usuario.user
             WHERE (venta.venta_fecha BETWEEN '$fecha_inicio' AND '$fecha_final') 
-            ORDER BY venta.venta_fecha DESC";
+            ORDER BY venta.venta_fecha DESC 
+            LIMIT $inicio, $registros";
         }else{
+            $fecha_actual = date('Y-m-d');
             $consulta = "SELECT SQL_CALC_FOUND_ROWS $campos 
             FROM venta 
             LEFT JOIN cliente
@@ -648,7 +650,9 @@ class ventaControlador extends ventaModelo{
             ON venta.metodo_id = medio_pago.id_medio_pago 
             LEFT JOIN usuario
             ON venta.usuario_nombre = usuario.user
-            ORDER BY venta.venta_fecha DESC";
+            WHERE venta.venta_fecha = '$fecha_actual'
+            ORDER BY venta.venta_fecha DESC 
+            LIMIT $inicio, $registros";
         }
 
         //variable de conexion
@@ -680,74 +684,88 @@ class ventaControlador extends ventaModelo{
         //variable para tabla
         $tabla.= '<div class="table-responsive">
             <table class="table table-dark table-sm">
-                <thead>
-                    <tr class="text-center roboto-medium">
-                        <th>#</th>
-                        <th>CODIGO DE VENTA</th>
-                        <th>CLIENTE</th>
-                        <th>VENDEDOR</th>
-                        <th>FECHA Y HORA DE VENTA</th>
-                        <th>ESTADO ACTUAL</th>
-                        <th>DETALLES</th>
-                        <th>COMPROBANTE</th>';
-                        if($privilegio == 1){
-                            $tabla.= '<th>DEVOLVER</th>';
-                        }
-                        
-                        $tabla.= '</tr>
-                </thead>
-                <tbody>';
+            <thead>
+                <tr class="text-center roboto-medium">
+                <th>#</th>
+                <th>CODIGO DE VENTA</th>
+                <th>CLIENTE</th>
+                <th>VENDEDOR</th>
+                <th>FECHA Y HORA DE VENTA</th>
+                <th>TOTAL</th>
+                <th>ESTADO ACTUAL</th>
+                <th>DETALLES</th>
+                <th>COMPROBANTE</th>';
+                if($privilegio == 1){
+                    $tabla.= '<th>DEVOLVER</th>';
+                }
+                
+                $tabla.= '</tr>
+            </thead>
+            <tbody>';
+        
+        $total_ventas = 0;
+        $total_cantidad = 0;
         
         if($total >= 1 && $pagina <= $Npaginas){//hay registros en la bd
             
             $contador = $inicio + 1;
             $reg_inicio = $inicio + 1; //variable para mostrar cuantos registros se estan mostrando en la tabla
             foreach ($datos as $rows) {
-                $tabla .= '<tr class="text-center">
-                                <td>'.$contador.'</td>
-                                <td>'.$rows['venta_codigo'].'</td>
-                                <td>'.(empty($rows['cliente_nombre']) ? '-' : $rows['cliente_nombre']).' '.$rows['cliente_apellido'].'</td>
-                                <td>'.$rows['usuario_nombre'].'</td>
-                                <td>'.date("d-m-Y", strtotime($rows['venta_fecha'])).' '.$rows['venta_hora'].'</td>';
+            $total_ventas += $rows['venta_total'];
+            $total_cantidad += $rows['venta_cantidad'];
+            
+            $tabla .= '<tr class="text-center">
+                    <td>'.$contador.'</td>
+                    <td>'.$rows['venta_codigo'].'</td>
+                    <td>'.(empty($rows['cliente_nombre']) ? '-' : $rows['cliente_nombre']).' '.$rows['cliente_apellido'].'</td>
+                    <td>'.$rows['usuario_nombre'].'</td>
+                    <td>'.date("d-m-Y", strtotime($rows['venta_fecha'])).' '.$rows['venta_hora'].'</td>';
+                    $tabla .= '<td>'.moneda.' '.number_format($rows['venta_total'],2,'.',',').'</td>';
 
-                                if ($rows['venta_estado'] == 'Pagado') {
-                                    $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
-                                }else{
-                                    $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
-                                }
+                    switch($rows['venta_estado']) {
+                        case 'Pagado':
+                        $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
+                        break;
+                        default:
+                        $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
+                        break;
+                    }
 
-                                $tabla .= '<td>
-                                    <button class="btn btn-info" onclick="verDetallesVenta('.$rows['venta_id'].')">
-                                        <i class="fas fa-info-circle"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info" target = "_blank">
-                                        <i class="fas fa-file-pdf"></i>
-                                    </a>
-                                </td>';
-                            if($privilegio == 1){
+                    $tabla .= '<td>
+                        <button class="btn btn-info" onclick="verDetallesVenta('.$rows['venta_id'].')">
+                        <i class="fas fa-info-circle"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info" target = "_blank">
+                        <i class="fas fa-file-pdf"></i>
+                        </a>
+                    </td>';
+                    if($privilegio == 1){
 
-                                if ($rows['venta_estado'] == "Devuelto") {
-                                    $tabla .= '<td>
-                                            <button class="btn btn-warning" disabled>
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                    </td>';
-                                } else {
-                                    $tabla .= '<td>
-                                        <form class = "FormularioAjax" action="'.server_url.'ajax/VentaAjax.php" method="POST" data-form="venta_devuelta" autocomplete="off">
-                                        <input type = "hidden" name = "venta_id_devuelta" value = "'.mainModel::encryption($rows['venta_codigo']).'">
-                                            <button type="submit" class="btn btn-warning">
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>';
-                                }
-                            }
-                                
-                            $tabla .= '</tr>';
-                $contador++;
+                    switch($rows['venta_estado']) {
+                        case "Devuelto":
+                        $tabla .= '<td>
+                            <button class="btn btn-warning" disabled>
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </td>';
+                        break;
+                        default:
+                        $tabla .= '<td>
+                            <form class = "FormularioAjax" action="'.server_url.'ajax/VentaAjax.php" method="POST" data-form="venta_devuelta" autocomplete="off">
+                            <input type = "hidden" name = "venta_id_devuelta" value = "'.mainModel::encryption($rows['venta_codigo']).'">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                            </form>
+                        </td>';
+                        break;
+                    }
+                    }
+                    
+                    $tabla .= '</tr>';
+            $contador++;
             }
 
             //fin de la cantidad de registros que se mustran en la pagina de la tabla
@@ -755,17 +773,26 @@ class ventaControlador extends ventaModelo{
 
         }else{//no hay registros en la bd
             if($total >= 1){//si hy mas de un registro 
-                $tabla .= '<tr class="text-center" ><td colspan = "9">
-                <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
-                </tr>';
+            $tabla .= '<tr class="text-center" ><td colspan = "9">
+            <a href = "'.$url.'" class = "btn btn-raised btn-primary btn-sm">Clic aqui para recargar el listado</a>
+            </tr>';
 
             }else{
-                $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
+            $tabla .= '<tr class="text-center" ><td colspan = "9">Ningun registro coincide con el termino de busqueda</td></tr>';
             }
         }
 
-        //cierre de las etiquetas
-        $tabla .= '</tbody></table></div>';
+        //pie de pagina con totales
+        $tabla .= '</tbody>
+            <tfoot>
+                <tr class="text-center roboto-medium bg-secondary">
+                <th colspan="4">TOTALES</th>
+                <th>'.$total_cantidad.' Items</th>
+                <th>'.moneda.' '.number_format($total_ventas,2,'.',',').'</th>
+                <th colspan="'.($privilegio == 1 ? '4' : '3').'"></th>
+                </tr>
+            </tfoot>
+            </table></div>';
 
         //colocamos los botones para la paginacion de la tabla que muestra los usuarios
         if($total >= 1 && $pagina <= $Npaginas){ //para verificar si hay registros y estamos en una pagina correcta
@@ -974,5 +1001,178 @@ class ventaControlador extends ventaModelo{
     public function obtener_datos_metodos_pago_controlador() {
         $datos_metodos_pago = ventaModelo::obtener_datos_metodos_pago_modelo();
         echo json_encode($datos_metodos_pago);
+    }
+
+    //controlador para reporte de ventas con filtros
+    public function reporte_ventas_filtrado_controlador() {
+        //recibir parámetros
+        $pagina = isset($_POST['pagina']) ? mainModel::limpiar_cadena($_POST['pagina']) : 1;
+        $fecha_inicio = isset($_POST['fecha_inicio']) ? mainModel::limpiar_cadena($_POST['fecha_inicio']) : "";
+        $fecha_fin = isset($_POST['fecha_fin']) ? mainModel::limpiar_cadena($_POST['fecha_fin']) : "";
+        $medio_pago = isset($_POST['medio_pago']) ? mainModel::limpiar_cadena($_POST['medio_pago']) : "";
+        $estado = isset($_POST['estado']) ? mainModel::limpiar_cadena($_POST['estado']) : "";
+
+        //validar página
+        $pagina = (isset($pagina) && $pagina > 0) ? (int)$pagina : 1;
+        $registros = 15;
+        $inicio = ($pagina > 0) ? (($pagina * $registros) - $registros) : 0;
+
+        //validar fechas si es necesario
+        if($fecha_inicio != "" && mainModel::verificar_fecha($fecha_inicio)) {
+            echo '<div class="alert alert-danger text-center">Fecha de inicio inválida</div>';
+            return;
+        }
+        if($fecha_fin != "" && mainModel::verificar_fecha($fecha_fin)) {
+            echo '<div class="alert alert-danger text-center">Fecha de fin inválida</div>';
+            return;
+        }
+
+        //obtener datos filtrados
+        $datos = ventaModelo::obtener_ventas_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado, $inicio, $registros);
+        $total = ventaModelo::obtener_cantidad_ventas_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado);
+
+        //calcular total de páginas
+        $Npaginas = ceil($total / $registros);
+
+        //generar tabla
+        $tabla = '<div class="table-responsive">
+            <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                <th>#</th>
+                <th>CODIGO DE VENTA</th>
+                <th>CLIENTE</th>
+                <th>VENDEDOR</th>
+                <th>FECHA Y HORA</th>
+                <th>TOTAL</th>
+                <th>MEDIO DE PAGO</th>
+                <th>ESTADO</th>
+                <th>DETALLES</th>
+                <th>COMPROBANTE</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+        $total_ventas = 0;
+        $total_cantidad = 0;
+
+        if($total >= 1 && $pagina <= $Npaginas) {
+            $contador = $inicio + 1;
+            $reg_inicio = $inicio + 1;
+
+            foreach($datos as $rows) {
+            // Solo sumar totales si la venta no está devuelta
+            if($rows['venta_estado'] == 'Pagado') {
+            $total_ventas += $rows['venta_total'];
+            $total_cantidad += $rows['venta_cantidad'];
+            }
+
+            $tabla .= '<tr class="text-center">
+                <td>'.$contador.'</td>
+                <td>'.$rows['venta_codigo'].'</td>
+                <td>'.(empty($rows['cliente_nombre']) ? 'Cliente General' : $rows['cliente_nombre'].' '.$rows['cliente_apellido']).'</td>
+                <td>'.$rows['usuario_nombre'].'</td>
+                <td>'.date("d-m-Y", strtotime($rows['venta_fecha'])).' '.$rows['venta_hora'].'</td>
+                <td>S/ '.number_format($rows['venta_total'], 2).'</td>
+                <td>'.(empty($rows['descripcion']) ? '-' : $rows['descripcion']).'</td>';
+
+                if ($rows['venta_estado'] == 'Pagado') {
+                $tabla .= '<td><span class="badge badge-success">Pagada</span></td>';
+                } else {
+                $tabla .= '<td><span class="badge badge-danger">Devuelta</span></td>';
+                }
+
+                $tabla .= '<td>
+                <button class="btn btn-info btn-sm" onclick="verDetallesVenta('.$rows['venta_id'].')">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+                </td>';
+                $tabla .= '<td>
+                <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info btn-sm" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+                </td>';
+                
+                $tabla .= '</tr>';
+            $contador++;
+            }
+
+            $reg_final = $contador - 1;
+        } else {
+            if($total >= 1) {
+            $tabla .= '<tr class="text-center"><td colspan="10">
+                <a href="'.server_url.'venta-reporte/" class="btn btn-raised btn-primary btn-sm">Clic aqui para recargar el reporte</a>
+            </td></tr>';
+            } else {
+            $tabla .= '<tr class="text-center"><td colspan="10">No hay resultados que coincidan con los filtros seleccionados</td></tr>';
+            }
+        }
+
+        $tabla .= '</tbody>
+            <tfoot>
+            <tr class="text-center roboto-medium bg-secondary">
+                <th colspan="4">TOTALES</th>
+                <th>'.$total_cantidad.' Items</th>
+                <th>S/ '.number_format($total_ventas,2,'.',',').'</th>
+                <th colspan="4"></th>
+            </tr>
+            </tfoot>
+            </table></div>';
+
+        //agregar paginación
+        if($total >= 1 && $pagina <= $Npaginas) {
+            $tabla .= '<p class="text-right">Mostrando ventas '.$reg_inicio.' al '.$reg_final.' de un total de '.$total.' registros</p>';
+            
+            //generar botones de paginación
+            $url_base = "javascript:filtrar_reporte_ventas(";
+            
+            if($Npaginas > 1) {
+                $tabla .= '<nav aria-label="Page navigation"><ul class="pagination justify-content-center">';
+                
+                //botón anterior
+                if($pagina > 1) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.($pagina-1).')">Anterior</a></li>';
+                } else {
+                    $tabla .= '<li class="page-item disabled"><span class="page-link">Anterior</span></li>';
+                }
+
+                //números de página
+                $inicio_pag = max(1, $pagina - 2);
+                $fin_pag = min($Npaginas, $pagina + 2);
+
+                if($inicio_pag > 1) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.'1)">1</a></li>';
+                    if($inicio_pag > 2) {
+                        $tabla .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                }
+
+                for($i = $inicio_pag; $i <= $fin_pag; $i++) {
+                    if($i == $pagina) {
+                        $tabla .= '<li class="page-item active"><span class="page-link">'.$i.'</span></li>';
+                    } else {
+                        $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.$i.')">'.$i.'</a></li>';
+                    }
+                }
+
+                if($fin_pag < $Npaginas) {
+                    if($fin_pag < $Npaginas - 1) {
+                        $tabla .= '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.$Npaginas.')">'.$Npaginas.'</a></li>';
+                }
+
+                //botón siguiente
+                if($pagina < $Npaginas) {
+                    $tabla .= '<li class="page-item"><a class="page-link" href="'.$url_base.($pagina+1).')">Siguiente</a></li>';
+                } else {
+                    $tabla .= '<li class="page-item disabled"><span class="page-link">Siguiente</span></li>';
+                }
+
+                $tabla .= '</ul></nav>';
+            }
+        }
+
+        echo $tabla;
     }
 }

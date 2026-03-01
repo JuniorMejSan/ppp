@@ -146,6 +146,17 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="#" class="nav-btn-submenu"><i class="fas fa-chart-bar fa-fw"></i> &nbsp; Reportes <i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li>
+                            <a href="<?php echo server_url; ?>reporte-ventas/"><i class="fas fa-chart-line fa-fw"></i> &nbsp; Reporte de Ventas</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo server_url; ?>reporte-compras/"><i class="fas fa-chart-pie fa-fw"></i> &nbsp; Reporte de Compras</a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </div>

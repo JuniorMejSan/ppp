@@ -176,5 +176,71 @@ class ventaModelo extends mainModel{
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    //modelo para obtener ventas filtradas por fecha, medio de pago y estado
+    protected static function obtener_ventas_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado, $inicio, $registros) {
+        $campos = "venta.venta_id, venta.venta_codigo, venta.venta_fecha, venta.venta_hora, venta.venta_cantidad, venta.venta_total, venta.metodo_id, venta.venta_observacion, venta.usuario_nombre, venta.cliente_id, venta.venta_estado, cliente.cliente_nombre, cliente.cliente_apellido, medio_pago.descripcion";
+
+        $query = "SELECT $campos FROM venta 
+                  LEFT JOIN cliente ON venta.cliente_id = cliente.cliente_id 
+                  LEFT JOIN medio_pago ON venta.metodo_id = medio_pago.id_medio_pago
+                  WHERE 1=1"; //filtro por defecto para mostrar solo las ventas del dia actual
+
+        //agregar filtro de fecha inicio
+        if($fecha_inicio != "") {
+            $query .= " AND venta.venta_fecha >= '$fecha_inicio'";
+        }
+
+        //agregar filtro de fecha fin
+        if($fecha_fin != "") {
+            $query .= " AND venta.venta_fecha <= '$fecha_fin'";
+        }
+
+        //agregar filtro de medio de pago
+        if($medio_pago != "") {
+            $query .= " AND venta.metodo_id = '$medio_pago'";
+        }
+
+        //agregar filtro de estado
+        if($estado != "") {
+            $query .= " AND venta.venta_estado = '$estado'";
+        }
+
+        $query .= " ORDER BY venta.venta_fecha DESC LIMIT $inicio, $registros";
+
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    //modelo para contar ventas filtradas
+    protected static function obtener_cantidad_ventas_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado) {
+        $query = "SELECT COUNT(*) as total FROM venta WHERE 1=1";
+
+        //agregar filtro de fecha inicio
+        if($fecha_inicio != "") {
+            $query .= " AND venta_fecha >= '$fecha_inicio'";
+        }
+
+        //agregar filtro de fecha fin
+        if($fecha_fin != "") {
+            $query .= " AND venta_fecha <= '$fecha_fin'";
+        }
+
+        //agregar filtro de medio de pago
+        if($medio_pago != "") {
+            $query .= " AND metodo_id = '$medio_pago'";
+        }
+
+        //agregar filtro de estado
+        if($estado != "") {
+            $query .= " AND venta_estado = '$estado'";
+        }
+
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        $resultado = $sql->fetch(PDO::FETCH_ASSOC);
+        return $resultado['total'];
+    }
     
 }
