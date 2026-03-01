@@ -4,7 +4,7 @@
         <i class="fab fa-dashcube fa-fw"></i> &nbsp; DASHBOARD
     </h3>
     <p class="text-justify">
-        SISTEMA WEB PARA LA GESTIÓN DEL KARDEX Y VENTA DE EQUIPOS TECNOLÓGICOS
+        SISTEMA DE PUNTO DE VENTA Y CONTROL DE INVENTARIO PARA FARMACIA.
     </p>
 </div>
 
@@ -97,6 +97,50 @@
         <div class="tile-icon">
             <i class="fas fa-store-alt fa-fw"></i>
             <p><?php echo $total_compras -> rowCount(); ?> Registrados</p>
+        </div>
+    </a>
+
+    <?php
+        require_once "./controladores/itemControlador.php";
+        $ins_presentacion = new itemControlador();
+
+        $total_presentaciones = $ins_presentacion -> datos_presentacion_controlador("Conteo", 0);
+    ?>
+    <a href="<?php echo server_url; ?>presentacion-list/" class="tile">
+        <div class="tile-tittle">Presentaciones</div>
+        <div class="tile-icon">
+            <i class="fas fa-boxes fa-fw"></i>
+            <p><?php echo $total_presentaciones -> rowCount(); ?> Registradas</p>
+        </div>
+    </a>
+
+    <?php
+        require_once "./controladores/medioControlador.php";
+        $ins_medio_pago = new medioControlador();
+
+        $total_medios_pago = $ins_medio_pago -> datos_medio_controlador("Conteo", 0);
+    ?>
+    <a href="<?php echo server_url; ?>medio-list/" class="tile">
+        <div class="tile-tittle">Medios de Pago</div>
+        <div class="tile-icon">
+            <i class="fas fa-credit-card fa-fw"></i>
+            <p><?php echo $total_medios_pago -> rowCount(); ?> Registrados</p>
+        </div>
+    </a>
+
+    <a href="<?php echo server_url; ?>reporte-ventas/" class="tile">
+        <div class="tile-tittle">Reporte de Ventas</div>
+        <div class="tile-icon">
+            <i class="fas fa-chart-bar fa-fw"></i>
+            <p>Generar Reportes</p>
+        </div>
+    </a>
+
+    <a href="<?php echo server_url; ?>reporte-compras/" class="tile">
+        <div class="tile-tittle">Reporte de Compras</div>
+        <div class="tile-icon">
+            <i class="fas fa-chart-line fa-fw"></i>
+            <p>Generar Reportes</p>
         </div>
     </a>
 

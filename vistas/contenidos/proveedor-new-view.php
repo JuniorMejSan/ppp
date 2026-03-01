@@ -43,7 +43,7 @@
         <i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR PROVEEDOR
     </h3>
     <p class="text-justify">
-        Ingrese los datos del PROVEEDOR que son requeridos.
+        Completa el formulario para registrar un nuevo proveedor en el sistema. Puedes consultar el RUC para autocompletar la información básica del proveedor ingresando el número de RUC y presionando ENTER. Asegúrate de ingresar un RUC válido de 11 dígitos para obtener los datos correctamente. Si el RUC no se encuentra, podrás ingresar la información manualmente.
     </p>
 </div>
 

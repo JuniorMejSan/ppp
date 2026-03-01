@@ -4,7 +4,7 @@
         <i class="fas fa-search-dollar fa-fw"></i> &nbsp; BUSCAR VENTAS POR FECHA
     </h3>
     <p class="text-justify">
-        GESTION DE VENTAS
+        Busqueda de venta por rango de fechas, para visualizar ventas finalizadas en un periodo determinado.
     </p>
 </div>
 

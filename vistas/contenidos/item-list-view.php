@@ -4,7 +4,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE ITEMS
     </h3>
     <p class="text-justify">
-        Listado de los ITEMS con sus respectivos datos.
+        Lista de items habilitados en el sistema, puede agregar nuevos items, editar o eliminar los existentes. También puede buscar un item específico utilizando el buscador.
     </p>
 </div>
 

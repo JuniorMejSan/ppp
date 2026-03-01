@@ -4,7 +4,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; FINALIZADAS
     </h3>
     <p class="text-justify">
-        GESTION DE VENTAS FINALIZADAS
+        Listado de ventas finalizadas, puedes ver los detalles de cada venta haciendo clic en el botón "Detalles". También puedes buscar ventas por fecha desde la pestaña "Buscar por fecha".
     </p>
 </div>
 

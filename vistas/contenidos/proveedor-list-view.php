@@ -4,7 +4,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE PROVEEDORES
     </h3>
     <p class="text-justify">
-        Listado de los PROVEEDORES con sus respectivos datos.
+        Listado completo de proveedores registrados en el sistema. Desde esta sección podrá actualizar los datos de sus proveedores o eliminarlos si lo desea.
     </p>
 </div>
 

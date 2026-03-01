@@ -10,7 +10,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS
     </h3>
     <p class="text-justify">
-        Listado de los USUARIOS con sus respectivos datos.
+        Lista de todos los usuarios registrados en el sistema. Puede administrar sus datos, privilegios y estado desde esta sección.
     </p>
 </div>
 

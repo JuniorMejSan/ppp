@@ -63,7 +63,9 @@ if ($_SESSION['privilegio_ppp'] != 1) { //para que no pueda entrar sin privilegi
         <i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO USUARIO
     </h3>
     <p class="text-justify">
-        Ingrese los datos del USUARIO que son requeridos.
+        En el módulo USUARIOS usted podrá registrar nuevos usuarios, actualizar datos de los usuarios
+        registrados y eliminar usuarios que ya no requiera. También podrá buscar un usuario específico
+        ingresando su nombre o apellido en el buscador.
     </p>
 </div>
 

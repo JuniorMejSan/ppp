@@ -12,7 +12,7 @@ $horaActual = date('H:i:s');
         <i class="fas fa-plus fa-fw"></i> &nbsp; NUEVA VENTA
     </h3>
     <p class="text-justify">
-        GESTION DE VENTAS
+        Registro de nueva venta, seleccione un cliente o agregue los items a vender, luego complete los datos y guardar la venta. En cliente no es obligatorio, si no se selecciona ninguno se registrará como "Cliente General".
     </p>
 </div>
 

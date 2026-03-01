@@ -4,7 +4,7 @@
         <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES
     </h3>
     <p class="text-justify">
-        Listado de los CLIENTES con sus respectivos datos.
+        En el módulo LISTA DE CLIENTES se muestran todos los clientes registrados en el sistema. Desde esta sección se pueden actualizar los datos de un cliente, eliminar un cliente o buscar un cliente específico.
     </p>
 </div>
 
