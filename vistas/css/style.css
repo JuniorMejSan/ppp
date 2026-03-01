@@ -28,7 +28,7 @@
 :root{
 	--color-one: #F5F5F5;
 	--color-two: #24292E;
-	--color-three: #EC5252;
+	--color-three: #16a085;;
 	/*--color-three: #0366D6;*/
 
 	--form-color: #14111A;
@@ -368,7 +368,7 @@ table form{
 	left: 0;
 	z-index: 1;
 	transition: all .2s ease-in-out;
-	background-image: url('../assets/img/nav-font.jpg');
+	background-image: url('../assets/img/nav-font.png');
 	background-position: center center;
 	background-size: cover;
 }
@@ -537,7 +537,7 @@ table form{
 }
 .tile:hover .tile-icon > i,
 .tile:hover .tile-icon > p{
-	color: var(--color-three);
+	color: #16a085;
 }
 
 

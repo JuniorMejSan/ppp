@@ -92,14 +92,14 @@ switch ($datos_venta->rowCount()) {
 			<table border="0" width="100%">
 				<tr>
 					<td colspan="4" class="txt-center bold" style="font-size: 12px;">
-						CORPORACIÓN USQAY SAC
+						FARMACIA SAC
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4" class="txt-center">
 						RUC: 1234567890<br />
-						Dirección: Jiron Tacna 258 Oficina 1B - Piura<br />
-						Teléfono: (+51) 973105651<br />
+						Dirección: Piur<br />
+						Teléfono: 999999999<br />
 						<hr class="hr-header" />
 					</td>
 				</tr>

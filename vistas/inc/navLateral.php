@@ -3,7 +3,7 @@
     <div class="full-box nav-lateral-content">
         <figure class="full-box nav-lateral-avatar">
             <i class="far fa-times-circle show-nav-lateral"></i>
-            <img src="<?php echo server_url; ?>vistas/assets/img/usqay_logo2.png" class="img-fluid" alt="Avatar">
+            <img src="<?php echo server_url; ?>vistas/assets/img/logo_sistema.png" class="img-fluid" alt="Avatar">
             <figcaption class="roboto-medium text-center">
                 <?php echo $_SESSION['nombre_ppp']." ".$_SESSION['apellido_ppp']; ?> <br><small class="roboto-condensed-light"><?php echo $_SESSION['usuario_ppp']; ?></small>
             </figcaption>

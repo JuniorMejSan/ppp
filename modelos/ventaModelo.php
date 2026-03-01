@@ -95,7 +95,7 @@ class ventaModelo extends mainModel{
             $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
             $sql -> bindParam(":ID", $id);
         }elseif($tipo == "Conteo"){
-            $query_seleccionar_venta = "SELECT venta_id FROM venta";
+            $query_seleccionar_venta = "SELECT venta_id FROM venta WHERE venta_estado = 'Pagado'";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_venta);
         }elseif($tipo == "Detalle"){
             $query_seleccionar_detalle = "SELECT * FROM detalle_venta dv INNER JOIN venta v ON dv.venta_codigo = v.venta_codigo INNER JOIN item i ON dv.item_id = i.item_id WHERE dv.venta_codigo = :Codigo";

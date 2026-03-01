@@ -95,7 +95,7 @@ class compraModelo extends mainModel{
             $sql = mainModel::conectar() -> prepare($query_seleccionar_compra);
             $sql -> bindParam(":ID", $id);
         }elseif($tipo == "Conteo"){
-            $query_seleccionar_compra = "SELECT compra_id FROM compra";
+            $query_seleccionar_compra = "SELECT idCompra FROM compra WHERE compra_estado = 'Pagado'";
             $sql = mainModel::conectar() -> prepare($query_seleccionar_compra);
         }elseif($tipo == "Detalle"){
             $query_seleccionar_detalle = "SELECT * FROM detalle_compra dc INNER JOIN compra c ON dc.compra_codigo = c.compra_codigo INNER JOIN item i ON dc.item_id = i.item_id WHERE dc.compra_codigo = :Codigo";
