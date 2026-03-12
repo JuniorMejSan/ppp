@@ -173,7 +173,7 @@ class ventaControlador extends ventaModelo{
         }
 
         //comprobar texto en la bd
-        $query_datos_item = "SELECT * FROM item WHERE (item_codigo LIKE '%$item%' OR item_nombre LIKE '%$item%') AND (item_estado = 'Habilitado') ORDER BY item_codigo ASC";
+        $query_datos_item = "SELECT i.*, p.descripcion AS presentacion FROM item i INNER JOIN presentacion p ON p.id_presentacion = i.id_presentacion WHERE (i.item_codigo LIKE '%$item%' OR i.item_nombre LIKE '%$item%') AND (i.item_estado = 'Habilitado') ORDER BY i.item_codigo ASC";
         $datos_item = mainModel::ejecutar_consulta_simple($query_datos_item);
 
         //verificamos si hay datos
@@ -189,7 +189,7 @@ class ventaControlador extends ventaModelo{
             //recorremos los registros que trajo la consulta para poder mostrarlos
             foreach($datos_item as $rows){
                 $tabla.= '<tr class="text-center">
-                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.moneda.''.$rows['item_precio'].'</td>
+                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.$rows['presentacion'].' - '.moneda.''.$rows['item_precio'].'</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" onclick = "modal_agregar_item('.$rows['item_id'].')"><i
                                                 class="fas fa-box-open"></i></button>
