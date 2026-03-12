@@ -189,7 +189,7 @@ class ventaControlador extends ventaModelo{
             //recorremos los registros que trajo la consulta para poder mostrarlos
             foreach($datos_item as $rows){
                 $tabla.= '<tr class="text-center">
-                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.$rows['presentacion'].' - '.moneda.''.$rows['item_precio'].'</td>
+                                    <td>'.$rows['item_codigo'].' - '.$rows['item_nombre'].' - '.$rows['presentacion'].' - '.moneda.''.$rows['item_precio'].' - Stock: '.$rows['item_stock'].'</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" onclick = "modal_agregar_item('.$rows['item_id'].')"><i
                                                 class="fas fa-box-open"></i></button>
