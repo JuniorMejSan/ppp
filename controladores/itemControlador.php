@@ -189,7 +189,7 @@ class itemControlador extends itemModelo{
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",
-                "Texto"=> "El nombre del ITEM ya se encuentra registrado",
+                "Texto"=> "El nombre del ITEM ya se encuentra registrado, si es una presentacion diferente puede colocar la presentación en el nombre del producto para diferenciarlo",
                 "Tipo" => "error"
             ];
 
@@ -832,6 +832,11 @@ class itemControlador extends itemModelo{
         $id = mainModel::limpiar_cadena($id);
 
         return itemModelo::datos_item_modelo($tipo, $id);
+    }
+
+    //controlador para obtener productos proximos a vencer
+    public function items_proximos_vencer_controlador(){
+        return itemModelo::items_proximos_vencer_modelo();
     }
 
     //controlador para actualizar item

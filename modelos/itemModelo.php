@@ -181,4 +181,20 @@ class itemModelo extends mainModel{
         $sql->execute();
         return $sql;
     }
+
+    //modelo para obtener productos proximos a vencer (15 dias)
+    protected static function items_proximos_vencer_modelo(){
+        $query = "SELECT i.item_id, i.item_codigo, i.item_nombre, i.item_stock, i.item_fecha_vencimiento, 
+                  p.descripcion AS presentacion,
+                  DATEDIFF(i.item_fecha_vencimiento, CURDATE()) AS dias_restantes 
+                  FROM item i 
+                  INNER JOIN presentacion p ON p.id_presentacion = i.id_presentacion 
+                  WHERE i.item_estado = 'Habilitado' 
+                  AND i.item_fecha_vencimiento IS NOT NULL 
+                  AND DATEDIFF(i.item_fecha_vencimiento, CURDATE()) <= 15 
+                  ORDER BY i.item_fecha_vencimiento ASC";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -8,6 +8,29 @@
     </p>
 </div>
 
+<!-- Alerta de productos próximos a vencer -->
+<?php
+    require_once "./controladores/itemControlador.php";
+    $ins_item_alerta = new itemControlador();
+    $productos_por_vencer = $ins_item_alerta->items_proximos_vencer_controlador();
+    if(count($productos_por_vencer) > 0):
+?>
+<div class="full-box" style="margin-bottom: 15px; padding: 0 15px;">
+    <div style="background-color: #fff3cd; border-left: 5px solid #ff9800; border-radius: 5px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-exclamation-triangle fa-2x" style="color: #ff9800;"></i>
+            <div>
+                <strong style="color: #856404; font-size: 16px;">¡Atención!</strong>
+                <p style="margin: 0; color: #856404;">Tiene <strong><?php echo count($productos_por_vencer); ?></strong> producto(s) próximo(s) a vencer o ya vencido(s).</p>
+            </div>
+        </div>
+        <a href="<?php echo server_url; ?>item-vencimiento/" style="background-color: #ff9800; color: #fff; padding: 8px 18px; border-radius: 4px; text-decoration: none; font-weight: bold; white-space: nowrap;">
+            <i class="fas fa-eye fa-fw"></i> Verificar aquí
+        </a>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Content -->
 <div class="full-box tile-container">
     <?php
