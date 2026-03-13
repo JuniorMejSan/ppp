@@ -558,15 +558,24 @@ class ventaControlador extends ventaModelo{
         //comprobacion de errores
         if ($errores_detalle == 0) {//no hay errores en la insercion de detalle
 
+            //obtenemos el id de la venta registrada para el comprobante
+            $query_venta_id = "SELECT venta_id FROM venta WHERE venta_codigo = :codigo LIMIT 1";
+            $stmt_venta_id = mainModel::conectar()->prepare($query_venta_id);
+            $stmt_venta_id->bindParam(':codigo', $codigo);
+            $stmt_venta_id->execute();
+            $venta_registrada = $stmt_venta_id->fetch();
+            $venta_id_encriptado = mainModel::encryption($venta_registrada['venta_id']);
+
             //vaciamos las variables de sesion para limpiar la venta
             unset($_SESSION['datos_cliente']);
             unset($_SESSION['datos_item']);
 
             $alerta = [
-                "Alerta" => "recargar",
+                "Alerta" => "recargar_imprimir",
                 "Titulo" => "Venta registrada",
                 "Texto"=> "La VENTA fue registrada satisfactoriamente",
-                "Tipo" => "success"
+                "Tipo" => "success",
+                "URL" => server_url."comprobante/invoice.php?id=".$venta_id_encriptado."&print=1"
             ];
 
         } else {//eliminamos los datos de la insercion erronea
@@ -737,7 +746,7 @@ class ventaControlador extends ventaModelo{
                         </button>
                     </td>
                     <td>
-                        <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info" target = "_blank">
+                        <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'&print=1" class="btn btn-info" target = "_blank">
                         <i class="fas fa-file-pdf"></i>
                         </a>
                     </td>';
@@ -1088,7 +1097,7 @@ class ventaControlador extends ventaModelo{
                 </button>
                 </td>';
                 $tabla .= '<td>
-                <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'" class="btn btn-info btn-sm" target="_blank">
+                <a href="'.server_url.'comprobante/invoice.php?id='.mainModel::encryption($rows['venta_id']).'&print=1" class="btn btn-info btn-sm" target="_blank">
                     <i class="fas fa-file-pdf"></i>
                 </a>
                 </td>';

@@ -86,6 +86,18 @@ function alertas_ajax(alerta) {
                 location.reload();
             }
         });
+    }else if (alerta.Alerta==="recargar_imprimir") {//al registrar venta se abre comprobante para imprimir
+        Swal.fire({
+            title: alerta.Titulo,
+            text: alerta.Texto,
+            icon: alerta.Tipo,
+            confirmButtonText: 'Aceptar'
+        }).then((result) => {
+            if(result.isConfirmed) {
+                window.open(alerta.URL, '_blank');
+                location.reload();
+            }
+        });
     }else if (alerta.Alerta==="limpiar") {//una vez se le da a aceptar se limpian todos los valores ingresados
         Swal.fire({
             title: alerta.Titulo,

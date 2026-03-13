@@ -183,6 +183,9 @@ switch ($datos_venta->rowCount()) {
 			<br /><br />
 			<div class="txt-center">Este es una representacion de un ticket de pago.</div>
 			<br />
+			<?php if(isset($_GET['print']) && $_GET['print'] == '1'): ?>
+			<script>window.onload = function(){ window.print(); };</script>
+			<?php endif; ?>
 		</body>
 
 		</html>
