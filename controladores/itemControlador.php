@@ -839,6 +839,11 @@ class itemControlador extends itemModelo{
         return itemModelo::items_proximos_vencer_modelo();
     }
 
+    //controlador para obtener productos con stock bajo
+    public function items_stock_bajo_controlador(){
+        return itemModelo::items_stock_bajo_modelo();
+    }
+
     //controlador para actualizar item
     public function actualizar_item_controlador(){
         //recuperamos el id

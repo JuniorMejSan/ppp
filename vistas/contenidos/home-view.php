@@ -31,6 +31,27 @@
 </div>
 <?php endif; ?>
 
+<!-- Alerta de productos con stock bajo -->
+<?php
+    $items_stock_bajo = $ins_item_alerta->items_stock_bajo_controlador();
+    if(count($items_stock_bajo) > 0):
+?>
+<div class="full-box" style="margin-bottom: 15px; padding: 0 15px;">
+    <div style="background-color: #f8d7da; border-left: 5px solid #dc3545; border-radius: 5px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-box-open fa-2x" style="color: #dc3545;"></i>
+            <div>
+                <strong style="color: #721c24; font-size: 16px;">¡Stock bajo!</strong>
+                <p style="margin: 0; color: #721c24;">Tiene <strong><?php echo count($items_stock_bajo); ?></strong> producto(s) con stock bajo o agotado(s).</p>
+            </div>
+        </div>
+        <a href="<?php echo server_url; ?>item-stock/" style="background-color: #dc3545; color: #fff; padding: 8px 18px; border-radius: 4px; text-decoration: none; font-weight: bold; white-space: nowrap;">
+            <i class="fas fa-eye fa-fw"></i> Verificar aquí
+        </a>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Content -->
 <div class="full-box tile-container">
     <?php

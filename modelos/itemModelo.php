@@ -197,4 +197,18 @@ class itemModelo extends mainModel{
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    //modelo para obtener productos con stock bajo (10 unidades o menos)
+    protected static function items_stock_bajo_modelo(){
+        $query = "SELECT i.item_id, i.item_codigo, i.item_nombre, i.item_stock, i.item_precio,
+                  p.descripcion AS presentacion
+                  FROM item i 
+                  INNER JOIN presentacion p ON p.id_presentacion = i.id_presentacion 
+                  WHERE i.item_estado = 'Habilitado' 
+                  AND i.item_stock <= 10 
+                  ORDER BY i.item_stock ASC";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
