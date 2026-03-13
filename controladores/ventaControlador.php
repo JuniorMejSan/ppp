@@ -1012,6 +1012,11 @@ class ventaControlador extends ventaModelo{
         echo json_encode($datos_metodos_pago);
     }
 
+    //controlador para obtener ingresos por medio de pago (dashboard)
+    public function ingresos_por_medio_pago_controlador(){
+        return ventaModelo::ingresos_por_medio_pago_modelo();
+    }
+
     //controlador para reporte de ventas con filtros
     public function reporte_ventas_filtrado_controlador() {
         //recibir parámetros

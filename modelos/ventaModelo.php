@@ -177,6 +177,21 @@ class ventaModelo extends mainModel{
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //modelo para obtener ingresos del dia por medio de pago (dashboard)
+    protected static function ingresos_por_medio_pago_modelo(){
+        $query = "SELECT mp.descripcion AS medio_pago, 
+                         COUNT(v.venta_id) AS cantidad_ventas, 
+                         IFNULL(SUM(v.venta_total), 0) AS total_ventas
+                  FROM medio_pago mp 
+                  LEFT JOIN venta v ON v.metodo_id = mp.id_medio_pago AND v.venta_estado = 'Pagado' AND v.venta_fecha = CURDATE()
+                  WHERE mp.estado = 1 
+                  GROUP BY mp.id_medio_pago, mp.descripcion
+                  ORDER BY total_ventas DESC";
+        $sql = mainModel::conectar()->prepare($query);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     //modelo para obtener ventas filtradas por fecha, medio de pago y estado
     protected static function obtener_ventas_filtradas_modelo($fecha_inicio, $fecha_fin, $medio_pago, $estado, $inicio, $registros) {
         $campos = "venta.venta_id, venta.venta_codigo, venta.venta_fecha, venta.venta_hora, venta.venta_cantidad, venta.venta_total, venta.metodo_id, venta.venta_observacion, venta.usuario_nombre, venta.cliente_id, venta.venta_estado, cliente.cliente_nombre, cliente.cliente_apellido, medio_pago.descripcion";
