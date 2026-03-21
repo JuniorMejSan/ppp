@@ -102,6 +102,51 @@ class loginControlador extends loginModelo{
         }
     }
 
+    //controlador para validar contraseña del administrador (usuario id 1)
+    public function validar_password_admin_controlador(){
+        session_start(['name' => 'ppp']);
+
+        //verificar que el usuario está logueado
+        if(!isset($_SESSION['token_ppp']) || !isset($_SESSION['id_ppp'])){
+            $alerta = [
+                "status" => false,
+                "mensaje" => "Sesión no válida"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        $password = mainModel::limpiar_cadena($_POST['admin_password_check']);
+
+        if($password == ''){
+            $alerta = [
+                "status" => false,
+                "mensaje" => "La contraseña no puede estar vacía"
+            ];
+            echo json_encode($alerta);
+            exit();
+        }
+
+        //encriptamos la clave con el mismo método que usa el login
+        $password = mainModel::encryption($password);
+
+        //consultamos contra el usuario admin (id 1)
+        $resultado = loginModelo::validar_password_admin_modelo($password);
+
+        if($resultado->rowCount() == 1){
+            $alerta = [
+                "status" => true,
+                "mensaje" => "Contraseña válida"
+            ];
+        }else{
+            $alerta = [
+                "status" => false,
+                "mensaje" => "Contraseña del administrador incorrecta"
+            ];
+        }
+        echo json_encode($alerta);
+    }
+
     //controlador para cierre de sesion
     public function cerrar_sesion_controlador(){
         session_start(['name' => 'ppp']);//todas las sesiones llevan este nombre

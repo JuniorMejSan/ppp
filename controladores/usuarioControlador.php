@@ -469,7 +469,7 @@ class usuarioControlador extends usuarioModelo{
         $tipo_cuenta = mainModel::limpiar_cadena($_POST['tipo_cuenta']);
 
         //compraobamos que los datos no vengan vacios
-        if ($dni == "" || $nombre == "" || $apellido == "" || $telefono == "" || $direccion == "" || $usuario == "" || $email == "" || $admin_usuario == "" || $admin_clave == "") {
+        if ($dni == "" || $nombre == "" || $apellido == "" || $usuario == "" || $email == "" || $admin_usuario == "" || $admin_clave == "") {
             $alerta = [
                 "Alerta" => "simple",
                 "Titulo" => "Ocurrio un error",

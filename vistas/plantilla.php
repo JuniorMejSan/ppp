@@ -63,6 +63,10 @@ $vistas = $iv->obtener_vistas_controlador(); //guardar el resultado del controla
 				?>
 			</section>
 		</main>
+		<script>
+			window.pppUserId = <?php echo (int)$_SESSION['id_ppp']; ?>;
+			window.pppServerUrl = '<?php echo server_url; ?>';
+		</script>
 	<?php
 		include "./vistas/inc/logOut.php";
 	}
